@@ -1,0 +1,255 @@
+﻿#include "GraphicsDevice.h"
+
+//-----------------------------------------------------------------------------
+// コンストラクタ
+//-----------------------------------------------------------------------------
+GraphicsDevice::GraphicsDevice(GRAPHICS_DEVICE_CREATE_PARAM createParam)
+	: m_createParam(createParam)
+	, m_cpDevice(nullptr)
+	, m_cpContext(nullptr)
+	, m_cpGISwapChain(nullptr)
+	, m_cpFactory(nullptr)
+	, m_sampleDesc()
+	, m_adapterName(L"")
+{
+}
+
+//-----------------------------------------------------------------------------
+// デストラクタ
+//-----------------------------------------------------------------------------
+GraphicsDevice::~GraphicsDevice()
+{
+	//一般的にはデバイスのRelease前に配置するらしい
+#if _DEBUG && 0
+	ID3D11Debug* d3dDebug;
+	HRESULT hr = m_cpDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&d3dDebug));
+	if (SUCCEEDED(hr))
+	{
+		hr = d3dDebug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+	}
+	if (d3dDebug != nullptr) d3dDebug->Release();
+#endif
+}
+
+//-----------------------------------------------------------------------------
+// 初期化
+//-----------------------------------------------------------------------------
+bool GraphicsDevice::Initialize()
+{
+	//DXGIファクトリー作成
+	if (FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), reinterpret_cast<void**>(m_cpFactory.GetAddressOf()))))
+		return false;
+
+	if (!CreateDevice())
+	{
+		Debug::Log("デバイス/デバイスコンテキスト作成失敗."); return false;
+	}
+
+	if (!CreateSwapChain())
+	{
+		Debug::Log("スワップチェイン作成失敗."); return false;
+	}
+
+	if (!CreateBackBuffer())
+	{
+		Debug::Log("バックバッファー作成失敗."); return false;
+	}
+
+	//初期レンダーターゲット設定
+	m_cpContext->OMSetRenderTargets(1, m_spBackbuffer->RTVAddress(), m_spDefaultZbuffer->DSV());
+
+	//ビューポート変換行列の登録
+	m_viewport.TopLeftX = 0;
+	m_viewport.TopLeftY = 0;
+	m_viewport.Width	= static_cast<FLOAT>(m_createParam.Width);
+	m_viewport.Height	= static_cast<FLOAT>(m_createParam.Height);
+	m_viewport.MinDepth = D3D11_MIN_DEPTH;
+	m_viewport.MaxDepth = D3D11_MAX_DEPTH;
+
+	m_cpContext->RSSetViewports(1, &m_viewport);
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// 終了
+//-----------------------------------------------------------------------------
+bool GraphicsDevice::Finalize()
+{
+	m_spBackbuffer = m_spDefaultZbuffer = nullptr;
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// デバイスとデバイスコンテキスト作成
+//-----------------------------------------------------------------------------
+bool GraphicsDevice::CreateDevice()
+{
+	D3D_FEATURE_LEVEL featureLevel;
+	D3D_FEATURE_LEVEL featureLevels[] = {
+		D3D_FEATURE_LEVEL_12_1,
+		D3D_FEATURE_LEVEL_12_0,
+		D3D_FEATURE_LEVEL_11_1,
+		D3D_FEATURE_LEVEL_11_0,
+	};
+
+	UINT flags = 0;
+
+	//詳細なデバッグ情報を取得する
+	if (m_createParam.DebugMode)
+		flags |= D3D11_CREATE_DEVICE_DEBUG;
+
+	//デバイスとデバイスコンテキスト作成
+	if (FAILED(D3D11CreateDevice(CheckAdapter(), D3D_DRIVER_TYPE_UNKNOWN, nullptr, flags, featureLevels,
+		_countof(featureLevels), D3D11_SDK_VERSION, &m_cpDevice, &featureLevel, &m_cpContext)))
+		return false;
+
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// 描画開始
+//-----------------------------------------------------------------------------
+void GraphicsDevice::Begin()
+{
+	float clear[] = { 0.2f, 0.2f, 0.8f };
+	m_cpContext->ClearRenderTargetView(m_spBackbuffer->RTV(), clear);
+	m_cpContext->ClearDepthStencilView(m_spDefaultZbuffer->DSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
+
+	m_cpContext->RSSetViewports(1, &m_viewport);
+
+	m_cpContext->OMSetRenderTargets(1, m_spBackbuffer->RTVAddress(), m_spDefaultZbuffer->DSV());
+}
+
+//-----------------------------------------------------------------------------
+// 描画終了
+//-----------------------------------------------------------------------------
+void GraphicsDevice::End(UINT syncInterval, UINT flags)
+{
+	// TODO: 全画面だと垂直同期が切れる
+	HRESULT hr = m_cpGISwapChain->Present(syncInterval, flags);
+
+	if (FAILED(hr))
+		assert(0 && "エラー：画面更新の失敗.");
+	if (hr == DXGI_ERROR_DEVICE_REMOVED)
+		assert(0 && "エラー：ビデオカードがシステムから物理的に取り外されたか アップデートが行われました");
+}
+
+//-----------------------------------------------------------------------------
+// スワップチェイン作成
+//-----------------------------------------------------------------------------
+bool GraphicsDevice::CreateSwapChain()
+{
+	CheckMSAA();
+
+	// スワップチェーンの設定データ
+	DXGI_SWAP_CHAIN_DESC DXGISwapChainDesc = {};
+	DXGISwapChainDesc.BufferDesc.Width						= m_createParam.Width;
+	DXGISwapChainDesc.BufferDesc.Height						= m_createParam.Height;
+	DXGISwapChainDesc.BufferDesc.RefreshRate.Numerator		= 0;
+	DXGISwapChainDesc.BufferDesc.RefreshRate.Denominator	= 1;
+	DXGISwapChainDesc.BufferDesc.Format						= m_createParam.UseHDR ? DXGI_FORMAT_R16G16B16A16_FLOAT : DXGI_FORMAT_R8G8B8A8_UNORM;
+	DXGISwapChainDesc.BufferDesc.ScanlineOrdering			= DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	DXGISwapChainDesc.BufferDesc.Scaling					= DXGI_MODE_SCALING_UNSPECIFIED;
+
+	DXGISwapChainDesc.SampleDesc	= m_sampleDesc;
+
+	DXGISwapChainDesc.BufferUsage	= DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_SHADER_INPUT;
+	DXGISwapChainDesc.BufferCount	= m_createParam.BufferCount;
+	DXGISwapChainDesc.OutputWindow	= m_createParam.Hwnd;
+	DXGISwapChainDesc.Windowed		= m_createParam.Windowed;
+	DXGISwapChainDesc.SwapEffect	= DXGISwapChainDesc.BufferCount >= 2 ? DXGI_SWAP_EFFECT_DISCARD : DXGI_SWAP_EFFECT_SEQUENTIAL;
+	DXGISwapChainDesc.Flags			= DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+
+	if (FAILED(m_cpFactory->CreateSwapChain(m_cpDevice.Get(), &DXGISwapChainDesc, m_cpGISwapChain.ReleaseAndGetAddressOf())))
+		return false;
+
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// バックバッファーの作成
+//-----------------------------------------------------------------------------
+bool GraphicsDevice::CreateBackBuffer()
+{
+	//スワップチェインからバックバッファ取得
+	ComPtr<ID3D11Texture2D> pBackBuffer;
+	if (FAILED(m_cpGISwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)pBackBuffer.GetAddressOf())))
+		return false;
+
+	//バックバッファ(カラー)
+	m_spBackbuffer = std::make_shared<Texture>();
+	if (!m_spBackbuffer->Create(pBackBuffer.Get(), m_createParam.UseMSAA))
+		return false;
+
+	//バックバッファ(Z)
+	m_spDefaultZbuffer = std::make_shared<Texture>();
+	if (!m_spDefaultZbuffer->CreateDepthStencil(m_createParam.Height, m_createParam.Width, m_createParam.UseMSAA))
+		return false;
+
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// 環境に最適なアダプタを取得
+//-----------------------------------------------------------------------------
+IDXGIAdapter* GraphicsDevice::CheckAdapter()
+{
+	std::vector <IDXGIAdapter*> adapters;
+
+	IDXGIAdapter* adapter = nullptr;
+	for (int i = 0; m_cpFactory->EnumAdapters(i, &adapter) != DXGI_ERROR_NOT_FOUND; ++i)
+		adapters.push_back(adapter);
+
+	for (SIZE_T mem_size = 0; auto adpt : adapters)
+	{
+		DXGI_ADAPTER_DESC adesc;
+		adpt->GetDesc(&adesc);
+
+		//ビデオメモリのサイズ比較
+		if (SIZE_T mem_size_tmp = adesc.DedicatedVideoMemory;
+			mem_size_tmp > mem_size)
+		{
+			adapter = adpt;
+			mem_size = mem_size_tmp;
+
+			m_adapterName = adesc.Description;
+
+			Debug::Log(m_adapterName + L": " + std::to_wstring(static_cast<float>(mem_size) / 1073741824.0f));//byte to Gbyte
+		}
+	}
+	Debug::Log(L"使用アダプタ決定: " + m_adapterName);
+
+	return adapter;
+}
+
+//-----------------------------------------------------------------------------
+// 環境でMSAAを使用できるか確認しDXGI_SAMPLE_DESCを取得
+//-----------------------------------------------------------------------------
+void GraphicsDevice::CheckMSAA()
+{
+	for (int i = 1; i <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; i <<= 1)
+	{
+		if (UINT Quality; SUCCEEDED(m_cpDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_D24_UNORM_S8_UINT, i, &Quality)))
+		{
+			if (0 < Quality)
+			{
+				m_sampleDesc.Count = i;
+				m_sampleDesc.Quality = Quality - 1;
+			}
+		}
+	}
+
+	m_sampleDesc.Count = m_createParam.UseMSAA ? m_sampleDesc.Count : 1;
+
+	//MSAA非対応の場合
+	if (m_sampleDesc.Count <= 1)
+	{
+		//MSAAをOFFに
+		m_sampleDesc.Quality = 0;
+		m_createParam.UseMSAA = false;
+		Debug::Log("MSAA非対応 MSAAをOFFにします.");
+	}
+
+	Debug::Log("m_sampleDesc.Count: " + std::to_string(m_sampleDesc.Count));
+	Debug::Log("m_sampleDesc.Quality: " + std::to_string(m_sampleDesc.Quality));
+}

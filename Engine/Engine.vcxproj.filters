@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{7cb6b944-812a-47f2-830a-f2df9b7fbd8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{8398928e-7075-4c5e-ad45-e9a790bd1a8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Window">
+      <UniqueIdentifier>{06d166a9-82d7-4a2b-a7fa-83aa6177d443}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Audio">
+      <UniqueIdentifier>{2c3e81c7-1a36-4f11-a6ae-662a98ee876a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Video">
+      <UniqueIdentifier>{ccb338aa-50b9-45d6-8804-a588a15467d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Utility">
+      <UniqueIdentifier>{2821213f-02f2-47fd-aa24-9f4fbca35915}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Input">
+      <UniqueIdentifier>{7c066d21-5f43-46e1-b9fd-f94c3757c21e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics">
+      <UniqueIdentifier>{963e6e2d-feaa-46ed-b09a-e4dd6604b878}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Physics">
+      <UniqueIdentifier>{6d2f160a-c473-43a3-b7b3-fb0bd04be2f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Model">
+      <UniqueIdentifier>{6b38558b-39e7-4516-aaa5-fce7714232f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Debug">
+      <UniqueIdentifier>{7bf92eb6-fe05-45ed-94b1-15717f8a685c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Math">
+      <UniqueIdentifier>{4955ffb9-00ab-46a5-80e4-6d22ddb14b3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Audio\Vender">
+      <UniqueIdentifier>{6e577cfc-2724-40ab-a66b-018e2ea7e0f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\HighLevel">
+      <UniqueIdentifier>{e59585c9-38ef-4398-9828-0dfe7bd5a455}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\HighLevel\Component">
+      <UniqueIdentifier>{5241ec6f-eaa8-42f1-b0b3-d1c7fcc0756e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\HighLevel\Behaviour">
+      <UniqueIdentifier>{8636235f-7613-46c3-ac14-ffe65fe151cb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Window\Window.cpp">
+      <Filter>Source\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Pch.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Debug\Debug.cpp">
+      <Filter>Source\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\GraphicsDevice.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\GraphicsDeviceChild.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Texture.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Audio\AudioDevice.cpp">
+      <Filter>Source\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Audio\AudioDeviceChild.cpp">
+      <Filter>Source\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Audio\Vender\WaveBankReader.cpp">
+      <Filter>Source\Audio\Vender</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Audio\Vender\WAVFileReader.cpp">
+      <Filter>Source\Audio\Vender</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Audio\Sound.cpp">
+      <Filter>Source\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Video\VideoDevice.cpp">
+      <Filter>Source\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Input\Input.cpp">
+      <Filter>Source\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Audio\Sound3D.cpp">
+      <Filter>Source\Audio</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Resource.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Window\Window.h">
+      <Filter>Source\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Pch.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Debug\Debug.h">
+      <Filter>Source\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\GraphicsDevice.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\GraphicsDeviceChild.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\Vector3.h">
+      <Filter>Source\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\Vector4.h">
+      <Filter>Source\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\Matrix.h">
+      <Filter>Source\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\Quaternion.h">
+      <Filter>Source\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Texture.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Audio\AudioDevice.h">
+      <Filter>Source\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Audio\AudioDeviceChild.h">
+      <Filter>Source\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Audio\Vender\WaveBankReader.h">
+      <Filter>Source\Audio\Vender</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Audio\Vender\WAVFileReader.h">
+      <Filter>Source\Audio\Vender</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Audio\Sound.h">
+      <Filter>Source\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Video\VideoDevice.h">
+      <Filter>Source\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HighLevel\Component\Component.h">
+      <Filter>Source\HighLevel\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HighLevel\Behaviour\Behaviour.h">
+      <Filter>Source\HighLevel\Behaviour</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Input\Input.h">
+      <Filter>Source\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Audio\Sound3D.h">
+      <Filter>Source\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utility\Timer.h">
+      <Filter>Source\Utility</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resource\Engine.ico">
+      <Filter>Resource</Filter>
+    </Image>
+    <Image Include="Resource\small.ico">
+      <Filter>Resource</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource\Engine.rc">
+      <Filter>Resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
