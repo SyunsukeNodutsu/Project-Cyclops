@@ -1,4 +1,13 @@
-﻿#include "EnginePch.h"
+﻿//-----------------------------------------------------------------------------
+// File: main.cpp
+//
+// アプリケーション側の実装
+// 
+// メモ:
+//  SmpleMathでいい気がしてきた...
+//  面倒なのでモデルはライブラリ使用して実装しよう
+//-----------------------------------------------------------------------------
+#include "EnginePch.h"
 #pragma comment(lib, "Engine.lib")
 
 //アプリケーション必須デバイス
@@ -11,7 +20,7 @@ static constexpr int windowWidth = 896;
 static constexpr int windowHeight = 672;
 
 std::shared_ptr<Sound> sp_sound = nullptr;
-std::wstring sound_path = L"../Assets/Sunshine.mp3";
+std::wstring sound_path = L"../Assets/キューピーMIX.wav";
 
 void Initialize();
 void Update();
@@ -81,6 +90,8 @@ void Initialize()
 	device_param.Hwnd			= window->GetHwnd();
 
 	graphicsDevice = new GraphicsDevice(device_param);
+	//デバイスの初期化でデバイスの参照が必要な子Object(Texture)を使用するため
+	//即座にセットしなければならない なんか設計が間違っている気が...
 	GraphicsDeviceChild::SetDevice(graphicsDevice);
 	graphicsDevice->Initialize();
 
