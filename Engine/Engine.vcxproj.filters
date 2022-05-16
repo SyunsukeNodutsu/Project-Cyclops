@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Resource">
-      <UniqueIdentifier>{7cb6b944-812a-47f2-830a-f2df9b7fbd8c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source">
       <UniqueIdentifier>{8398928e-7075-4c5e-ad45-e9a790bd1a8f}</UniqueIdentifier>
     </Filter>
@@ -104,9 +101,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Resource.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Window\Window.h">
       <Filter>Source\Window</Filter>
     </ClInclude>
@@ -179,18 +173,5 @@
     <ClInclude Include="Source\Input\GamePad\GamePad.h">
       <Filter>Source\Input\GamePad</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Resource\Engine.ico">
-      <Filter>Resource</Filter>
-    </Image>
-    <Image Include="Resource\small.ico">
-      <Filter>Resource</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Resource\Engine.rc">
-      <Filter>Resource</Filter>
-    </ResourceCompile>
   </ItemGroup>
 </Project>

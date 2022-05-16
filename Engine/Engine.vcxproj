@@ -65,18 +65,10 @@
     <ClInclude Include="Source\Math\Vector3.h" />
     <ClInclude Include="Source\Math\Vector4.h" />
     <ClInclude Include="Source\Pch.h" />
-    <ClInclude Include="Source\Resource.h" />
     <ClInclude Include="Source\Utility\Timer.h" />
     <ClInclude Include="Source\Utility\Utility.h" />
     <ClInclude Include="Source\Video\VideoDevice.h" />
     <ClInclude Include="Source\Window\Window.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Resource\Engine.ico" />
-    <Image Include="Resource\small.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Resource\Engine.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

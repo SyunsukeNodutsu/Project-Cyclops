@@ -5,7 +5,6 @@
 // Windows
 // 
 //--------------------------------------------------
-
 #define NOMINMAX //#undef max/max
 
 #include <SDKDDKVer.h> //最新のSDKを自動的に定義する
@@ -15,11 +14,6 @@
 //Windows Runtime Library(ComPtr)
 #include <wrl.h>
 #pragma comment(lib, "runtimeobject.lib")
-
-using Microsoft::WRL::ComPtr;
-
-//Win32リソース用
-#include "Resource.h"
 
 //--------------------------------------------------
 // 

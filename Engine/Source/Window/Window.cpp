@@ -105,8 +105,8 @@ ATOM Window::RegisterWindowClass()
 	wc.cbClsExtra		= 0;
 	wc.cbWndExtra		= 0;
 	wc.hInstance		= GetModuleHandle(0);
-	wc.hIcon			= LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_ENGINE));
-	wc.hIconSm			= LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+	wc.hIcon			= LoadIcon(wc.hInstance, nullptr);//TODO: アイコン設定したい
+	wc.hIconSm			= LoadIcon(wc.hInstance, nullptr);
 	wc.hCursor			= LoadCursor(nullptr, IDC_ARROW);
 	wc.hbrBackground	= (HBRUSH)GetStockObject(LTGRAY_BRUSH);
 	wc.lpszMenuName		= nullptr;

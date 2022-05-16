@@ -8,6 +8,9 @@
 //便利マクロ
 #define ToString(Val) std::to_string(Val)//std::to_stringをエイリアス
 
+//TODO: どうする
+using Microsoft::WRL::ComPtr;
+
 //便利機能クラス
 class Utility
 {
