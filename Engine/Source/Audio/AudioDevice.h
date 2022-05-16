@@ -36,7 +36,8 @@ private:
 
     std::list<std::shared_ptr<Sound>>   m_soundList;    //サウンドリスト
     std::array<float, 8>                m_peakLevels;   //ピークメータ ※瞬間最大値
-    std::array<float, 8>                m_RMSLevels;    //RMSメータ ※平均値
+    std::array<float, 8>                m_RMSLevels;    //RMSメータ    ※平均値
+    float                               m_prevVolume;   //以前の音量
 
 private:
 

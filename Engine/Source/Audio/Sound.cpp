@@ -101,8 +101,8 @@ void Sound::SetFade(float volume, float time)
     if (m_pSourceVoice == nullptr) return;
 
     //許容値
-    time = std::clamp(time, 0.0f, 5.0f);
-    volume = std::clamp(volume, -1.0f, 1.0f);
+    time    = std::clamp(time, 0.0f, 5.0f);
+    volume  = std::clamp(volume, -1.0f, 1.0f);
 
     m_fadeVolume    = (volume - GetVolume()) / time;//時間ごとの変化量計算
     m_startVolume   = GetVolume();

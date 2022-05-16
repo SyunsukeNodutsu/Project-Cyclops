@@ -1,37 +1,37 @@
-//-----------------------------------------------------------------------------
+ï»¿//-----------------------------------------------------------------------------
 // File: Utility.h
 //
-// •Ö—˜‹@”\
+// ä¾¿åˆ©æ©Ÿèƒ½
 //-----------------------------------------------------------------------------
 #pragma once
 
-//•Ö—˜ƒ}ƒNƒ
-#define ToString(Val) std::to_string(Val)//std::to_string‚ğƒGƒCƒŠƒAƒX
+//ä¾¿åˆ©ãƒã‚¯ãƒ­
+#define ToString(Val) std::to_string(Val)//std::to_stringã‚’ã‚¨ã‚¤ãƒªã‚¢ã‚¹
 
-//•Ö—˜‹@”\ƒNƒ‰ƒX
+//ä¾¿åˆ©æ©Ÿèƒ½ã‚¯ãƒ©ã‚¹
 class Utility
 {
 public:
 
-    //@brief Š®‘SƒpƒX‚©‚çƒtƒ@ƒCƒ‹–¼(Šg’£qŠÜ‚Ş)‚ğ•Ô‚·
+    //@brief å®Œå…¨ãƒ‘ã‚¹ã‹ã‚‰ãƒ•ã‚¡ã‚¤ãƒ«å(æ‹¡å¼µå­å«ã‚€)ã‚’è¿”ã™
     static const std::string& GetFilenameFromFullpath(const std::string& fullpath);
 
-    //@brief Š®‘SƒpƒX‚©‚çƒtƒ@ƒCƒ‹–¼(Šg’£qŠÜ‚Ş)‚ğ•Ô‚·
+    //@brief å®Œå…¨ãƒ‘ã‚¹ã‹ã‚‰ãƒ•ã‚¡ã‚¤ãƒ«å(æ‹¡å¼µå­å«ã‚€)ã‚’è¿”ã™
     static const std::wstring& GetFilenameFromFullpath(const std::wstring& fullpath);
 
 };
 
-//ƒfƒoƒbƒOƒNƒ‰ƒX
+//ãƒ‡ãƒãƒƒã‚°ã‚¯ãƒ©ã‚¹
 class Debug
 {
 public:
 
-    //@brief ƒƒO‚ğ“Š‚°‚é
-    //@param location ƒƒO‚Éo—Í‚·‚éƒƒP[ƒVƒ‡ƒ“î•ñ ‚±‚Ì’l‚Íİ’è‚µ‚È‚¢
+    //@brief ãƒ­ã‚°ã‚’æŠ•ã’ã‚‹
+    //@param location ãƒ­ã‚°ã«å‡ºåŠ›ã™ã‚‹ãƒ­ã‚±ãƒ¼ã‚·ãƒ§ãƒ³æƒ…å ± ã“ã®å€¤ã¯è¨­å®šã—ãªã„
     static void Log(std::string log, std::source_location location = std::source_location::current());
 
-    //@brief ƒƒO‚ğ“Š‚°‚é
-    //@param location ƒƒO‚Éo—Í‚·‚éƒƒP[ƒVƒ‡ƒ“î•ñ ‚±‚Ì’l‚Íİ’è‚µ‚È‚¢
+    //@brief ãƒ­ã‚°ã‚’æŠ•ã’ã‚‹
+    //@param location ãƒ­ã‚°ã«å‡ºåŠ›ã™ã‚‹ãƒ­ã‚±ãƒ¼ã‚·ãƒ§ãƒ³æƒ…å ± ã“ã®å€¤ã¯è¨­å®šã—ãªã„
     static void Log(std::wstring log, std::source_location location = std::source_location::current());
 
 };

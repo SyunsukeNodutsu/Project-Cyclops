@@ -12,6 +12,7 @@ AudioDevice::AudioDevice()
 	, m_soundList()
 	, m_peakLevels()
 	, m_RMSLevels()
+	, m_prevVolume()
 {
 }
 
@@ -76,6 +77,9 @@ void AudioDevice::Finalize()
 //-----------------------------------------------------------------------------
 void AudioDevice::Update(const Matrix& listener)
 {
+    if (m_pX2Audio == nullptr) return;
+    if (m_pMasteringVoice == nullptr) return;
+
     //TOOD: サウンドリスナー更新
 
     //サウンドリスト更新
@@ -90,8 +94,13 @@ void AudioDevice::Update(const Matrix& listener)
 //-----------------------------------------------------------------------------
 void AudioDevice::SetMasterVolume(float volume)
 {
+    if (m_pX2Audio == nullptr) return;
+    if (m_pMasteringVoice == nullptr) return;
+    if (volume == m_prevVolume) { Debug::Log("以前の音量と同じなのでSetVolumeを飛ばします."); return; }
+
     volume = std::clamp(volume, -1.0f, 1.0f);
     m_pMasteringVoice->SetVolume(volume);
+    m_prevVolume = volume;
 }
 
 //-----------------------------------------------------------------------------
@@ -155,7 +164,7 @@ void AudioDevice::UpdateVolumeMeter()
 }
 
 //-----------------------------------------------------------------------------
-// サウンドリストをフェードアウトさせる
+// サウンドリストをフェードアウトさせる TODO: マスター音量でええやん...
 //-----------------------------------------------------------------------------
 void AudioDevice::FadeOutSoundList(float fadeSec)
 {
