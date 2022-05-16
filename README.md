@@ -29,7 +29,7 @@ DEMOの実行方法など、基本的な使い方を説明する
 
 # Author
 * 作成者  : 野筒隼輔
-* 所属    : ありましぇーん
+* 所属    : のずお王国
 * E-mail  : nozuo0630@gmail.com
 
 # License
