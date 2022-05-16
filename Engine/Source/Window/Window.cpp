@@ -50,6 +50,8 @@ bool Window::ProcessMessage()
 	if (m_hWnd == nullptr) return false;
 
 	//入力情報更新
+	//TODO: OnXXX()のようなイベント関数を取得し、InputDevice側で処理を行う
+	// そうすればstatic/pubkicにしなくて済む
 	Input::Refresh();
 
 	MSG msg;

@@ -46,6 +46,15 @@
     <Filter Include="Source\HighLevel\Behaviour">
       <UniqueIdentifier>{8636235f-7613-46c3-ac14-ffe65fe151cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Input\GamePad">
+      <UniqueIdentifier>{772108eb-8a2d-41c0-a08b-3ef1a577f609}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Input\Keyboard">
+      <UniqueIdentifier>{1c4f27ea-e99f-4faf-b9b9-45e9503c2fb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Input\Mouse">
+      <UniqueIdentifier>{06404aea-6209-485f-8b84-ef47a7b75c47}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Window\Window.cpp">
@@ -89,6 +98,9 @@
     </ClCompile>
     <ClCompile Include="Source\Utility\Utility.cpp">
       <Filter>Source\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Input\GamePad\GamePad.cpp">
+      <Filter>Source\Input\GamePad</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="Source\Math\Vector2.h">
       <Filter>Source\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Input\GamePad\GamePad.h">
+      <Filter>Source\Input\GamePad</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
