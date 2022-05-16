@@ -43,10 +43,8 @@
 #include "Math/Matrix.h"
 #include "Math/Quaternion.h"
 
-//デバッグ
-#include "Debug/Debug.h"
-
 //ユーティリティ
+#include "Utility/Utility.h"
 #include "Utility/Timer.h"
 
 //ウィンドウ

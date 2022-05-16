@@ -17,19 +17,10 @@ Window::Window(WINDOE_CREATE_PARAM createParam)
 //-----------------------------------------------------------------------------
 bool Window::Initialize()
 {
-	HINSTANCE hInstance = GetModuleHandle(0);
-
 	if (RegisterWindowClass() == 0)
 		return false;
 
-	m_hWnd = CreateWindowW(
-		m_className.c_str(), m_titleName.c_str(),
-		WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX,
-		CW_USEDEFAULT, 0,
-		m_clientWidth, m_clientHeight,
-		nullptr, nullptr, hInstance, this);
-
-	if (m_hWnd == nullptr)
+	if (CreateWindowInstance() == false)
 		return false;
 
 	MoveDesktopCenterWindow(m_hWnd);
@@ -123,6 +114,24 @@ ATOM Window::RegisterWindowClass()
 }
 
 //-----------------------------------------------------------------------------
+// ウィンドウ作成しウィンドウハンドルを取得する
+//-----------------------------------------------------------------------------
+bool Window::CreateWindowInstance()
+{
+	HINSTANCE hInstance = GetModuleHandle(0);
+
+	DWORD style = WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME/* & ~WS_MAXIMIZEBOX*/;
+
+	m_hWnd = CreateWindowW(
+		m_className.c_str(), m_titleName.c_str(),
+		style, CW_USEDEFAULT, 0,
+		m_clientWidth, m_clientHeight,
+		nullptr, nullptr, hInstance, this);
+
+	return (m_hWnd != nullptr);
+}
+
+//-----------------------------------------------------------------------------
 // ウィンドウ関数
 //-----------------------------------------------------------------------------
 LRESULT Window::WindowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
@@ -136,7 +145,7 @@ LRESULT Window::WindowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam
 	{
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hwnd, &ps);
-		// TODO: hdcを使用する描画コードをここに追加
+		//TODO: hdcを使用する描画コードをここに追加
 		EndPaint(hwnd, &ps);
 		break;
 	}

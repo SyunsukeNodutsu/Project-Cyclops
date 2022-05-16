@@ -3,18 +3,28 @@
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
-Sound::Sound()
+Sound::Sound(const std::wstring& filepath, bool loop, bool useFilter)
     : m_soundData()
     , m_pSourceVoice(nullptr)
-    , m_filepath(L"")
-    , m_loop(false)
     , m_timer()
     , m_fadeVolume(0.0f)
     , m_startVolume(0.0f)
     , m_targetVolume(0.0f)
     , m_targetTime(0.0f)
     , m_fade(false)
+    , m_done(false)
+    , m_prevVolume(0.0f)
 {
+    if (!Load(filepath, loop, useFilter))
+        Release();
+}
+
+//-----------------------------------------------------------------------------
+// 更新
+//-----------------------------------------------------------------------------
+void Sound::Update()
+{
+    UpdateFade();
 }
 
 //-----------------------------------------------------------------------------
@@ -36,48 +46,6 @@ void Sound::Release()
 }
 
 //-----------------------------------------------------------------------------
-// 読み込み
-//-----------------------------------------------------------------------------
-bool Sound::Load(const std::wstring& filepath, bool loop, bool useFilter)
-{
-    m_filepath = filepath;
-    m_loop = loop;
-
-    //サウンドデータクラス作成/音源情報読み込み
-    if (!m_soundData.Create(filepath, loop, useFilter))
-    {
-        Debug::Log("SoundData作成失敗."); return false;
-    }
-
-    //送信先になるの宛先ボイスを定義
-    XAUDIO2_SEND_DESCRIPTOR sendDescriptors[1];
-    //LPFダイレクトパス
-    sendDescriptors[0].Flags        = XAUDIO2_SEND_USEFILTER;
-    sendDescriptors[0].pOutputVoice = m_audioDevice->m_pMasteringVoice;
-
-    const XAUDIO2_VOICE_SENDS sendList = { 1, sendDescriptors };
-
-    //ソースボイス作成
-    if (FAILED(m_audioDevice->m_pX2Audio->CreateSourceVoice(
-        &m_pSourceVoice, m_soundData.m_pWaveFormat,
-        useFilter ? XAUDIO2_VOICE_USEFILTER : 0, 2.0f, nullptr, &sendList, nullptr)))
-    {
-        Debug::Log("CreateSourceVoice失敗."); return false;
-    }
-
-    //オーディオバッファを追加
-    if (!SubmitBuffer(loop, 0))
-        return false;
-
-    //完全パスから情報を取得
-    wchar_t name[_MAX_FNAME] = L"", ext[_MAX_EXT] = L"";
-    _wsplitpath_s(m_filepath.c_str(), nullptr, 0, nullptr, 0, name, _countof(name), ext, _countof(ext));
-    Debug::Log(L"SourceVoice作成: " + std::wstring(name) + std::wstring(ext));
-
-    return true;
-}
-
-//-----------------------------------------------------------------------------
 // 再生
 //-----------------------------------------------------------------------------
 void Sound::Play(bool flush, DWORD delay)
@@ -91,7 +59,6 @@ void Sound::Play(bool flush, DWORD delay)
         std::thread([=] {
             std::this_thread::sleep_for(std::chrono::milliseconds(delay));
             m_pSourceVoice->Start();
-            return;
             }).detach();
     }
     else m_pSourceVoice->Start();
@@ -108,8 +75,22 @@ void Sound::Stop(bool flush)
     if (flush)
     {
         m_pSourceVoice->FlushSourceBuffers();
-        SubmitBuffer(m_loop, 0);
+        SubmitBuffer(m_soundData.m_loop, 0);
     }
+}
+
+//-----------------------------------------------------------------------------
+// 音量を設定
+//-----------------------------------------------------------------------------
+void Sound::SetVolume(float volume)
+{
+    if (m_pSourceVoice == nullptr) return;
+    if (volume == m_prevVolume) { Debug::Log("以前の音量と同じなのでSetVolumeを飛ばします."); return; }
+    //TODO: 人間が聞いてもわからないような変化量は飛ばしてもいいかも
+    
+    volume = std::clamp(volume, -XAUDIO2_MAX_VOLUME_LEVEL, XAUDIO2_MAX_VOLUME_LEVEL);
+    m_pSourceVoice->SetVolume(volume);
+    m_prevVolume = volume;
 }
 
 //-----------------------------------------------------------------------------
@@ -117,6 +98,8 @@ void Sound::Stop(bool flush)
 //-----------------------------------------------------------------------------
 void Sound::SetFade(float volume, float time)
 {
+    if (m_pSourceVoice == nullptr) return;
+
     //許容値
     time = std::clamp(time, 0.0f, 5.0f);
     volume = std::clamp(volume, -1.0f, 1.0f);
@@ -132,79 +115,25 @@ void Sound::SetFade(float volume, float time)
 }
 
 //-----------------------------------------------------------------------------
-// フェード更新
-//-----------------------------------------------------------------------------
-void Sound::UpdateFade()
-{
-    if (!m_fade) return;
-
-    //タイマから経過時間を取得し設定する音量を計算
-    const auto& progress_time = static_cast<float>(m_timer.GetElapsedSeconds());
-    float set_volume = m_startVolume + (m_fadeVolume * progress_time);
-
-    SetVolume(set_volume);
-
-    //フェード終了
-    if (progress_time >= m_targetTime)
-    {
-        SetVolume(m_targetVolume);
-        m_fade = false;
-    }
-}
-
-//-----------------------------------------------------------------------------
 // ピッチ設定
 //-----------------------------------------------------------------------------
 void Sound::SetPitch(float pitch)
 {
-    if (m_pSourceVoice)
-        m_pSourceVoice->SetFrequencyRatio(pitch);
-}
-
-//-----------------------------------------------------------------------------
-// 音量を設定
-//-----------------------------------------------------------------------------
-void Sound::SetVolume(float volume)
-{
-    volume = std::clamp(volume, -XAUDIO2_MAX_VOLUME_LEVEL, XAUDIO2_MAX_VOLUME_LEVEL);
-    if (m_pSourceVoice) m_pSourceVoice->SetVolume(volume);
-}
-
-//-----------------------------------------------------------------------------
-// 音量を返す
-//-----------------------------------------------------------------------------
-float Sound::GetVolume()
-{
-    if (m_pSourceVoice == nullptr) return FLT_MIN;
-
-    float volume; m_pSourceVoice->GetVolume(&volume);
-    return volume;
-}
-
-//-----------------------------------------------------------------------------
-// 再生中かどうかを返す
-//-----------------------------------------------------------------------------
-bool Sound::IsPlaying()
-{
-    if (m_pSourceVoice == nullptr) return false;
-
-    XAUDIO2_VOICE_STATE pState;
-    m_pSourceVoice->GetState(&pState);
-
-    return (pState.BuffersQueued > 0);
+    if (m_pSourceVoice == nullptr) return;
+    m_pSourceVoice->SetFrequencyRatio(pitch);
 }
 
 //-----------------------------------------------------------------------------
 // 音を左右に振り分ける
 //-----------------------------------------------------------------------------
-bool Sound::SetPan(float pan)
+void Sound::SetPan(float pan)
 {
-    if (m_pSourceVoice == nullptr) return false;
+    if (m_pSourceVoice == nullptr) return;
 
     //左右のパンの値を計算
     pan = std::clamp(pan, -1.0f, 1.0f);
 
-    float left  = 0.5f - pan / 2;
+    float left = 0.5f - pan / 2;
     float right = 0.5f + pan / 2;
 
     //チャンネル取得
@@ -232,28 +161,108 @@ bool Sound::SetPan(float pan)
 
     if (FAILED(m_pSourceVoice->SetOutputMatrix(m_audioDevice->m_pMasteringVoice, source_channels, destination_channels, outputMatrix)))
     {
-        Debug::Log("SetOutputMatrix失敗."); return false;
+        Debug::Log("SetOutputMatrix失敗.");
     }
-    return true;
 }
 
 //-----------------------------------------------------------------------------
 // ソースボイスにフィルターを設定
 //-----------------------------------------------------------------------------
-bool Sound::SetFilter(XAUDIO2_FILTER_TYPE type, float frequencym, float oneOverQ)
+void Sound::SetFilter(XAUDIO2_FILTER_TYPE type, float frequencym, float oneOverQ)
 {
-    frequencym  = std::clamp(frequencym, 0.0f, XAUDIO2_MAX_FILTER_FREQUENCY);
-    oneOverQ    = std::clamp(oneOverQ, 0.1f, XAUDIO2_MAX_FILTER_ONEOVERQ);
+    if (m_pSourceVoice == nullptr) return;
+
+    frequencym = std::clamp(frequencym, 0.0f, XAUDIO2_MAX_FILTER_FREQUENCY);
+    oneOverQ = std::clamp(oneOverQ, 0.1f, XAUDIO2_MAX_FILTER_ONEOVERQ);
 
     XAUDIO2_FILTER_PARAMETERS FilterParams;
-    FilterParams.Type       = type;
-    FilterParams.Frequency  = frequencym;
-    FilterParams.OneOverQ   = oneOverQ;
+    FilterParams.Type = type;
+    FilterParams.Frequency = frequencym;
+    FilterParams.OneOverQ = oneOverQ;
 
     if (FAILED(m_pSourceVoice->SetFilterParameters(&FilterParams)))
     {
-        Debug::Log("SetFilterParameters失敗.useFilterフラグを確認してください."); return false;
+        Debug::Log("SetFilterParameters失敗.useFilterフラグを確認してください.");
     }
+}
+
+//-----------------------------------------------------------------------------
+// 音量を返す
+//-----------------------------------------------------------------------------
+float Sound::GetVolume()
+{
+    if (m_pSourceVoice == nullptr) return FLT_MIN;
+
+    float volume; m_pSourceVoice->GetVolume(&volume);
+    return volume;
+}
+
+//-----------------------------------------------------------------------------
+// 再生中かどうかを返す
+//-----------------------------------------------------------------------------
+bool Sound::IsPlaying()
+{
+    if (m_pSourceVoice == nullptr) return false;
+
+    XAUDIO2_VOICE_STATE pState;
+    m_pSourceVoice->GetState(&pState);
+
+    return (pState.BuffersQueued > 0);
+}
+
+//-----------------------------------------------------------------------------
+// フェード更新
+//-----------------------------------------------------------------------------
+void Sound::UpdateFade()
+{
+    if (m_pSourceVoice == nullptr) return;
+    if (!m_fade) return;
+
+    //タイマから経過時間を取得し設定する音量を計算
+    const float& progress_time = static_cast<float>(m_timer.GetElapsedSeconds());
+
+    SetVolume(m_startVolume + (m_fadeVolume * progress_time));
+
+    //フェード終了
+    if (progress_time >= m_targetTime)
+    {
+        SetVolume(m_targetVolume);
+        m_fade = false;
+    }
+}
+
+//-----------------------------------------------------------------------------
+// 読み込み
+//-----------------------------------------------------------------------------
+bool Sound::Load(const std::wstring& filepath, bool loop, bool useFilter)
+{
+    //サウンドデータクラス作成/音源情報読み込み
+    if (!m_soundData.Create(filepath, loop, useFilter))
+    {
+        Debug::Log("SoundData作成失敗."); return false;
+    }
+
+    //送信先になるの宛先ボイスを定義
+    XAUDIO2_SEND_DESCRIPTOR sendDescriptors[1];
+    //LPFダイレクトパス
+    sendDescriptors[0].Flags = XAUDIO2_SEND_USEFILTER;
+    sendDescriptors[0].pOutputVoice = m_audioDevice->m_pMasteringVoice;
+
+    const XAUDIO2_VOICE_SENDS sendList = { 1, sendDescriptors };
+
+    //ソースボイス作成
+    if (FAILED(m_audioDevice->m_pX2Audio->CreateSourceVoice(
+        &m_pSourceVoice, m_soundData.m_pWaveFormat,
+        useFilter ? XAUDIO2_VOICE_USEFILTER : 0, 2.0f, nullptr, &sendList, nullptr)))
+    {
+        Debug::Log("CreateSourceVoice失敗."); return false;
+    }
+
+    //オーディオバッファを追加
+    if (!SubmitBuffer(loop, 0))
+        return false;
+
+    Debug::Log(L"SourceVoice作成: " + Utility::GetFilenameFromFullpath(m_soundData.m_filepath));
     return true;
 }
 
@@ -274,7 +283,6 @@ bool Sound::SubmitBuffer(bool loop, UINT32 playBegin)
     {
         Debug::Log("SubmitSourceBuffer失敗."); return false;
     }
-
     return true;
 }
 
@@ -291,6 +299,11 @@ bool Sound::SubmitBuffer(bool loop, UINT32 playBegin)
 //-----------------------------------------------------------------------------
 bool SoundData::Create(const std::wstring& filepath, bool loop, bool useFilter)
 {
+    //ユーザーデータ取得
+    m_filepath = filepath;
+    m_loop = loop;
+    m_useFilter = useFilter;
+
     //ソースリーダー作成
     IMFSourceReader* pMFSourceReader = nullptr;
     if (FAILED(MFCreateSourceReaderFromURL(filepath.c_str(), nullptr, &pMFSourceReader)))

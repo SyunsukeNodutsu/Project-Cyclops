@@ -6,7 +6,7 @@
 #pragma once
 
 //3Dサウンドクラス
-class Sound3D : public Sound
+class Sound3D// : public Sound
 {
 public:
 

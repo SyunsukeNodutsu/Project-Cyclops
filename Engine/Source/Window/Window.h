@@ -54,10 +54,8 @@ private:
 
 private:
 
-	//ウィンドウクラスの登録
 	ATOM RegisterWindowClass();
-	//ウィンドウプロシージャ
+	bool CreateWindowInstance();
 	LRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
-	//ウィンドウプロシージャ(call back)
 	static LRESULT CALLBACK callWindowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
 };

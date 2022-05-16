@@ -80,7 +80,7 @@ void AudioDevice::Update(const Matrix& listener)
 
     //サウンドリスト更新
     for (const auto& sound : m_soundList)
-        sound->UpdateFade();
+        sound->Update();
 
     UpdateVolumeMeter();
 }
@@ -172,7 +172,10 @@ void AudioDevice::FadeOutSoundList(float fadeSec)
         const float& total = time_span.count() * 1000.0f;
 
         for (const auto& sound : m_soundList)
-            sound->UpdateFade();
+        {
+            if (!sound->IsPlaying()) continue;
+            sound->Update();
+        }
 
         if (total >= fadeSec * 1000.0f)
             break;

@@ -82,7 +82,7 @@ void Initialize()
 
 	graphicsDevice = new GraphicsDevice(device_param);
 	GraphicsDeviceChild::SetDevice(graphicsDevice);
-	//graphicsDevice->Initialize();
+	graphicsDevice->Initialize();
 
 	//ビデオデバイス作成
 	video_device = new VideoDevice();
@@ -94,16 +94,14 @@ void Initialize()
 	audio_device->SetMasterVolume(0.2f);
 
 	//サウンドテスト ※一連の動作をラップした方がいい コンポーネント化とか
-	sp_sound = std::make_shared<Sound>();
-	if (sp_sound)
-	{
-		sp_sound->Load(sound_path, true, true);
-		sp_sound->Play();
-		//sp_sound->SetPitch(2.0f);
-
-		//サウンドリストに追加
-		audio_device->AddSound(sp_sound);
-	}
+	std::thread([&] {
+		sp_sound = std::make_shared<Sound>(sound_path, true, true);
+		if (sp_sound)
+		{
+			sp_sound->Play();
+			audio_device->AddSound(sp_sound);
+		}}
+	).detach();
 }
 
 void Update()
@@ -125,9 +123,9 @@ void Update()
 
 void Draw()
 {
-	//graphicsDevice->Begin();
+	graphicsDevice->Begin();
 
-	//graphicsDevice->End();
+	graphicsDevice->End();
 }
 
 void LateUpdate()
@@ -138,7 +136,7 @@ void LateUpdate()
 void Finalize()
 {
 	audio_device->Finalize();
-	//graphicsDevice->Finalize();
+	graphicsDevice->Finalize();
 	window->Finalize();
 
 	delete audio_device;
