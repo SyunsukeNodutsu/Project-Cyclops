@@ -16,11 +16,13 @@ static GraphicsDevice* graphicsDevice = nullptr;
 static AudioDevice* audio_device = nullptr;
 static VideoDevice* video_device = nullptr;
 
+static GamePad* game_pad = nullptr;
+
 static constexpr int windowWidth = 1280;
 static constexpr int windowHeight = 720;
 
 std::shared_ptr<Sound> sp_sound = nullptr;
-std::wstring sound_path = L"Assets/キューピーMIX.wav";
+std::wstring sound_path = L"Assets/父母唄.mp3";
 
 void Initialize();
 void Update();
@@ -69,25 +71,25 @@ void Initialize()
 {
 	//ウィンドウ作成
 	WINDOE_CREATE_PARAM window_param;
-	window_param.TitleName = L"Project Cyclops";
-	window_param.ClassName = L"ClassName";
-	window_param.ClientWidth = windowWidth;
-	window_param.ClientHeight = windowHeight;
+	window_param.TitleName		= L"Project Cyclops";
+	window_param.ClassName		= L"ClassName";
+	window_param.ClientWidth	= windowWidth;
+	window_param.ClientHeight	= windowHeight;
 
 	window = new Window(window_param);
 	window->Initialize();
 
 	//グラフィックスデバイス作成
 	GRAPHICS_DEVICE_CREATE_PARAM device_param;
-	device_param.BufferCount = 2;
-	device_param.Width = windowWidth;
-	device_param.Height = windowHeight;
-	device_param.RefreshRate = 0;
-	device_param.Windowed = true;
-	device_param.UseHDR = false;
-	device_param.UseMSAA = true;
-	device_param.DebugMode = true;
-	device_param.Hwnd = window->GetHwnd();
+	device_param.BufferCount	= 2;
+	device_param.Width			= windowWidth;
+	device_param.Height			= windowHeight;
+	device_param.RefreshRate	= 0;
+	device_param.Windowed		= true;
+	device_param.UseHDR			= false;
+	device_param.UseMSAA		= true;
+	device_param.DebugMode		= true;
+	device_param.Hwnd			= window->GetHwnd();
 
 	graphicsDevice = new GraphicsDevice(device_param);
 	//デバイスの初期化でデバイスの参照が必要な子Object(Texture)を使用するため
@@ -104,6 +106,8 @@ void Initialize()
 	audio_device->Initialize();
 	audio_device->SetMasterVolume(0.2f);
 
+	game_pad = new GamePad();
+
 	//サウンドテスト ※一連の動作をラップした方がいい コンポーネント化とか
 	std::thread([&] {
 		sp_sound = std::make_shared<Sound>(sound_path, true, true);
@@ -117,17 +121,21 @@ void Initialize()
 
 void Update()
 {
+	game_pad->Update();
+
+	const Vector2& left = game_pad->Left();
+
 	auto now_volume = audio_device->GetMasterVolume();
 	if (Input::IsKeyDown(KeyCode::UpArrow)) { audio_device->SetMasterVolume(now_volume + 0.1f); Debug::Log("Volume: " + ToString(audio_device->GetMasterVolume())); }
 	if (Input::IsKeyDown(KeyCode::DownArrow)) { audio_device->SetMasterVolume(now_volume - 0.1f); Debug::Log("Volume: " + ToString(audio_device->GetMasterVolume())); }
 
-	if (Input::IsKeyDown(KeyCode::LeftArrow)) { sp_sound->SetFilter(XAUDIO2_FILTER_TYPE::LowPassFilter, 0.2f);		Debug::Log("フィルタ: LowPass"); }
-	if (Input::IsKeyDown(KeyCode::RightArrow)) { sp_sound->SetFilter(XAUDIO2_FILTER_TYPE::HighPassFilter, 0.3f);		Debug::Log("フィルタ: HighPass"); }
-	if (Input::IsKeyDown(KeyCode::Space)) { sp_sound->SetFilter(XAUDIO2_FILTER_TYPE::LowPassFilter, 1.0f, 1.0f);	Debug::Log("フィルタ: リセット"); }
+	if (Input::IsKeyDown(KeyCode::LeftArrow)) { sp_sound->SetFilter(XAUDIO2_FILTER_TYPE::LowPassFilter, 0.2f); Debug::Log("フィルタ: LowPass"); }
+	if (Input::IsKeyDown(KeyCode::RightArrow)) { sp_sound->SetFilter(XAUDIO2_FILTER_TYPE::HighPassFilter, 0.3f); Debug::Log("フィルタ: HighPass"); }
+	if (Input::IsKeyDown(KeyCode::Space)) { sp_sound->SetFilter(XAUDIO2_FILTER_TYPE::LowPassFilter, 1.0f, 1.0f); Debug::Log("フィルタ: リセット"); }
 
 	if (Input::IsKeyDown(KeyCode::Keyboard1)) { sp_sound->SetPan(-1.0f); Debug::Log("パン: 左"); }
-	if (Input::IsKeyDown(KeyCode::Keyboard2)) { sp_sound->SetPan(1.0f); Debug::Log("パン: 右"); }
-	if (Input::IsKeyDown(KeyCode::Keyboard3)) { sp_sound->SetPan(0.0f); Debug::Log("パン: 中央"); }
+	if (Input::IsKeyDown(KeyCode::Keyboard2)) { sp_sound->SetPan( 0.0f); Debug::Log("パン: 中央"); }
+	if (Input::IsKeyDown(KeyCode::Keyboard3)) { sp_sound->SetPan( 1.0f); Debug::Log("パン: 右"); }
 
 	audio_device->Update(Matrix());
 }
@@ -150,6 +158,7 @@ void Finalize()
 	graphicsDevice->Finalize();
 	window->Finalize();
 
+	delete game_pad;
 	delete audio_device;
 	delete video_device;
 	delete graphicsDevice;

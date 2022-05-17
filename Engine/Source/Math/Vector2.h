@@ -11,6 +11,7 @@ class Vector2 : public DirectX::XMFLOAT2
 public:
 
 	Vector2() { x = y = 0.0f; }
+	Vector2(float v) { x = y = v; }
 	Vector2(float _x, float _y) { x = _x; y = _y; }
 	Vector2(const DirectX::XMFLOAT2& v) { x = v.x; y = v.y; }
 	Vector2(const DirectX::XMVECTOR& v) { DirectX::XMStoreFloat2(this, v); }

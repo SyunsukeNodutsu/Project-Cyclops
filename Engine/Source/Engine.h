@@ -72,6 +72,7 @@
 
 //入力
 #include "Input/Input.h"
+#include "Input/GamePad/GamePad.h"
 
 //高レベル層
 #include "HighLevel/Behaviour/Behaviour.h"
