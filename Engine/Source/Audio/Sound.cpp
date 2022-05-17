@@ -146,18 +146,39 @@ void Sound::SetPan(float pan)
     UINT32 source_channels = VoiceDetails.InputChannels;
     UINT32 destination_channels = MasterVoiceDetails.InputChannels;
 
-    //Matrix作成
-    int num_element = source_channels * destination_channels;
+    //スピーカー構成に応じて行列の値を設定
+    float outputMatrix[8];
+    for (int i = 0; i < 8; i++) outputMatrix[i] = 0;
+    
+    DWORD dwChannelMask;
+    m_audioDevice->m_pMasteringVoice->GetChannelMask(&dwChannelMask);
 
-    float outputMatrix[4];
-    for (int i = 0; i < 4; i++)
-        outputMatrix[i] = 0;
-    outputMatrix[0] = outputMatrix[1] = left;
-    outputMatrix[2] = outputMatrix[3] = right;
+    /*
+    要調査: Microsoftのパンの記事のままだと環境によって音の出方が違う(ワロタ^ ^)
+    https://docs.microsoft.com/ja-jp/windows-hardware/drivers/ddi/ksmedia/ns-ksmedia-ksaudio_channel_config
+    #define SPEAKER_MONO             SPEAKER_FRONT_CENTER
+    #define SPEAKER_STEREO           (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT)
+    #define SPEAKER_2POINT1          (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_LOW_FREQUENCY)
+    #define SPEAKER_SURROUND         (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_FRONT_CENTER | SPEAKER_BACK_CENTER)
+    #define SPEAKER_QUAD             (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT)
+    #define SPEAKER_4POINT1          (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_LOW_FREQUENCY | SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT)
+    #define SPEAKER_5POINT1          (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_FRONT_CENTER | SPEAKER_LOW_FREQUENCY | SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT)
+    #define SPEAKER_7POINT1          (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_FRONT_CENTER | SPEAKER_LOW_FREQUENCY | SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT | SPEAKER_FRONT_LEFT_OF_CENTER | SPEAKER_FRONT_RIGHT_OF_CENTER)
+    #define SPEAKER_5POINT1_SURROUND (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_FRONT_CENTER | SPEAKER_LOW_FREQUENCY | SPEAKER_SIDE_LEFT  | SPEAKER_SIDE_RIGHT)
+    #define SPEAKER_7POINT1_SURROUND (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_FRONT_CENTER | SPEAKER_LOW_FREQUENCY | SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT | SPEAKER_SIDE_LEFT  | SPEAKER_SIDE_RIGHT)
+    */
 
-    Debug::Log("sourceChannels: " + ToString(source_channels));
-    Debug::Log("destinationChannels: " + ToString(destination_channels));
-    Debug::Log("num_element: " + ToString(num_element));
+    if (dwChannelMask == SPEAKER_MONO) Debug::Log("SPEAKER_MONO");
+    if (dwChannelMask == SPEAKER_STEREO) Debug::Log("SPEAKER_STEREO");
+    if (dwChannelMask == SPEAKER_2POINT1) Debug::Log("SPEAKER_2POINT1");
+    if (dwChannelMask == SPEAKER_SURROUND) Debug::Log("SPEAKER_SURROUND");
+    if (dwChannelMask == SPEAKER_QUAD) Debug::Log("SPEAKER_QUAD");
+    if (dwChannelMask == SPEAKER_4POINT1) Debug::Log("SPEAKER_4POINT1");
+    if (dwChannelMask == SPEAKER_5POINT1) Debug::Log("SPEAKER_5POINT1");
+    if (dwChannelMask == SPEAKER_7POINT1) Debug::Log("SPEAKER_7POINT1");
+    if (dwChannelMask == SPEAKER_5POINT1_SURROUND) Debug::Log("SPEAKER_5POINT1_SURROUND");
+    if (dwChannelMask == SPEAKER_7POINT1_SURROUND) Debug::Log("SPEAKER_7POINT1_SURROUND");
+    return;
 
     if (FAILED(m_pSourceVoice->SetOutputMatrix(m_audioDevice->m_pMasteringVoice, source_channels, destination_channels, outputMatrix)))
     {

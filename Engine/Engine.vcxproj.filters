@@ -49,6 +49,9 @@
     <Filter Include="Source\Input\Keyboard">
       <UniqueIdentifier>{6e729bb8-248b-42bb-a56a-235ac15dd68a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Input\Mouse">
+      <UniqueIdentifier>{a26cd4e3-dca7-4b96-9c23-6f5a15e90153}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Window\Window.cpp">
@@ -98,6 +101,9 @@
     </ClCompile>
     <ClCompile Include="Source\Input\Keyboard\Keyboard.cpp">
       <Filter>Source\Input\Keyboard</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Input\Mouse\Mouse.cpp">
+      <Filter>Source\Input\Mouse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="Source\Input\Keyboard\Keyboard.h">
       <Filter>Source\Input\Keyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Input\Mouse\Mouse.h">
+      <Filter>Source\Input\Mouse</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

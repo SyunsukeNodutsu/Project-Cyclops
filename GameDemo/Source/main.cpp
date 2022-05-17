@@ -22,7 +22,7 @@ static constexpr int windowWidth = 1280;
 static constexpr int windowHeight = 720;
 
 std::shared_ptr<Sound> sp_sound = nullptr;
-std::wstring sound_path = L"Assets/父母唄.mp3";
+std::wstring sound_path = L"Assets/エージェント夜を往く.mp3";
 
 void Initialize();
 void Update();
@@ -124,6 +124,7 @@ void Update()
 	game_pad->Update();
 
 	const Vector2& left = game_pad->Left();
+	//Debug::Log("left: " + ToStringV(left));
 
 	auto now_volume = audio_device->GetMasterVolume();
 	if (Input::IsKeyDown(KeyCode::UpArrow)) { audio_device->SetMasterVolume(now_volume + 0.1f); Debug::Log("Volume: " + ToString(audio_device->GetMasterVolume())); }

@@ -13,6 +13,13 @@ AudioDevice::AudioDevice()
 	, m_peakLevels()
 	, m_RMSLevels()
 	, m_prevVolume()
+
+    , m_timer()
+    , m_fadeVolume(0.0f)
+    , m_startVolume(0.0f)
+    , m_targetVolume(0.0f)
+    , m_targetTime(0.0f)
+    , m_fade(false)
 {
 }
 
@@ -54,7 +61,13 @@ bool AudioDevice::Initialize()
 //-----------------------------------------------------------------------------
 void AudioDevice::Finalize()
 {
-    FadeOutSoundList(0.2f);
+    //最終フェードアウト ※TODO: Soudクラスとロジックは一緒なので共通化
+    SetAllFade(0.0f, 0.6f);
+    while (true)
+    {
+        UpdateFade();
+        if (!m_fade) break;
+    }
 
     for (const auto& sound : m_soundList)
         sound->Release();
@@ -86,6 +99,7 @@ void AudioDevice::Update(const Matrix& listener)
     for (const auto& sound : m_soundList)
         sound->Update();
 
+    UpdateFade();
     UpdateVolumeMeter();
 }
 
@@ -101,6 +115,28 @@ void AudioDevice::SetMasterVolume(float volume)
     volume = std::clamp(volume, -1.0f, 1.0f);
     m_pMasteringVoice->SetVolume(volume);
     m_prevVolume = volume;
+}
+
+//-----------------------------------------------------------------------------
+// マスター音量をフェードさせる
+//-----------------------------------------------------------------------------
+void AudioDevice::SetAllFade(float volume, float time)
+{
+    if (m_pX2Audio == nullptr) return;
+    if (m_pMasteringVoice == nullptr) return;
+
+    //許容値
+    time    = std::clamp(time, 0.0f, 5.0f);
+    volume  = std::clamp(volume, -1.0f, 1.0f);
+
+    m_fadeVolume    = (volume - GetMasterVolume()) / time;//時間ごとの変化量計算
+    m_startVolume   = GetMasterVolume();
+    m_targetTime    = time;
+    m_targetVolume  = volume;
+    m_fade          = true;
+
+    //タイマ計測開始
+    m_timer.Record();
 }
 
 //-----------------------------------------------------------------------------
@@ -164,29 +200,23 @@ void AudioDevice::UpdateVolumeMeter()
 }
 
 //-----------------------------------------------------------------------------
-// サウンドリストをフェードアウトさせる TODO: マスター音量でええやん...
+// フェード更新
 //-----------------------------------------------------------------------------
-void AudioDevice::FadeOutSoundList(float fadeSec)
+void AudioDevice::UpdateFade()
 {
-    for (const auto& sound : m_soundList)
-        sound->SetFade(0.0f, fadeSec);
+    if (m_pX2Audio == nullptr) return;
+    if (m_pMasteringVoice == nullptr) return;
+    if (!m_fade) return;
 
-    std::chrono::high_resolution_clock::time_point m_timeStamp;
-    m_timeStamp = std::chrono::high_resolution_clock::now();
+    //タイマから経過時間を取得し設定する音量を計算
+    const float& progress_time = static_cast<float>(m_timer.GetElapsedSeconds());
 
-    while (true)
+    SetMasterVolume(m_startVolume + (m_fadeVolume * progress_time));
+
+    //フェード終了
+    if (progress_time >= m_targetTime)
     {
-        const auto& now = std::chrono::high_resolution_clock::now();
-        const auto& time_span = std::chrono::duration_cast<std::chrono::duration<float>>(now - m_timeStamp);
-        const float& total = time_span.count() * 1000.0f;
-
-        for (const auto& sound : m_soundList)
-        {
-            if (!sound->IsPlaying()) continue;
-            sound->Update();
-        }
-
-        if (total >= fadeSec * 1000.0f)
-            break;
+        SetMasterVolume(m_targetVolume);
+        m_fade = false;
     }
 }
