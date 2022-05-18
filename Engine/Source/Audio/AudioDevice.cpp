@@ -118,6 +118,18 @@ void AudioDevice::SetMasterVolume(float volume)
 }
 
 //-----------------------------------------------------------------------------
+// マスター音量を返す
+//-----------------------------------------------------------------------------
+float AudioDevice::GetMasterVolume()
+{
+    if (m_pX2Audio == nullptr) return FLT_MIN;
+    if (m_pMasteringVoice == nullptr) return FLT_MIN;
+
+    float volume; m_pMasteringVoice->GetVolume(&volume);
+    return volume;
+}
+
+//-----------------------------------------------------------------------------
 // マスター音量をフェードさせる
 //-----------------------------------------------------------------------------
 void AudioDevice::SetAllFade(float volume, float time)
@@ -182,6 +194,9 @@ bool AudioDevice::CreateVolumeMeter()
 //-----------------------------------------------------------------------------
 void AudioDevice::UpdateVolumeMeter()
 {
+    if (m_pX2Audio == nullptr) return;
+    if (m_pMasteringVoice == nullptr) return;
+
     m_peakLevels.fill(0);
     m_RMSLevels.fill(0);
 

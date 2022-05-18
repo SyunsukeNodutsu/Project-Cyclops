@@ -99,6 +99,9 @@
     <ClCompile Include="Source\HighLevel\Component\Transform.cpp">
       <Filter>Source\HighLevel\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Physics\Collision.cpp">
+      <Filter>Source\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window\Window.h">
@@ -178,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="Source\HighLevel\Component\Transform.h">
       <Filter>Source\HighLevel\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Physics\Collision.h">
+      <Filter>Source\Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

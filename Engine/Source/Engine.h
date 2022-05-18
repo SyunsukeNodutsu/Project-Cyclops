@@ -70,6 +70,8 @@
 
 //モデル
 
+//物理
+#include "Physics/Collision.h"
 
 //入力
 #include "Input/Input.h"

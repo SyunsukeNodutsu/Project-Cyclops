@@ -24,7 +24,7 @@ public:
     const std::list<std::shared_ptr<Sound>>& GetSoundList() { return m_soundList; }
 
     void SetMasterVolume(float volume);
-    float GetMasterVolume() { float volume; m_pMasteringVoice->GetVolume(&volume); return volume; }
+    float GetMasterVolume();
 
     void SetAllFade(float volume, float time);
 

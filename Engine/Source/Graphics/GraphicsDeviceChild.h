@@ -18,6 +18,6 @@ public:
 
 protected:
 
-    static GraphicsDevice* g_graphicsDevice;
+    static GraphicsDevice* m_graphicsDevice;
 
 };

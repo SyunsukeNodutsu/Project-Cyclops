@@ -23,6 +23,12 @@ namespace
     static constexpr float PI = 3.141592654f;
     static constexpr float DegToRad(const float deg) { return deg * (PI / 180.0f); }
     static constexpr float RadToDeg(const float rad) { return rad * (180.0f / PI); }
+
+    template<class T>
+    void SafeRelease(T*& p) { if (p) { p->Release(); p = nullptr; } }
+
+    template<class T>
+    void SafeDelete(T*& p) { if (p) { delete p; p = nullptr; } }
 }
 
 //便利機能クラス
