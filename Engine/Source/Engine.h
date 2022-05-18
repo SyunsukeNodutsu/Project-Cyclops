@@ -17,6 +17,10 @@
 #include <x3daudio.h>
 #pragma comment(lib,"xaudio2.lib")
 
+//XInput
+#include <Xinput.h>
+#pragma comment(lib, "Xinput.lib")
+
 //Media Foundation
 #include <mfapi.h>
 #include <mfidl.h>
@@ -25,10 +29,6 @@
 #pragma comment(lib, "mfplat.lib")
 #pragma comment(lib, "Mfreadwrite.lib")
 #pragma comment(lib, "mfuuid.lib")
-
-//XInput
-#include <Xinput.h>
-#pragma comment(lib, "Xinput.lib")
 
 //DirectXMath
 #include <DirectXMath.h>

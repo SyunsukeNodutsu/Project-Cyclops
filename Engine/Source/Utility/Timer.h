@@ -37,7 +37,9 @@ private:
 
 };
 
-//FPS計測用タイマー ※TODO: 時間のスケーリングはここで管理するべきではないかも
+//FPS計測用タイマー
+//TODO: 時間のスケーリングはここで管理するべきではないかも
+//TODO: staticでいい
 class FpsTimer
 {
 public:

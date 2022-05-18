@@ -43,6 +43,9 @@
     <Filter Include="Source\HighLevel\Behaviour">
       <UniqueIdentifier>{8636235f-7613-46c3-ac14-ffe65fe151cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Graphics\Shader">
+      <UniqueIdentifier>{1298e19e-20de-4168-97c0-262693440c49}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Window\Window.cpp">
@@ -92,6 +95,9 @@
     </ClCompile>
     <ClCompile Include="Source\Utility\Timer.cpp">
       <Filter>Source\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\HighLevel\Component\Transform.cpp">
+      <Filter>Source\HighLevel\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="Source\Input\GamePad.h">
       <Filter>Source\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HighLevel\Component\Transform.h">
+      <Filter>Source\HighLevel\Component</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

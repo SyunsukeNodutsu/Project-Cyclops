@@ -28,6 +28,7 @@
     <ClCompile Include="Source\Graphics\GraphicsDevice.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsDeviceChild.cpp" />
     <ClCompile Include="Source\Graphics\Texture.cpp" />
+    <ClCompile Include="Source\HighLevel\Component\Transform.cpp" />
     <ClCompile Include="Source\Input\GamePad.cpp" />
     <ClCompile Include="Source\Input\Input.cpp" />
     <ClCompile Include="Source\Pch.cpp">
@@ -58,6 +59,7 @@
     <ClInclude Include="Source\Graphics\Texture.h" />
     <ClInclude Include="Source\HighLevel\Behaviour\Behaviour.h" />
     <ClInclude Include="Source\HighLevel\Component\Component.h" />
+    <ClInclude Include="Source\HighLevel\Component\Transform.h" />
     <ClInclude Include="Source\Input\GamePad.h" />
     <ClInclude Include="Source\Input\Input.h" />
     <ClInclude Include="Source\Math\Matrix.h" />

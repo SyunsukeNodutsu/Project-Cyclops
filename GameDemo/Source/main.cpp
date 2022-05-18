@@ -1,11 +1,7 @@
 ﻿//-----------------------------------------------------------------------------
 // File: main.cpp
 //
-// アプリケーション側の実装
-// 
-// メモ:
-//  SmpleMathでいい気がしてきた...
-//  面倒なのでモデルはライブラリ使用して実装しよう
+// アプリケーション側の実装デモ
 //-----------------------------------------------------------------------------
 #include "../../Engine/Source/Pch.h"
 #pragma comment(lib, "Engine.lib")
@@ -32,7 +28,6 @@ static AudioDevice* audio_device = nullptr;
 static VideoDevice* video_device = nullptr;
 
 static FpsTimer* fps_timer = nullptr;
-static GamePad* game_pad = nullptr;
 
 std::shared_ptr<Sound> sp_sound = nullptr;
 std::wstring sound_path = L"Assets/Sunshine.mp3";
@@ -62,6 +57,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		return -1;
 	}
 
+	//アプリケーション側の実装 --------------------------------------->
 	Initialize();
 
 	//メインループ
@@ -75,6 +71,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	}
 
 	Finalize();
+	//<--------------------------------アプリケーション側の実装ここまで
 
 	CoUninitialize();
 
@@ -125,7 +122,6 @@ void Initialize()
 	audio_device->Initialize();
 	audio_device->SetMasterVolume(0.0f);
 
-	game_pad = new GamePad();
 	fps_timer = new FpsTimer();
 
 	//サウンドテスト ※一連の動作をラップした方がいい コンポーネント化とか
@@ -144,7 +140,7 @@ void Initialize()
 //-----------------------------------------------------------------------------
 void Update()
 {
-	game_pad->Update();
+	GamePad::Update();
 	fps_timer->Tick();
 
 	auto now_volume = audio_device->GetMasterVolume();
@@ -163,9 +159,9 @@ void Update()
 //-----------------------------------------------------------------------------
 void Draw()
 {
-	graphicsDevice->Begin();
+	//graphicsDevice->Begin();
 
-	graphicsDevice->End();
+	//graphicsDevice->End();
 }
 
 //-----------------------------------------------------------------------------
@@ -186,7 +182,6 @@ void Finalize()
 	window->Finalize();
 
 	delete fps_timer;
-	delete game_pad;
 	delete audio_device;
 	delete video_device;
 	delete graphicsDevice;
