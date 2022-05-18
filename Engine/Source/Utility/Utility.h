@@ -13,6 +13,8 @@ static std::string ToStringV(const DirectX::XMFLOAT4& v) { return std::string("(
 static std::string ToStringV(const DirectX::XMFLOAT3& v) { return std::string("(" + std::to_string(v.x) + ", " + std::to_string(v.y) + ", " + std::to_string(v.z) + ")"); }
 static std::string ToStringV(const DirectX::XMFLOAT2& v) { return std::string("(" + std::to_string(v.x) + ", " + std::to_string(v.y) + ")"); }
 
+static std::string ToStringV(const DirectX::XMINT2& v) { return std::string("(" + std::to_string(v.x) + ", " + std::to_string(v.y) + ")"); }//TODO: Vector2Int -> Vector2の暗黙のキャスト
+
 //TODO: どうする
 using Microsoft::WRL::ComPtr;
 

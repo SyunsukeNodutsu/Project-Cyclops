@@ -2,10 +2,10 @@
 // File: Input.h
 //
 // 入力 対応予定の入力機器(Keyboard,Mouse,XInput,RowInput)
-// TOOD: keyboard,mouseは別ファイルに移動
 //-----------------------------------------------------------------------------
 #pragma once
 
+#pragma region enums
 //仮想キーコード
 enum class KeyCode : UINT
 {
@@ -86,6 +86,15 @@ enum class KeyCode : UINT
 	Numpad9 = 105
 };
 
+//仮想マウスボタン TOOD: 拡張ボタン対応
+enum class MouseButton
+{
+	Left = 0,
+	Middle,
+	Right,
+};
+#pragma endregion
+
 //入力クラス
 class Input
 {
@@ -94,26 +103,35 @@ public:
 	Input() = default;
 	~Input() = default;
 
-	//@brief 入力情報解析
-	static void ParseInputData(UINT message, WPARAM wparam, LPARAM lparam);
+	static void ParseInputData(UINT message, WPARAM wparam, LPARAM lparam);//入力情報解析
+	static void Refresh();//入力情報更新 ゲームループの最後に呼び出す
+	static void SetWindowHwnd(HWND hwnd) { m_hwnd = hwnd; }
 
-	//@brief 入力情報更新 ゲームループの最後に呼び出す
-	static void Refresh();
-
-	//入力判定
-
-	//@brief 押された瞬間かどうかを返す
 	static bool IsKeyDown(KeyCode keyCode) { return m_keyDownArray[(int)keyCode]; }
-
-	//@brief 押されているかどうかを返す
 	static bool IsKeyPressed(KeyCode keyCode) { return GetAsyncKeyState((int)keyCode); }
-
-	//@brief 離した瞬間かどうかを返す
 	static bool IsKeyUp(KeyCode keyCode) { return m_keyUpArray[(int)keyCode]; }
+
+	static bool IsMouseDown(MouseButton mbutton) { return m_mouseDownArray[(int)mbutton]; }
+	static bool IsMousePressed(MouseButton mbutton);
+	static bool IsMouseUp(MouseButton mbutton) { return m_mouseUpArray[(int)mbutton]; }
+
+	static Vector2Int GetMousePos() { return m_mousePos; }
+	static int GetMouseWheelDelta() { return m_mouseWheelDelta; }
+
+	static void SetMousePos(Vector2Int pos);
+	static void SetMouseHide(bool show);
 
 private:
 
+	static HWND m_hwnd;
+
+	static WPARAM m_mouseState;
+	static Vector2Int m_mousePos;
+	static int m_mouseWheelDelta;
+
 	static std::array<bool, 256> m_keyDownArray;
 	static std::array<bool, 256> m_keyUpArray;
+	static std::array<bool, 3> m_mouseDownArray;
+	static std::array<bool, 3> m_mouseUpArray;
 
 };

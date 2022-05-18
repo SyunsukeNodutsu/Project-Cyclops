@@ -9,6 +9,7 @@
 
 #include <SDKDDKVer.h> //ÅV‚ÌSDK‚ğ©“®“I‚É’è‹`‚·‚é
 #include <windows.h>
+#include <windowsx.h>
 #pragma comment(lib, "winmm.lib")
 
 //Windows Runtime Library(ComPtr)

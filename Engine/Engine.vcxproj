@@ -28,10 +28,8 @@
     <ClCompile Include="Source\Graphics\GraphicsDevice.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsDeviceChild.cpp" />
     <ClCompile Include="Source\Graphics\Texture.cpp" />
-    <ClCompile Include="Source\Input\GamePad\GamePad.cpp" />
+    <ClCompile Include="Source\Input\GamePad.cpp" />
     <ClCompile Include="Source\Input\Input.cpp" />
-    <ClCompile Include="Source\Input\Keyboard\Keyboard.cpp" />
-    <ClCompile Include="Source\Input\Mouse\Mouse.cpp" />
     <ClCompile Include="Source\Pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pch.h</PrecompiledHeaderFile>
@@ -59,13 +57,12 @@
     <ClInclude Include="Source\Graphics\Texture.h" />
     <ClInclude Include="Source\HighLevel\Behaviour\Behaviour.h" />
     <ClInclude Include="Source\HighLevel\Component\Component.h" />
-    <ClInclude Include="Source\Input\GamePad\GamePad.h" />
+    <ClInclude Include="Source\Input\GamePad.h" />
     <ClInclude Include="Source\Input\Input.h" />
-    <ClInclude Include="Source\Input\Keyboard\Keyboard.h" />
-    <ClInclude Include="Source\Input\Mouse\Mouse.h" />
     <ClInclude Include="Source\Math\Matrix.h" />
     <ClInclude Include="Source\Math\Quaternion.h" />
     <ClInclude Include="Source\Math\Vector2.h" />
+    <ClInclude Include="Source\Math\Vector2Int.h" />
     <ClInclude Include="Source\Math\Vector3.h" />
     <ClInclude Include="Source\Math\Vector4.h" />
     <ClInclude Include="Source\Pch.h" />

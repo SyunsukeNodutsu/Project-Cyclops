@@ -12,7 +12,7 @@ AudioDevice::AudioDevice()
 	, m_soundList()
 	, m_peakLevels()
 	, m_RMSLevels()
-	, m_prevVolume()
+	, m_prevVolume(FLT_MIN)
 
     , m_timer()
     , m_fadeVolume(0.0f)
