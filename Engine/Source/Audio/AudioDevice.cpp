@@ -124,6 +124,7 @@ void AudioDevice::SetAllFade(float volume, float time)
 {
     if (m_pX2Audio == nullptr) return;
     if (m_pMasteringVoice == nullptr) return;
+    if (GetMasterVolume() == 0) return;//TOOD: あまりに小さい音量であれば必要ない
 
     //許容値
     time    = std::clamp(time, 0.0f, 5.0f);

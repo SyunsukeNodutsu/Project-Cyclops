@@ -112,13 +112,12 @@ public:
 	static bool IsKeyUp(KeyCode keyCode) { return m_keyUpArray[(int)keyCode]; }
 
 	static bool IsMouseDown(MouseButton mbutton) { return m_mouseDownArray[(int)mbutton]; }
-	static bool IsMousePressed(MouseButton mbutton);
 	static bool IsMouseUp(MouseButton mbutton) { return m_mouseUpArray[(int)mbutton]; }
 
 	static Vector2Int GetMousePos() { return m_mousePos; }
 	static int GetMouseWheelDelta() { return m_mouseWheelDelta; }
 
-	static void SetMousePos(Vector2Int pos);
+	static void SetMousePos(const Vector2Int& pos);
 	static void SetMouseHide(bool show);
 
 private:

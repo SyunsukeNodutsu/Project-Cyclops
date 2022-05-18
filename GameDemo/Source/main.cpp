@@ -10,26 +10,36 @@
 #include "../../Engine/Source/Pch.h"
 #pragma comment(lib, "Engine.lib")
 
-//アプリケーション必須デバイス
-static Window* window = nullptr;
-static GraphicsDevice* graphicsDevice = nullptr;
-static AudioDevice* audio_device = nullptr;
-static VideoDevice* video_device = nullptr;
-
-static GamePad* game_pad = nullptr;
-
-static constexpr int windowWidth = 1280;
-static constexpr int windowHeight = 720;
-
-std::shared_ptr<Sound> sp_sound = nullptr;
-std::wstring sound_path = L"Assets/Sunshine.mp3";
-
+//-----------------------------------------------------------------------------
+//前方宣言
+//-----------------------------------------------------------------------------
 void Initialize();
 void Update();
 void Draw();
 void LateUpdate();
 void Finalize();
 
+//-----------------------------------------------------------------------------
+// グローバル変数
+//-----------------------------------------------------------------------------
+static constexpr int windowWidth = 1280;
+static constexpr int windowHeight = 720;
+
+//アプリケーション必須デバイス
+static Window* window = nullptr;
+static GraphicsDevice* graphicsDevice = nullptr;
+static AudioDevice* audio_device = nullptr;
+static VideoDevice* video_device = nullptr;
+
+static FpsTimer* fps_timer = nullptr;
+static GamePad* game_pad = nullptr;
+
+std::shared_ptr<Sound> sp_sound = nullptr;
+std::wstring sound_path = L"Assets/Sunshine.mp3";
+
+//-----------------------------------------------------------------------------
+// メインエントリ
+//-----------------------------------------------------------------------------
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
 	//不使用な引数をコンパイラに伝えてWarningを抑制
@@ -46,14 +56,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	//COM初期化
 	Microsoft::WRL::Wrappers::RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
+	if (FAILED(initialize))
+	{
+		MessageBoxA(nullptr, "COM initialization failed.", "Failed", MB_OK);
+		return -1;
+	}
 
 	Initialize();
 
 	//メインループ
 	while (true)
 	{
-		if (!window->ProcessMessage())
-			break;
+		if (!window->ProcessMessage()) break;
 
 		Update();
 		Draw();
@@ -67,6 +81,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	return 0;
 }
 
+//-----------------------------------------------------------------------------
+// 初期化
+//-----------------------------------------------------------------------------
 void Initialize()
 {
 	//ウィンドウ作成
@@ -109,6 +126,7 @@ void Initialize()
 	audio_device->SetMasterVolume(0.0f);
 
 	game_pad = new GamePad();
+	fps_timer = new FpsTimer();
 
 	//サウンドテスト ※一連の動作をラップした方がいい コンポーネント化とか
 	std::thread([&] {
@@ -121,9 +139,13 @@ void Initialize()
 	).detach();
 }
 
+//-----------------------------------------------------------------------------
+// 更新
+//-----------------------------------------------------------------------------
 void Update()
 {
 	game_pad->Update();
+	fps_timer->Tick();
 
 	auto now_volume = audio_device->GetMasterVolume();
 	if (Input::IsKeyDown(KeyCode::UpArrow))		{ audio_device->SetMasterVolume(now_volume + 0.1f); Debug::Log("Volume: " + ToString(audio_device->GetMasterVolume())); }
@@ -133,27 +155,12 @@ void Update()
 	if (Input::IsKeyDown(KeyCode::RightArrow))	{ sp_sound->SetFilter(XAUDIO2_FILTER_TYPE::HighPassFilter, 0.3f); Debug::Log("フィルタ: HighPass"); }
 	if (Input::IsKeyDown(KeyCode::Space))		{ sp_sound->SetFilter(XAUDIO2_FILTER_TYPE::LowPassFilter, 1.0f, 1.0f); Debug::Log("フィルタ: リセット"); }
 
-	const Vector2& left = game_pad->Left();
-	//Debug::Log("left: " + ToStringV(left));
-
-	const auto& mpos = Input::GetMousePos();
-	const auto& mwheeldelta = Input::GetMouseWheelDelta();
-	//Debug::Log("Nouse pos: " + ToStringV(mpos));
-	//Debug::Log("mwheeldelta: " + ToString(mwheeldelta));
-
-	if (Input::IsMouseDown(MouseButton::Left)) Debug::Log("Left Down.");
-	if (Input::IsMouseDown(MouseButton::Middle)) Debug::Log("Middle Down.");
-	if (Input::IsMouseDown(MouseButton::Right)) Debug::Log("Right Down.");
-	if (Input::IsMouseUp(MouseButton::Left)) Debug::Log("Left Up.");
-	if (Input::IsMouseUp(MouseButton::Middle)) Debug::Log("Middle Up.");
-	if (Input::IsMouseUp(MouseButton::Right)) Debug::Log("Right Up.");
-	//if (Input::IsMousePressed(MouseButton::Left)) Debug::Log("Left Pressed.");
-	//if (Input::IsMousePressed(MouseButton::Middle)) Debug::Log("Middle Pressed.");
-	//if (Input::IsMousePressed(MouseButton::Right)) Debug::Log("Right Pressed.");
-
 	audio_device->Update(Matrix());
 }
 
+//-----------------------------------------------------------------------------
+// 描画
+//-----------------------------------------------------------------------------
 void Draw()
 {
 	graphicsDevice->Begin();
@@ -161,17 +168,24 @@ void Draw()
 	graphicsDevice->End();
 }
 
+//-----------------------------------------------------------------------------
+// 描画後更新
+//-----------------------------------------------------------------------------
 void LateUpdate()
 {
 
 }
 
+//-----------------------------------------------------------------------------
+// 終了
+//-----------------------------------------------------------------------------
 void Finalize()
 {
 	audio_device->Finalize();
 	graphicsDevice->Finalize();
 	window->Finalize();
 
+	delete fps_timer;
 	delete game_pad;
 	delete audio_device;
 	delete video_device;

@@ -46,7 +46,7 @@ void Input::Refresh()
 //-----------------------------------------------------------------------------
 // マウス座標を設定する
 //-----------------------------------------------------------------------------
-void Input::SetMousePos(Vector2Int pos)
+void Input::SetMousePos(const Vector2Int& pos)
 {
 	//TODO: ClipCursor設定いるかも
 	while (SetCursorPos(pos.x, pos.y) != 0) {}

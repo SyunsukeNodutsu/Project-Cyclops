@@ -18,7 +18,7 @@ public:
 
 	Matrix& operator*= (const Matrix& m) { *this = DirectX::XMMatrixMultiply(*this, m); return *this; }
 
-	//作成
+	//作成(TODO: staticでもいい気が)
 
 	void CreateTranslation(float x, float y, float z) { *this = DirectX::XMMatrixTranslation(x, y, z); }
 	void CreateTranslation(const Vector3& v) { *this = DirectX::XMMatrixTranslation(v.x, v.y, v.z); }
@@ -29,7 +29,7 @@ public:
 	void CreateScalling(const Vector3& v) { *this = DirectX::XMMatrixScaling(v.x, v.y, v.z); }
 
 	void CreateRotationAxis(const Vector3& axis, float angle) { *this = DirectX::XMMatrixRotationAxis(axis, angle); }
-
+	void CreateFromYawPitchRoll(const float yaw, const float pitch, const float roll) { *this = DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll); }
 	void CreateFromQuaternion(const DirectX::XMVECTOR& q) { *this = DirectX::XMMatrixRotationQuaternion(q); }
 
 	Matrix& CreateProjectionPerspectiveFov(float fovAngleY, float aspectRatio, float nearZ, float farZ)
