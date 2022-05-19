@@ -57,7 +57,7 @@ public://TODO: アクセス制限
 	ComPtr<ID3D11DeviceContext> m_cpContext;		//即時コンテキスト
 
 	ComPtr<IDXGISwapChain>		m_cpGISwapChain;
-	ComPtr<IDXGIFactory1>		m_cpFactory;
+	ComPtr<IDXGIFactory>		m_cpFactory;
 
 	DXGI_SAMPLE_DESC			m_sampleDesc;
 

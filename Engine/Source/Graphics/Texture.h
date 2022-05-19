@@ -14,9 +14,7 @@ public:
 	Texture();
 	Texture(const std::string& filename) { Load(filename); }
 
-	~Texture() { Release(); }
-
-	void Release();
+	~Texture() = default;
 
 	bool Load(const std::string& filename, bool renderTarget = false, bool depthStencil = false, bool generateMipmap = true);
 
@@ -37,20 +35,20 @@ public:
 
 	ID3D11Texture2D* GetResource() const;
 
-	ID3D11ShaderResourceView* SRV() const { return m_srv; }
-	ID3D11ShaderResourceView* const* SRVAddress() const { return &m_srv; }
-	ID3D11RenderTargetView* RTV() const { return m_rtv; }
-	ID3D11RenderTargetView* const* RTVAddress() const { return &m_rtv; }
-	ID3D11DepthStencilView* DSV() const { return m_dsv; }
+
+	inline ID3D11RenderTargetView* RTV() const { return m_cpRTV.Get(); }
+	inline ID3D11RenderTargetView* const* RTVAddress() const { return m_cpRTV.GetAddressOf(); }
+	inline ID3D11ShaderResourceView* SRV() const { return m_cpSRV.Get(); }
+	inline ID3D11ShaderResourceView* const* SRVAddress() const { return m_cpSRV.GetAddressOf(); }
+	inline ID3D11DepthStencilView* DSV() const { return m_cpDSV.Get(); }
 
 private:
 
-	ID3D11ShaderResourceView* m_srv;
-	ID3D11RenderTargetView* m_rtv;
-	ID3D11DepthStencilView* m_dsv;
-	D3D11_TEXTURE2D_DESC m_desc;
-
-	std::string m_filepath;
+	ComPtr<ID3D11ShaderResourceView>	m_cpSRV;		//SRV
+	ComPtr<ID3D11RenderTargetView>		m_cpRTV;		//RTV
+	ComPtr<ID3D11DepthStencilView>		m_cpDSV;		//DSV 深度バッファ書き込み用
+	D3D11_TEXTURE2D_DESC				m_desc;			//テクスチャ情報
+	std::string							m_filepath;		//Load時のファイルパス
 
 private:
 

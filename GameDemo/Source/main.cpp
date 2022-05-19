@@ -103,7 +103,7 @@ void Initialize()
 	device_param.RefreshRate	= 0;
 	device_param.Windowed		= true;
 	device_param.UseHDR			= false;
-	device_param.UseMSAA		= true;
+	device_param.UseMSAA		= false;
 	device_param.DebugMode		= true;
 	device_param.Hwnd			= window->GetHwnd();
 

@@ -1,35 +1,15 @@
 ﻿#include "Texture.h"
 
-void SetTextureInfo(D3D11_TEXTURE2D_DESC& rDesc, int w, int h, DXGI_FORMAT format, UINT arrayCnt, UINT miscFlags)
-{
-	rDesc.Width = (UINT)w;
-	rDesc.Height = (UINT)h;
-	rDesc.Format = format;
-	rDesc.ArraySize = arrayCnt;
-	rDesc.MiscFlags = miscFlags;
-}
-
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
 Texture::Texture()
-	: m_srv(nullptr)
-	, m_rtv(nullptr)
-	, m_dsv(nullptr)
+	: m_cpSRV(nullptr)
+	, m_cpRTV(nullptr)
+	, m_cpDSV(nullptr)
 	, m_desc()
 	, m_filepath("")
 {
-}
-
-//-----------------------------------------------------------------------------
-// 解放
-//-----------------------------------------------------------------------------
-void Texture::Release()
-{
-	SafeRelease(m_srv);
-	SafeRelease(m_rtv);
-	SafeRelease(m_dsv);
-	m_filepath = "";
 }
 
 //-----------------------------------------------------------------------------
@@ -37,10 +17,10 @@ void Texture::Release()
 //-----------------------------------------------------------------------------
 ID3D11Texture2D* Texture::GetResource() const
 {
-	if (m_srv == nullptr) return nullptr;
+	if (m_cpSRV == nullptr) return nullptr;
 
 	ID3D11Resource* res;
-	m_srv->GetResource(&res);
+	m_cpSRV->GetResource(&res);
 
 	ID3D11Texture2D* texture;
 	if (FAILED(res->QueryInterface<ID3D11Texture2D>(&texture)))
@@ -67,12 +47,11 @@ bool Texture::Load(const std::string& filename, bool renderTarget, bool depthSte
 //-----------------------------------------------------------------------------
 bool Texture::Create(ID3D11Texture2D* pTexture2D)
 {
-	Release();
 	if (pTexture2D == nullptr) return false;
 
-	if (!CreateViewsFromTexture2D(pTexture2D, &m_srv, &m_rtv, &m_dsv))
+	if (!CreateViewsFromTexture2D(pTexture2D, m_cpSRV.GetAddressOf(), m_cpRTV.GetAddressOf(), m_cpDSV.GetAddressOf()))
 	{
-		Release(); Debug::Log("CreateViewsFromTexture2D失敗."); return false;
+		Debug::Log("CreateViewsFromTexture2D失敗."); return false;
 	}
 
 	pTexture2D->GetDesc(&m_desc);
@@ -86,20 +65,18 @@ bool Texture::Create(ID3D11Texture2D* pTexture2D)
 //-----------------------------------------------------------------------------
 bool Texture::Create(const D3D11_TEXTURE2D_DESC& desc, const D3D11_SUBRESOURCE_DATA* fillData)
 {
-	if (m_graphicsDevice == nullptr) return;
-	if (m_graphicsDevice->m_cpDevice == nullptr) return;
-
-	Release();
+	if (m_graphicsDevice == nullptr) return false;
+	if (m_graphicsDevice->m_cpDevice == nullptr) return false;
 
 	ID3D11Texture2D* resource;
 	if (FAILED(m_graphicsDevice->m_cpDevice->CreateTexture2D(&desc, fillData, &resource)))
 	{
-		Release(); Debug::Log("CreateTexture2D失敗."); return false;
+		Debug::Log("CreateTexture2D失敗."); return false;
 	}
 
-	if (CreateViewsFromTexture2D(resource, &m_srv, &m_rtv, &m_dsv) == false)
+	if (CreateViewsFromTexture2D(resource, m_cpSRV.GetAddressOf(), m_cpRTV.GetAddressOf(), m_cpDSV.GetAddressOf()) == false)
 	{
-		Release(); Debug::Log("CreateViewsFromTexture2D失敗."); return false;
+		Debug::Log("CreateViewsFromTexture2D失敗."); return false;
 	}
 
 	resource->GetDesc(&m_desc);
@@ -113,10 +90,14 @@ bool Texture::Create(const D3D11_TEXTURE2D_DESC& desc, const D3D11_SUBRESOURCE_D
 //-----------------------------------------------------------------------------
 bool Texture::Create(int w, int h, DXGI_FORMAT format, UINT arrayCnt, const D3D11_SUBRESOURCE_DATA* fillData)
 {
-	Release();
-
 	D3D11_TEXTURE2D_DESC desc;
-	//SetTextureInfo(desc, w, h, format, arrayCnt, 0);
+
+	desc.Width = (UINT)w;
+	desc.Height = (UINT)h;
+	desc.Format = format;
+	desc.ArraySize = arrayCnt;
+	desc.MiscFlags = 0;
+
 	desc.Usage				= D3D11_USAGE_DEFAULT;
 	desc.BindFlags			= D3D11_BIND_SHADER_RESOURCE;
 	desc.CPUAccessFlags		= 0;
@@ -132,10 +113,14 @@ bool Texture::Create(int w, int h, DXGI_FORMAT format, UINT arrayCnt, const D3D1
 //-----------------------------------------------------------------------------
 bool Texture::CreateRenderTarget(int w, int h, DXGI_FORMAT format, UINT arrayCnt, const D3D11_SUBRESOURCE_DATA* fillData, UINT miscFlags)
 {
-	Release();
-
 	D3D11_TEXTURE2D_DESC desc;
-	SetTextureInfo(desc, w, h, format, arrayCnt, 0);
+
+	desc.Width = (UINT)w;
+	desc.Height = (UINT)h;
+	desc.Format = format;
+	desc.ArraySize = arrayCnt;
+	desc.MiscFlags = miscFlags;
+
 	desc.Usage = D3D11_USAGE_DEFAULT;
 	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
 	desc.CPUAccessFlags = 0;
@@ -151,10 +136,14 @@ bool Texture::CreateRenderTarget(int w, int h, DXGI_FORMAT format, UINT arrayCnt
 //-----------------------------------------------------------------------------
 bool Texture::CreateDepthStencil(int w, int h, DXGI_FORMAT format, UINT arrayCnt, const D3D11_SUBRESOURCE_DATA* fillData, UINT miscFlags)
 {
-	Release();
-
 	D3D11_TEXTURE2D_DESC desc;
-	SetTextureInfo(desc, w, h, format, arrayCnt, 0);
+
+	desc.Width = (UINT)w;
+	desc.Height = (UINT)h;
+	desc.Format = format;
+	desc.ArraySize = arrayCnt;
+	desc.MiscFlags = miscFlags;
+
 	desc.Usage = D3D11_USAGE_DEFAULT;
 	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_DEPTH_STENCIL;
 	desc.CPUAccessFlags = 0;
@@ -172,9 +161,8 @@ void Texture::SetSRView(ID3D11ShaderResourceView* srv)
 {
 	if (srv == nullptr) return;
 
-	Release();
-	m_srv = srv;
-	m_srv->AddRef();//参照カウンタを増やしておく
+	m_cpSRV = srv;
+	m_cpSRV->AddRef();//参照カウンタを増やしておく
 	GetResource()->GetDesc(&m_desc);
 }
 
@@ -183,8 +171,8 @@ void Texture::SetSRView(ID3D11ShaderResourceView* srv)
 //-----------------------------------------------------------------------------
 bool Texture::CreateViewsFromTexture2D(ID3D11Texture2D* resource, ID3D11ShaderResourceView** ppSRV, ID3D11RenderTargetView** ppRTV, ID3D11DepthStencilView** ppDSV)
 {
-	if (m_graphicsDevice == nullptr) return;
-	if (m_graphicsDevice->m_cpDevice == nullptr) return;
+	if (m_graphicsDevice == nullptr) return false;
+	if (m_graphicsDevice->m_cpDevice == nullptr) return false;
 	if (resource == nullptr) return false;
 
 	//テクスチャ本体の情報取得

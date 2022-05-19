@@ -1,6 +1,6 @@
 ﻿#include "GraphicsDeviceChild.h"
 
-GraphicsDevice* GraphicsDeviceChild::g_graphicsDevice = nullptr;
+GraphicsDevice* GraphicsDeviceChild::m_graphicsDevice = nullptr;
 
 //-----------------------------------------------------------------------------
 // グラフィックスデバイスの設定
@@ -8,5 +8,5 @@ GraphicsDevice* GraphicsDeviceChild::g_graphicsDevice = nullptr;
 void GraphicsDeviceChild::SetDevice(GraphicsDevice* device)
 {
 	if (device == nullptr) return;
-	g_graphicsDevice = device;
+	m_graphicsDevice = device;
 }

@@ -5,11 +5,11 @@
 //--------------------------------------------------
 
 //Direct3D11
-#include <dxgi1_6.h>
 #include <d3d11_4.h>
+#include <dxgi1_6.h>
 #include <d3dcommon.h>
-#pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "dxgi.lib")
 
 //X2Audio X3DAudio
 #include <xaudio2.h>

@@ -37,7 +37,7 @@ GraphicsDevice::~GraphicsDevice()
 bool GraphicsDevice::Initialize()
 {
 	//DXGIファクトリー作成
-	if (FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), reinterpret_cast<void**>(m_cpFactory.GetAddressOf()))))
+	if (FAILED(CreateDXGIFactory(__uuidof(IDXGIFactory), reinterpret_cast<void**>(m_cpFactory.GetAddressOf()))))
 		return false;
 
 	if (!CreateDevice())
@@ -178,12 +178,12 @@ bool GraphicsDevice::CreateBackBuffer()
 
 	//バックバッファ(カラー)
 	m_spBackbuffer = std::make_shared<Texture>();
-	if (!m_spBackbuffer->Create(pBackBuffer.Get(), m_createParam.UseMSAA))
+	if (!m_spBackbuffer->Create(pBackBuffer.Get()))
 		return false;
 
 	//バックバッファ(Z)
 	m_spDefaultZbuffer = std::make_shared<Texture>();
-	if (!m_spDefaultZbuffer->CreateDepthStencil(m_createParam.Height, m_createParam.Width, m_createParam.UseMSAA))
+	if (!m_spDefaultZbuffer->CreateDepthStencil(m_createParam.Width, m_createParam.Height))
 		return false;
 
 	return true;
@@ -244,10 +244,12 @@ void GraphicsDevice::CheckMSAA()
 	//MSAA非対応の場合
 	if (m_sampleDesc.Count <= 1)
 	{
+		if (m_createParam.UseMSAA)
+			Debug::Log("MSAA非対応 MSAAをOFFにします.");
+
 		//MSAAをOFFに
 		m_sampleDesc.Quality = 0;
 		m_createParam.UseMSAA = false;
-		Debug::Log("MSAA非対応 MSAAをOFFにします.");
 	}
 
 	Debug::Log("m_sampleDesc.Count: " + std::to_string(m_sampleDesc.Count));
