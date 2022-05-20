@@ -16,6 +16,8 @@ public:
     //@note アプリケーション実行時に一回呼び出す
     static void SetDevice(GraphicsDevice* device);
 
+    static GraphicsDevice* GetDevice() { return m_graphicsDevice; }
+
 protected:
 
     static GraphicsDevice* m_graphicsDevice;

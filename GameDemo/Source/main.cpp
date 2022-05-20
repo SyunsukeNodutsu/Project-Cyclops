@@ -21,7 +21,7 @@ void Finalize();
 static constexpr int windowWidth = 1280;
 static constexpr int windowHeight = 720;
 
-//アプリケーション必須デバイス
+//サブシステム
 static Window* window = nullptr;
 static GraphicsDevice* graphicsDevice = nullptr;
 static AudioDevice* audio_device = nullptr;
@@ -83,6 +83,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 //-----------------------------------------------------------------------------
 void Initialize()
 {
+	//サブシステムを適切な順番で生成 -------------------------------->
 	//ウィンドウ作成
 	WINDOE_CREATE_PARAM window_param;
 	window_param.TitleName		= L"Project Cyclops";
@@ -123,8 +124,8 @@ void Initialize()
 	audio_device->SetMasterVolume(0.0f);
 
 	fps_timer = new FpsTimer();
+	//<-------------------------サブシステムを適切な順番で生成ここまで
 
-	//サウンドテスト ※一連の動作をラップした方がいい コンポーネント化とか
 	std::thread([&] {
 		sp_sound = std::make_shared<Sound>(sound_path, true, true);
 		if (sp_sound)
@@ -147,9 +148,11 @@ void Update()
 	if (Input::IsKeyDown(KeyCode::UpArrow))		{ audio_device->SetMasterVolume(now_volume + 0.1f); Debug::Log("Volume: " + ToString(audio_device->GetMasterVolume())); }
 	if (Input::IsKeyDown(KeyCode::DownArrow))	{ audio_device->SetMasterVolume(now_volume - 0.1f); Debug::Log("Volume: " + ToString(audio_device->GetMasterVolume())); }
 
-	if (Input::IsKeyDown(KeyCode::LeftArrow))	{ sp_sound->SetFilter(XAUDIO2_FILTER_TYPE::LowPassFilter, 0.2f); Debug::Log("フィルタ: LowPass"); }
-	if (Input::IsKeyDown(KeyCode::RightArrow))	{ sp_sound->SetFilter(XAUDIO2_FILTER_TYPE::HighPassFilter, 0.3f); Debug::Log("フィルタ: HighPass"); }
-	if (Input::IsKeyDown(KeyCode::Space))		{ sp_sound->SetFilter(XAUDIO2_FILTER_TYPE::LowPassFilter, 1.0f, 1.0f); Debug::Log("フィルタ: リセット"); }
+	if (Input::IsKeyDown(KeyCode::LeftArrow))	{ sp_sound->SetFilter(XAUDIO2_FILTER_TYPE::LowPassFilter, 0.2f);		Debug::Log("フィルタ: LowPass"); }
+	if (Input::IsKeyDown(KeyCode::RightArrow))	{ sp_sound->SetFilter(XAUDIO2_FILTER_TYPE::HighPassFilter, 0.3f);		Debug::Log("フィルタ: HighPass"); }
+	if (Input::IsKeyDown(KeyCode::Space))		{ sp_sound->SetFilter(XAUDIO2_FILTER_TYPE::LowPassFilter, 1.0f, 1.0f);	Debug::Log("フィルタ: リセット"); }
+
+	if (Input::IsKeyDown(KeyCode::R)) graphicsDevice->ToggleScreen(true);
 
 	audio_device->Update(Matrix());
 }
@@ -159,9 +162,9 @@ void Update()
 //-----------------------------------------------------------------------------
 void Draw()
 {
-	//graphicsDevice->Begin();
+	graphicsDevice->Begin();
 
-	//graphicsDevice->End();
+	graphicsDevice->End();
 }
 
 //-----------------------------------------------------------------------------
@@ -189,3 +192,16 @@ void Finalize()
 
 	Debug::Log("終了.");
 }
+
+/*//OGREの実装(イメージ)
+class SingltonBase
+{
+	static SingltonBase* gptr;
+
+	static SingltonBase* get()
+	{
+		if (gptr == nullptr) gptr = new SingltonBase();
+		return gptr;
+	}
+
+};*/

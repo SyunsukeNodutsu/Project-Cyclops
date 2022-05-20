@@ -29,8 +29,10 @@
     <ClCompile Include="Source\Graphics\GraphicsDeviceChild.cpp" />
     <ClCompile Include="Source\Graphics\Texture.cpp" />
     <ClCompile Include="Source\HighLevel\Component\Transform.cpp" />
+    <ClCompile Include="Source\HighLevel\CyclopsRoot.cpp" />
     <ClCompile Include="Source\Input\GamePad.cpp" />
     <ClCompile Include="Source\Input\Input.cpp" />
+    <ClCompile Include="Source\Math\Vector3.cpp" />
     <ClCompile Include="Source\Pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pch.h</PrecompiledHeaderFile>
@@ -61,14 +63,18 @@
     <ClInclude Include="Source\HighLevel\Behaviour\Behaviour.h" />
     <ClInclude Include="Source\HighLevel\Component\Component.h" />
     <ClInclude Include="Source\HighLevel\Component\Transform.h" />
+    <ClInclude Include="Source\HighLevel\CyclopsRoot.h" />
     <ClInclude Include="Source\Input\GamePad.h" />
     <ClInclude Include="Source\Input\Input.h" />
+    <ClInclude Include="Source\Math\Color.h" />
     <ClInclude Include="Source\Math\Matrix.h" />
     <ClInclude Include="Source\Math\Quaternion.h" />
     <ClInclude Include="Source\Math\Vector2.h" />
     <ClInclude Include="Source\Math\Vector2Int.h" />
     <ClInclude Include="Source\Math\Vector3.h" />
+    <ClInclude Include="Source\Math\Vector3Int.h" />
     <ClInclude Include="Source\Math\Vector4.h" />
+    <ClInclude Include="Source\Math\Vector4Int.h" />
     <ClInclude Include="Source\Pch.h" />
     <ClInclude Include="Source\Physics\Collision.h" />
     <ClInclude Include="Source\Utility\Timer.h" />

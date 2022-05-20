@@ -1,32 +1,32 @@
-//-----------------------------------------------------------------------------
+ï»¿//-----------------------------------------------------------------------------
 // File: Timer.h
 //
-// Šeíƒ^ƒCƒ}[
-// TODO: FpsTimer‚ÍInput‚Æ“¯—lƒEƒBƒ“ƒhƒE‚Ìƒ‹[ƒv‚ÉˆË‘¶
+// å„ç¨®ã‚¿ã‚¤ãƒãƒ¼
+// TODO: FpsTimerã¯Inputã¨åŒæ§˜ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ãƒ«ãƒ¼ãƒ—ã«ä¾å­˜
 //-----------------------------------------------------------------------------
 #pragma once
 
-//”Ä—pŠÔŒv‘ªƒ^ƒCƒ}[
+//æ±ç”¨æ™‚é–“è¨ˆæ¸¬ã‚¿ã‚¤ãƒãƒ¼
 struct CommonTimer
 {
-	//@brief ƒRƒ“ƒXƒgƒ‰ƒNƒ^ ƒŒƒR[ƒh‚ÌŠJn
+	//@brief ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ ãƒ¬ã‚³ãƒ¼ãƒ‰ã®é–‹å§‹
 	CommonTimer() { Record(); }
 
-	//@brief Šî€‚Æ‚È‚éƒ^ƒCƒ€ƒXƒ^ƒ“ƒv‚Ì‹L˜^
+	//@brief åŸºæº–ã¨ãªã‚‹ã‚¿ã‚¤ãƒ ã‚¹ã‚¿ãƒ³ãƒ—ã®è¨˜éŒ²
 	inline void Record() {
 		m_timeStamp = std::chrono::high_resolution_clock::now();
 	}
 
-	//@brief ÅŒã‚ÉRecord()‚ªŒÄ‚Î‚ê‚Ä‚©‚ç‚ÌŒo‰ßŠÔ(•b)‚ğ•Ô‚·
-	//@return Œo‰ßŠÔ(•b)
+	//@brief æœ€å¾Œã«Record()ãŒå‘¼ã°ã‚Œã¦ã‹ã‚‰ã®çµŒéæ™‚é–“(ç§’)ã‚’è¿”ã™
+	//@return çµŒéæ™‚é–“(ç§’)
 	inline double GetElapsedSeconds() {
 		auto now = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(now - m_timeStamp);
 		return time_span.count();
 	}
 
-	//@brief ÅŒã‚ÉRecord()‚ªŒÄ‚Î‚ê‚Ä‚©‚ç‚ÌŒo‰ßŠÔ(ƒ~ƒŠ•b)‚ğ•Ô‚·
-	//@return Œo‰ßŠÔ(ƒ~ƒŠ•b)
+	//@brief æœ€å¾Œã«Record()ãŒå‘¼ã°ã‚Œã¦ã‹ã‚‰ã®çµŒéæ™‚é–“(ãƒŸãƒªç§’)ã‚’è¿”ã™
+	//@return çµŒéæ™‚é–“(ãƒŸãƒªç§’)
 	inline double GetElapsedMilliseconds() {
 		return GetElapsedSeconds() * 1000.0;
 	}
@@ -37,9 +37,9 @@ private:
 
 };
 
-//FPSŒv‘ª—pƒ^ƒCƒ}[
-//TODO: ŠÔ‚ÌƒXƒP[ƒŠƒ“ƒO‚Í‚±‚±‚ÅŠÇ—‚·‚é‚×‚«‚Å‚Í‚È‚¢‚©‚à
-//TODO: static‚Å‚¢‚¢
+//FPSè¨ˆæ¸¬ç”¨ã‚¿ã‚¤ãƒãƒ¼
+//TODO: æ™‚é–“ã®ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°ã¯ã“ã“ã§ç®¡ç†ã™ã‚‹ã¹ãã§ã¯ãªã„ã‹ã‚‚
+//TODO: staticã§ã„ã„
 class FpsTimer
 {
 public:
@@ -69,20 +69,20 @@ public:
 
 private:
 
-	LARGE_INTEGER	m_frequency;		//‚‰ğ‘œ“xƒ^ƒCƒ}‚Ìü”g”
-	LARGE_INTEGER	m_lastTime;			//‘O‰ñŒv‘ªŠÔ
+	LARGE_INTEGER	m_frequency;		//é«˜è§£åƒåº¦ã‚¿ã‚¤ãƒã®å‘¨æ³¢æ•°
+	LARGE_INTEGER	m_lastTime;			//å‰å›è¨ˆæ¸¬æ™‚é–“
 
-	std::uint64_t	m_maxDelta;			//‹–—e‚·‚éÅ‘å‚Ìƒfƒ‹ƒ^ƒ^ƒCƒ€
-	std::uint64_t	m_deltaTicks;		//‘OƒtƒŒ[ƒ€‚©‚ç‚Ìƒfƒ‹ƒ^ƒeƒBƒbƒN
-	std::uint64_t	m_totalTicks;		//‚±‚Ìƒ^ƒCƒ}‚Ì‘Œo‰ßƒeƒBƒbƒN
+	std::uint64_t	m_maxDelta;			//è¨±å®¹ã™ã‚‹æœ€å¤§ã®ãƒ‡ãƒ«ã‚¿ã‚¿ã‚¤ãƒ 
+	std::uint64_t	m_deltaTicks;		//å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰ã®ãƒ‡ãƒ«ã‚¿ãƒ†ã‚£ãƒƒã‚¯
+	std::uint64_t	m_totalTicks;		//ã“ã®ã‚¿ã‚¤ãƒã®ç·çµŒéãƒ†ã‚£ãƒƒã‚¯
 
-	std::uint32_t	m_totalFrameCount;	//‘ƒtƒŒ[ƒ€”
-	std::uint32_t	m_frameThisCount;	//Œ»İ‚Ì1•b‚ÌƒtƒŒ[ƒ€”‚ğ”‚¦‚é
+	std::uint32_t	m_totalFrameCount;	//ç·ãƒ•ãƒ¬ãƒ¼ãƒ æ•°
+	std::uint32_t	m_frameThisCount;	//ç¾åœ¨ã®1ç§’ã®ãƒ•ãƒ¬ãƒ¼ãƒ æ•°ã‚’æ•°ãˆã‚‹
 
-	std::uint32_t	m_fps;				//‘O‚Ì1•b‚ÌƒtƒŒ[ƒ€ƒŒ[ƒg
-	std::uint64_t	m_secondCounter;	//1•b‚ğŒv‘ª
+	std::uint32_t	m_fps;				//å‰ã®1ç§’ã®ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¬ãƒ¼ãƒˆ
+	std::uint64_t	m_secondCounter;	//1ç§’ã‚’è¨ˆæ¸¬
 
-	double			m_scaling;			//ŠÔ‚ÌŒo‰ß‚ğƒXƒP[ƒŠƒ“ƒO
+	double			m_scaling;			//æ™‚é–“ã®çµŒéã‚’ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°
 
 };
 

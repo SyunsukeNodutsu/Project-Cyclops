@@ -1,7 +1,7 @@
-#include "Timer.h"
+ï»¿#include "Timer.h"
 
 //-----------------------------------------------------------------------------
-// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 //-----------------------------------------------------------------------------
 FpsTimer::FpsTimer()
 	: m_frequency()
@@ -15,7 +15,7 @@ FpsTimer::FpsTimer()
 	, m_secondCounter(0)
 	, m_scaling(1.0f)
 {
-	//ü”g”•Û‘¶
+	//å‘¨æ³¢æ•°ä¿å­˜
 	QueryPerformanceFrequency(&m_frequency);
 	QueryPerformanceCounter(&m_lastTime);
 
@@ -23,48 +23,48 @@ FpsTimer::FpsTimer()
 }
 
 //-----------------------------------------------------------------------------
-// ‘OƒtƒŒ[ƒ€‚©‚ç‚Ìƒfƒ‹ƒ^ƒ^ƒCƒ€‚ğŒvZ
+// å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰ã®ãƒ‡ãƒ«ã‚¿ã‚¿ã‚¤ãƒ ã‚’è¨ˆç®—
 //-----------------------------------------------------------------------------
 void FpsTimer::Tick()
 {
 	LARGE_INTEGER currentTime;
 	QueryPerformanceCounter(&currentTime);
 
-	//‘O‰ñ‚ÌTick‚©‚ç‚ÌŒo‰ßŠÔ
+	//å‰å›ã®Tickã‹ã‚‰ã®çµŒéæ™‚é–“
 	std::uint64_t deltaTime = currentTime.QuadPart - m_lastTime.QuadPart;
 	m_lastTime = currentTime;
 	m_secondCounter += deltaTime;
 
-	//‰½‚ç‚©‚Ì——R‚Å‘O‰ñ‚©‚çŠÔ‚ª—§‚¿‚·‚¬‚Ä‚¢‚é‚Æ‚«‚Ím_maxDelta‚ğdelta_time‚É‚·‚é
-	//‚»‚Ì‚Ü‚Üg‚¤‚ÆŠÔ‚ª‘å‚«‚·‚¬‚ÄƒQ[ƒ€‚Ìˆ—‚ª”j’]‚·‚é‚Ì‚ğ–h‚®
+	//ä½•ã‚‰ã‹ã®ç†ç”±ã§å‰å›ã‹ã‚‰æ™‚é–“ãŒç«‹ã¡ã™ãã¦ã„ã‚‹ã¨ãã¯m_maxDeltaã‚’delta_timeã«ã™ã‚‹
+	//ãã®ã¾ã¾ä½¿ã†ã¨æ™‚é–“ãŒå¤§ãã™ãã¦ã‚²ãƒ¼ãƒ ã®å‡¦ç†ãŒç ´ç¶»ã™ã‚‹ã®ã‚’é˜²ã
 	if (deltaTime > m_maxDelta) {
 		deltaTime = m_maxDelta;
-		Debug::Log("‹–—e”ÍˆÍ‚ğ’´‚¦‚½.");
+		Debug::Log("å‡¦ç†è½ã¡ã—ã¾ã—ãŸ ã‚·ã‚¹ãƒ†ãƒ èµ·å‹•ã‹ã‚‰ã®çµŒéæ™‚é–“: " + ToString(TicksToSeconds(m_totalTicks)));
 	}
 
-	//ŠÔ‚Æ‚µ‚Äˆµ‚¦‚é‚æ‚¤‚ÉŒvZ
+	//æ™‚é–“ã¨ã—ã¦æ‰±ãˆã‚‹ã‚ˆã†ã«è¨ˆç®—
 	deltaTime = deltaTime * TicksPerSecond / m_frequency.QuadPart;
 
-	//‚»‚ê‚¼‚êXV
+	//ãã‚Œãã‚Œæ›´æ–°
 	m_deltaTicks = deltaTime;
 	m_totalTicks += deltaTime;
 	++m_totalFrameCount;
 	++m_frameThisCount;
 
-	//1•bŒo‰ß‚µ‚½‚çŒÄ‚Ño‚³‚ê‚½Tick()‚Ì”‚ğfps‚Æ‚·‚é ¦FPS‚Í1•bXV
+	//1ç§’çµŒéã—ãŸã‚‰å‘¼ã³å‡ºã•ã‚ŒãŸTick()ã®æ•°ã‚’fpsã¨ã™ã‚‹ â€»FPSã¯1ç§’æ›´æ–°
 	if (static_cast<std::uint64_t>(m_frequency.QuadPart) <= m_secondCounter)
 	{
 		m_fps = m_frameThisCount;
 		m_frameThisCount = 0;
 
-		//0‚É‚·‚é‚Æ’[”‚ÌŠÔ‚ª¸‚í‚ê‚Äƒ^ƒCƒ}‚ª™X‚É‹¶‚¤
-		//è—]‚Å’[”‚ÌŠÔ‚ğ•Û‘¶‚µ‚Ä‚¨‚­
+		//0ã«ã™ã‚‹ã¨ç«¯æ•°ã®æ™‚é–“ãŒå¤±ã‚ã‚Œã¦ã‚¿ã‚¤ãƒãŒå¾ã€…ã«ç‹‚ã†
+		//å‰°ä½™ã§ç«¯æ•°ã®æ™‚é–“ã‚’ä¿å­˜ã—ã¦ãŠã
 		m_secondCounter %= m_frequency.QuadPart;
 	}
 }
 
 //-----------------------------------------------------------------------------
-// Œo‰ßŠÔƒŠƒZƒbƒg
+// çµŒéæ™‚é–“ãƒªã‚»ãƒƒãƒˆ
 //-----------------------------------------------------------------------------
 void FpsTimer::ResetDeltaTime()
 {

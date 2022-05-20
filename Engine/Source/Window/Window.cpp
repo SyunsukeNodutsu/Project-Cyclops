@@ -57,7 +57,7 @@ bool Window::ProcessMessage()
 
 	//入力情報更新
 	//TODO: OnXXX()のようなイベント関数を取得し、InputDevice側で処理を行う
-	// そうすればstatic/pubkicにしなくて済む
+	// そうすればstatic/publicにしなくて済む
 	Input::Refresh();
 
 	MSG msg;
@@ -128,7 +128,7 @@ bool Window::CreateWindowInstance()
 {
 	HINSTANCE hInstance = GetModuleHandle(0);
 
-	DWORD style = WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME/* & ~WS_MAXIMIZEBOX*/;
+	DWORD style = WS_OVERLAPPEDWINDOW;// WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME/* & ~WS_MAXIMIZEBOX*/;
 
 	m_hWnd = CreateWindowW(
 		m_className.c_str(), m_titleName.c_str(),
@@ -161,6 +161,11 @@ LRESULT Window::WindowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam
 		EndPaint(hwnd, &ps);
 		break;
 	}
+
+	case WM_SIZE:
+		if (GraphicsDeviceChild::GetDevice())
+			GraphicsDeviceChild::GetDevice()->Resize(wparam, LOWORD(lparam), HIWORD(lparam));
+		break;
 
 	case WM_CLOSE:
 		Finalize();

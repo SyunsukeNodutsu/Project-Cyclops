@@ -46,6 +46,9 @@
     <Filter Include="Source\Graphics\Shader">
       <UniqueIdentifier>{1298e19e-20de-4168-97c0-262693440c49}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Physics\PhysX">
+      <UniqueIdentifier>{8eee3524-c3cf-4f16-a8c5-b2abe59208e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Window\Window.cpp">
@@ -101,6 +104,12 @@
     </ClCompile>
     <ClCompile Include="Source\Physics\Collision.cpp">
       <Filter>Source\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\HighLevel\CyclopsRoot.cpp">
+      <Filter>Source\HighLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Math\Vector3.cpp">
+      <Filter>Source\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +193,18 @@
     </ClInclude>
     <ClInclude Include="Source\Physics\Collision.h">
       <Filter>Source\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\Vector3Int.h">
+      <Filter>Source\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\Vector4Int.h">
+      <Filter>Source\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HighLevel\CyclopsRoot.h">
+      <Filter>Source\HighLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\Color.h">
+      <Filter>Source\Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

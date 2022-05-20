@@ -28,28 +28,19 @@ class GraphicsDevice
 {
 public:
 
-	//@brief コンストラクタ
-	//@param createParam 作成情報
 	GraphicsDevice(GRAPHICS_DEVICE_CREATE_PARAM createParam);
+	~GraphicsDevice() = default;
 
-	//@brief デストラクタ
-	~GraphicsDevice();
-
-	//@brief 初期化
 	bool Initialize();
-
-	//@brief 終了
 	bool Finalize();
 
-	//@brief 描画開始
-	void Begin();
-
-	// @brief 描画終了と画面更新
-	// @param syncInterval フレームの表示を垂直ブランクと同期する方法
-	// @param flags スワップチェーン表示オプション
+	void Begin(const Vector3 clearColor = Vector3(0.0f, 0.0f, 1.0f));
 	void End(UINT syncInterval = 0, UINT flags = 0);
 
-public://TODO: アクセス制限
+	void Resize(WPARAM wparam, UINT width, UINT height);
+	void ToggleScreen(bool fullscreen);
+
+public://TODO: アクセス制限 例)"ACCESS_ENGINE"みたいな
 
 	GRAPHICS_DEVICE_CREATE_PARAM m_createParam;
 
@@ -57,7 +48,8 @@ public://TODO: アクセス制限
 	ComPtr<ID3D11DeviceContext> m_cpContext;		//即時コンテキスト
 
 	ComPtr<IDXGISwapChain>		m_cpGISwapChain;
-	ComPtr<IDXGIFactory>		m_cpFactory;
+	ComPtr<IDXGIFactory1>		m_cpFactory;
+	ComPtr<IDXGIAdapter1>		m_cpAdapter;
 
 	DXGI_SAMPLE_DESC			m_sampleDesc;
 
@@ -73,22 +65,9 @@ private:
 	bool CreateDevice();
 	bool CreateSwapChain();
 	bool CreateBackBuffer();
+	bool CreateViewport();
 
-	IDXGIAdapter* CheckAdapter();
+	void CheckAdapter();
 	void CheckMSAA();
 
 };
-
-/*enum SHADERSTAGE
-{
-	MS,
-	AS,
-	VS,
-	HS,
-	DS,
-	GS,
-	PS,
-	CS,
-	LIB,
-	SHADERSTAGE_COUNT,
-};*/

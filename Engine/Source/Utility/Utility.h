@@ -29,6 +29,8 @@ namespace
 
     template<class T>
     void SafeDelete(T*& p) { if (p) { delete p; p = nullptr; } }
+
+    static constexpr double ByteToGB(double size) { return size / 1073741824; }
 }
 
 //便利機能クラス

@@ -9,26 +9,12 @@ GraphicsDevice::GraphicsDevice(GRAPHICS_DEVICE_CREATE_PARAM createParam)
 	, m_cpContext(nullptr)
 	, m_cpGISwapChain(nullptr)
 	, m_cpFactory(nullptr)
+	, m_cpAdapter(nullptr)
 	, m_sampleDesc()
 	, m_adapterName(L"")
+	, m_spBackbuffer(nullptr)
+	, m_spDefaultZbuffer(nullptr)
 {
-}
-
-//-----------------------------------------------------------------------------
-// デストラクタ
-//-----------------------------------------------------------------------------
-GraphicsDevice::~GraphicsDevice()
-{
-	//一般的にはデバイスのRelease前に配置するらしい
-#if _DEBUG && 0
-	ID3D11Debug* d3dDebug;
-	HRESULT hr = m_cpDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&d3dDebug));
-	if (SUCCEEDED(hr))
-	{
-		hr = d3dDebug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
-	}
-	if (d3dDebug != nullptr) d3dDebug->Release();
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -37,8 +23,10 @@ GraphicsDevice::~GraphicsDevice()
 bool GraphicsDevice::Initialize()
 {
 	//DXGIファクトリー作成
-	if (FAILED(CreateDXGIFactory(__uuidof(IDXGIFactory), reinterpret_cast<void**>(m_cpFactory.GetAddressOf()))))
-		return false;
+	if (FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), reinterpret_cast<void**>(m_cpFactory.GetAddressOf()))))
+	{
+		Debug::Log("DXGIファクトリー作成失敗."); return false;
+	}
 
 	if (!CreateDevice())
 	{
@@ -58,15 +46,11 @@ bool GraphicsDevice::Initialize()
 	//初期レンダーターゲット設定
 	m_cpContext->OMSetRenderTargets(1, m_spBackbuffer->RTVAddress(), m_spDefaultZbuffer->DSV());
 
-	//ビューポート変換行列の登録
-	m_viewport.TopLeftX = 0;
-	m_viewport.TopLeftY = 0;
-	m_viewport.Width	= static_cast<FLOAT>(m_createParam.Width);
-	m_viewport.Height	= static_cast<FLOAT>(m_createParam.Height);
-	m_viewport.MinDepth = D3D11_MIN_DEPTH;
-	m_viewport.MaxDepth = D3D11_MAX_DEPTH;
+	if (!CreateViewport())
+	{
+		Debug::Log("ビューポート変換行列の登録失敗."); return false;
+	}
 
-	m_cpContext->RSSetViewports(1, &m_viewport);
 	return true;
 }
 
@@ -76,6 +60,18 @@ bool GraphicsDevice::Initialize()
 bool GraphicsDevice::Finalize()
 {
 	m_spBackbuffer = m_spDefaultZbuffer = nullptr;
+
+	//一般的にはデバイスのRelease前に配置するらしい
+#if _DEBUG && 0
+	ID3D11Debug* d3dDebug;
+	HRESULT hr = m_cpDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&d3dDebug));
+	if (SUCCEEDED(hr))
+	{
+		hr = d3dDebug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+	}
+	if (d3dDebug != nullptr) d3dDebug->Release();
+#endif
+
 	return true;
 }
 
@@ -98,8 +94,11 @@ bool GraphicsDevice::CreateDevice()
 	if (m_createParam.DebugMode)
 		flags |= D3D11_CREATE_DEVICE_DEBUG;
 
+	//アダプタ確認/取得
+	CheckAdapter();
+
 	//デバイスとデバイスコンテキスト作成
-	if (FAILED(D3D11CreateDevice(CheckAdapter(), D3D_DRIVER_TYPE_UNKNOWN, nullptr, flags, featureLevels,
+	if (FAILED(D3D11CreateDevice(m_cpAdapter.Get(), D3D_DRIVER_TYPE_UNKNOWN, nullptr, flags, featureLevels,
 		_countof(featureLevels), D3D11_SDK_VERSION, &m_cpDevice, &featureLevel, &m_cpContext)))
 		return false;
 
@@ -109,9 +108,9 @@ bool GraphicsDevice::CreateDevice()
 //-----------------------------------------------------------------------------
 // 描画開始
 //-----------------------------------------------------------------------------
-void GraphicsDevice::Begin()
+void GraphicsDevice::Begin(const Vector3 clearColor)
 {
-	float clear[] = { 0.2f, 0.2f, 0.8f };
+	float clear[] = { clearColor.x, clearColor.y, clearColor.z };
 	m_cpContext->ClearRenderTargetView(m_spBackbuffer->RTV(), clear);
 	m_cpContext->ClearDepthStencilView(m_spDefaultZbuffer->DSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 
@@ -125,13 +124,65 @@ void GraphicsDevice::Begin()
 //-----------------------------------------------------------------------------
 void GraphicsDevice::End(UINT syncInterval, UINT flags)
 {
-	// TODO: 全画面だと垂直同期が切れる
+	//TODO: 全画面だと垂直同期が切れる
 	HRESULT hr = m_cpGISwapChain->Present(syncInterval, flags);
 
 	if (FAILED(hr))
 		assert(0 && "エラー：画面更新の失敗.");
 	if (hr == DXGI_ERROR_DEVICE_REMOVED)
 		assert(0 && "エラー：ビデオカードがシステムから物理的に取り外されたか アップデートが行われました");
+}
+
+//-----------------------------------------------------------------------------
+// 画面のリサイズ
+//-----------------------------------------------------------------------------
+void GraphicsDevice::Resize(WPARAM wparam, UINT width, UINT height)
+{
+	if (width == m_createParam.Width && height == m_createParam.Height) return;//サイズが変更されていない
+	if (m_cpGISwapChain == nullptr) return;
+
+	m_createParam.Width = width;
+	m_createParam.Height = height;
+
+	DXGI_SWAP_CHAIN_DESC swapChainDesc;
+	m_cpGISwapChain->GetDesc(&swapChainDesc);
+	if (!swapChainDesc.Windowed)
+		return;
+
+	m_spBackbuffer.reset(); m_spBackbuffer = nullptr;
+	m_spDefaultZbuffer.reset(); m_spDefaultZbuffer = nullptr;
+
+	if (FAILED(m_cpGISwapChain->ResizeBuffers(swapChainDesc.BufferCount, width, height, swapChainDesc.BufferDesc.Format, swapChainDesc.Flags)))
+	{
+		Debug::Log("ResizeBuffers失敗."); return; //throw std::runtime_error("バックバッファのサイズ変更に失敗");
+	}
+
+	if (!CreateBackBuffer())
+	{
+		Debug::Log("バックバッファー作成失敗."); return;
+	}
+
+	CreateViewport();
+}
+
+//-----------------------------------------------------------------------------
+// フルスクリーン切り替え
+//-----------------------------------------------------------------------------
+void GraphicsDevice::ToggleScreen(bool fullscreen)
+{
+	DXGI_SWAP_CHAIN_DESC desc; m_cpGISwapChain->GetDesc(&desc);
+
+	ComPtr<IDXGIOutput> pOutput;
+	if (m_cpAdapter->EnumOutputs(0, pOutput.GetAddressOf()) == DXGI_ERROR_NOT_FOUND)
+	{
+		Debug::Log("アダプターの出力先が見つかりません."); return;
+	}
+	if (FAILED(m_cpGISwapChain->SetFullscreenState(fullscreen, NULL)))
+	{
+		Debug::Log("SetFullscreenState失敗."); return;
+	}
+
+	Resize(WPARAM(), 1920, 1080);
 }
 
 //-----------------------------------------------------------------------------
@@ -142,7 +193,7 @@ bool GraphicsDevice::CreateSwapChain()
 	CheckMSAA();
 
 	// スワップチェーンの設定データ
-	DXGI_SWAP_CHAIN_DESC DXGISwapChainDesc = {};
+	DXGI_SWAP_CHAIN_DESC DXGISwapChainDesc;
 	DXGISwapChainDesc.BufferDesc.Width						= m_createParam.Width;
 	DXGISwapChainDesc.BufferDesc.Height						= m_createParam.Height;
 	DXGISwapChainDesc.BufferDesc.RefreshRate.Numerator		= 0;
@@ -160,7 +211,7 @@ bool GraphicsDevice::CreateSwapChain()
 	DXGISwapChainDesc.SwapEffect	= DXGISwapChainDesc.BufferCount >= 2 ? DXGI_SWAP_EFFECT_DISCARD : DXGI_SWAP_EFFECT_SEQUENTIAL;
 	DXGISwapChainDesc.Flags			= DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-	if (FAILED(m_cpFactory->CreateSwapChain(m_cpDevice.Get(), &DXGISwapChainDesc, m_cpGISwapChain.ReleaseAndGetAddressOf())))
+	if (FAILED(m_cpFactory->CreateSwapChain(m_cpDevice.Get(), &DXGISwapChainDesc, m_cpGISwapChain.GetAddressOf())))
 		return false;
 
 	return true;
@@ -190,36 +241,47 @@ bool GraphicsDevice::CreateBackBuffer()
 }
 
 //-----------------------------------------------------------------------------
+// ビューポート変換行列の登録
+//-----------------------------------------------------------------------------
+bool GraphicsDevice::CreateViewport()
+{
+	m_viewport.TopLeftX = 0;
+	m_viewport.TopLeftY = 0;
+	m_viewport.Width	= static_cast<FLOAT>(m_createParam.Width);
+	m_viewport.Height	= static_cast<FLOAT>(m_createParam.Height);
+	m_viewport.MinDepth = D3D11_MIN_DEPTH;
+	m_viewport.MaxDepth = D3D11_MAX_DEPTH;
+
+	m_cpContext->RSSetViewports(1, &m_viewport);
+	return true;
+}
+
+//-----------------------------------------------------------------------------
 // 環境に最適なアダプタを取得
 //-----------------------------------------------------------------------------
-IDXGIAdapter* GraphicsDevice::CheckAdapter()
+void GraphicsDevice::CheckAdapter()
 {
-	std::vector <IDXGIAdapter*> adapters;
+	//アダプタ列挙
+	std::vector <ComPtr<IDXGIAdapter1>> adapters;
+	for (int i = 0; m_cpFactory->EnumAdapters1(i, m_cpAdapter.ReleaseAndGetAddressOf()) != DXGI_ERROR_NOT_FOUND; ++i)
+		adapters.push_back(m_cpAdapter.Get());
 
-	IDXGIAdapter* adapter = nullptr;
-	for (int i = 0; m_cpFactory->EnumAdapters(i, &adapter) != DXGI_ERROR_NOT_FOUND; ++i)
-		adapters.push_back(adapter);
-
-	for (SIZE_T mem_size = 0; auto adpt : adapters)
+	for (SIZE_T mem_size = 0; const auto adpt : adapters)
 	{
-		DXGI_ADAPTER_DESC adesc;
-		adpt->GetDesc(&adesc);
+		DXGI_ADAPTER_DESC adesc; adpt->GetDesc(&adesc);
 
 		//ビデオメモリのサイズ比較
-		if (SIZE_T mem_size_tmp = adesc.DedicatedVideoMemory;
-			mem_size_tmp > mem_size)
+		if (SIZE_T mem_size_tmp = adesc.DedicatedVideoMemory; mem_size_tmp > mem_size)
 		{
-			adapter = adpt;
-			mem_size = mem_size_tmp;
-
 			m_adapterName = adesc.Description;
+			mem_size = mem_size_tmp;
+			adpt.CopyTo(m_cpAdapter.GetAddressOf());
 
-			Debug::Log(m_adapterName + L": " + std::to_wstring(static_cast<float>(mem_size) / 1073741824.0f));//byte to Gbyte
+			Debug::Log(m_adapterName + L": " + std::to_wstring(ByteToGB((double)mem_size)));
 		}
 	}
+	adapters.clear();
 	Debug::Log(L"使用アダプタ決定: " + m_adapterName);
-
-	return adapter;
 }
 
 //-----------------------------------------------------------------------------
