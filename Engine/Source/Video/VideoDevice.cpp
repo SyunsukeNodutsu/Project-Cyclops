@@ -147,6 +147,54 @@ void VideoDevice::Play()
 }
 
 //-----------------------------------------------------------------------------
+// 
+//-----------------------------------------------------------------------------
+HRESULT VideoDevice::ResizeVideo(WORD width, WORD height)
+{
+	if (m_pVideoDisplay)
+	{
+		// Set the destination rectangle.
+		// Leave the default source rectangle (0,0,1,1).
+
+		RECT rcDest = { 0, 0, width, height };
+
+		return m_pVideoDisplay->SetVideoPosition(NULL, &rcDest);
+	}
+	else
+	{
+		return S_OK;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// 
+//-----------------------------------------------------------------------------
+HRESULT VideoDevice::OnTopologyStatus(IMFMediaEvent* pEvent)
+{
+	UINT32 status;
+
+	HRESULT hr = pEvent->GetUINT32(MF_EVENT_TOPOLOGY_STATUS, &status);
+	if (SUCCEEDED(hr) && (status == MF_TOPOSTATUS_READY))
+	{
+		//SafeRelease(&m_pVideoDisplay);
+
+		// Get the IMFVideoDisplayControl interface from EVR. This call is
+		// expected to fail if the media file does not have a video stream.
+
+		(void)MFGetService(pSession, MR_VIDEO_RENDER_SERVICE, IID_PPV_ARGS(&m_pVideoDisplay));
+
+		{
+			PROPVARIANT varStart;
+			PropVariantInit(&varStart);
+
+			HRESULT hr = pSession->Start(&GUID_NULL, &varStart);
+			PropVariantClear(&varStart);
+		}
+	}
+	return hr;
+}
+
+//-----------------------------------------------------------------------------
 // Add a source node to a topology.
 //-----------------------------------------------------------------------------
 HRESULT VideoDevice::AddSourceNode(IMFTopology* pTopology, IMFMediaSource* pSource, IMFPresentationDescriptor* pPD, IMFStreamDescriptor* pSD, IMFTopologyNode** ppNode)

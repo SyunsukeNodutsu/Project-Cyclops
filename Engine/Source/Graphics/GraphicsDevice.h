@@ -20,6 +20,14 @@ typedef struct GRAPHICS_DEVICE_CREATE_PARAM
 	HWND Hwnd;
 }GRAPHICS_DEVICE_CREATE_PARAM;
 
+//シェーダーステージ
+enum class SHADER_STAGE
+{
+	VS,
+	PS,
+	CS,
+};
+
 class Texture;
 class Buffer;
 

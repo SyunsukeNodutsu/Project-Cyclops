@@ -13,7 +13,6 @@ public:
 
 	Texture();
 	Texture(const std::string& filepath) { Load(filepath); }
-
 	~Texture() = default;
 
 	bool Load(const std::string& filepath, bool renderTarget = false, bool depthStencil = false, bool mipmap = true);
@@ -27,9 +26,10 @@ public:
 
 	void SetSRView(ID3D11ShaderResourceView* srv);
 
-	float GetAspectRatio() const { return (float)m_desc.Width / m_desc.Height; }
 	UINT GetWidth() const { return m_desc.Width; }
 	UINT GetHeight() const { return m_desc.Height; }
+	float GetAspectRatio() const { return (float)m_desc.Width / m_desc.Height; }
+
 	const D3D11_TEXTURE2D_DESC& GetInfo() const { return m_desc; }
 	const std::string& GetFilepath() const { return m_filepath; }
 

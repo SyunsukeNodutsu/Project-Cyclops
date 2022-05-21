@@ -22,13 +22,15 @@
 #pragma comment(lib, "Xinput.lib")
 
 //Media Foundation
+#include <evr.h>
 #include <mfapi.h>
 #include <mfidl.h>
 #include <mfreadwrite.h>
-#pragma comment(lib, "Mf.lib")
+#pragma comment(lib, "mf.lib")
 #pragma comment(lib, "mfplat.lib")
-#pragma comment(lib, "Mfreadwrite.lib")
+#pragma comment(lib, "mfreadwrite.lib")
 #pragma comment(lib, "mfuuid.lib")
+#pragma comment(lib, "strmiids.lib")
 
 //DirectXMath
 #include <DirectXMath.h>
@@ -56,6 +58,7 @@
 #include "Graphics/GraphicsDevice.h"
 #include "Graphics/GraphicsDeviceChild.h"
 
+#include "Graphics/Buffer.h"
 #include "Graphics/Texture.h"
 
 //ビデオ

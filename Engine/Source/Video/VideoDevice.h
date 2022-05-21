@@ -20,6 +20,8 @@ public:
 
 	static void SetWindowHwnd(HWND hwnd) { m_hwnd = hwnd; }
 
+	HRESULT ResizeVideo(WORD width, WORD height);
+
 private:
 
 	static HWND m_hwnd;
@@ -42,8 +44,12 @@ private:
 	IMFMediaType* pOutputNodeMediaType = NULL;
 	IMFTopologyNode* pAudioSourceNode = NULL, * pVideoSourceNode = NULL;
 	IMFTopologyNode* pAudioSinkNode = NULL, * pVideoSinkNode = NULL;
+	IMFVideoDisplayControl* m_pVideoDisplay;
 
 private:
+
+	//
+	HRESULT OnTopologyStatus(IMFMediaEvent* pEvent);
 
 	//@brief Add a source node to a topology.
 	//@param pTopology Topology.

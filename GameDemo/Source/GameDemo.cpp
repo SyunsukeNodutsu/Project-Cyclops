@@ -81,12 +81,12 @@ void GameDemo::Initialize()
 	m_pVideoDevice->Play();
 
 	m_pAudioDevice->SetMasterVolume(0.2f);
-	return;
+	
 	std::thread([&] {
 		m_spSound = std::make_shared<Sound>(m_soundPath, true, true);
 		if (m_spSound)
 		{
-			m_spSound->Play();
+			//m_spSound->Play();
 			m_pAudioDevice->AddSound(m_spSound);
 		}}
 	).detach();
