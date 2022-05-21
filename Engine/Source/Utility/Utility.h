@@ -27,6 +27,9 @@ namespace
     template<class T>
     void SafeRelease(T*& p) { if (p) { p->Release(); p = nullptr; } }
 
+    template <class T>
+    void SafeRelease(T** pp) { if (*pp) { (*pp)->Release(); *pp = nullptr; } }
+
     template<class T>
     void SafeDelete(T*& p) { if (p) { delete p; p = nullptr; } }
 

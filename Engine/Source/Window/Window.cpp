@@ -151,14 +151,14 @@ LRESULT Window::WindowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam
 	{
 	case WM_PAINT:
 	{
-		PAINTSTRUCT ps;
-		HDC hdc = BeginPaint(hwnd, &ps);
-		static TCHAR szText[] = TEXT("表示テスト.");
-		TextOut(hdc, 0, 0, szText, lstrlen(szText));
-		SetTextColor(hdc, RGB(0, 255, 255));
-		//SetBkColor(hdc, RGB(255, 0, 0));
+		//PAINTSTRUCT ps;
+		//HDC hdc = BeginPaint(hwnd, &ps);
+		//static TCHAR szText[] = TEXT("表示テスト.");
+		//TextOut(hdc, 0, 0, szText, lstrlen(szText));
+		//SetTextColor(hdc, RGB(0, 255, 255));
+		////SetBkColor(hdc, RGB(255, 0, 0));
 
-		EndPaint(hwnd, &ps);
+		//EndPaint(hwnd, &ps);
 		break;
 	}
 

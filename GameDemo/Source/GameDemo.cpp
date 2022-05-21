@@ -34,6 +34,7 @@ void GameDemo::Initialize()
 	start = std::chrono::system_clock::now();
 
 	//サブシステムを適切な順番で生成 -------------------------------->
+	//いずれこの一連の初期化はエンジンが提供します
 	WINDOE_CREATE_PARAM window_param = {
 		.TitleName		= L"Project Cyclops",
 		.ClassName		= L"ClassName",
@@ -44,15 +45,15 @@ void GameDemo::Initialize()
 	m_pWindow->Initialize();
 	
 	GRAPHICS_DEVICE_CREATE_PARAM device_param = {
-		.BufferCount = 2,
-		.Width = m_windowWidth,
-		.Height = m_windowHeight,
-		.RefreshRate = 0,
-		.Windowed = true,
-		.UseHDR = false,
-		.UseMSAA = false,
-		.DebugMode = true,
-		.Hwnd = m_pWindow->GetHwnd(),
+		.BufferCount	= 2,
+		.Width			= m_windowWidth,
+		.Height			= m_windowHeight,
+		.RefreshRate	= 0,
+		.Windowed		= true,
+		.UseHDR			= false,
+		.UseMSAA		= false,
+		.DebugMode		= true,
+		.Hwnd			= m_pWindow->GetHwnd(),
 	};
 	m_pGraphicsDevice = new GraphicsDevice(device_param);
 
@@ -63,8 +64,10 @@ void GameDemo::Initialize()
 	GraphicsDeviceChild::SetDevice(m_pGraphicsDevice);
 	AudioDeviceChild::SetDevice(m_pAudioDevice);
 	Input::SetWindowHwnd(m_pWindow->GetHwnd());
+	VideoDevice::SetWindowHwnd(m_pWindow->GetHwnd());
 
 	m_pGraphicsDevice->Initialize();
+	m_pVideoDevice->Initialize();
 	m_pAudioDevice->Initialize();
 	//<-------------------------サブシステムを適切な順番で生成ここまで
 
@@ -75,8 +78,8 @@ void GameDemo::Initialize()
 	Debug::Log("サブシステムの初期化に要した時間(ミリ秒): " + ToString(msec));
 	//2022/05/21: 250～270ミリ秒
 
-	m_pAudioDevice->SetMasterVolume(0.6f);
-
+	m_pAudioDevice->SetMasterVolume(0.2f);
+	return;
 	std::thread([&] {
 		m_spSound = std::make_shared<Sound>(m_soundPath, true, true);
 		if (m_spSound)
@@ -94,17 +97,6 @@ void GameDemo::Update()
 {
 	GamePad::Update();
 	m_pFpsTimer->Tick();
-
-	auto now_volume = m_pAudioDevice->GetMasterVolume();
-	if (Input::IsKeyDown(KeyCode::UpArrow))		{ m_pAudioDevice->SetMasterVolume(now_volume + 0.1f); Debug::Log("Volume: " + ToString(m_pAudioDevice->GetMasterVolume())); }
-	if (Input::IsKeyDown(KeyCode::DownArrow))	{ m_pAudioDevice->SetMasterVolume(now_volume - 0.1f); Debug::Log("Volume: " + ToString(m_pAudioDevice->GetMasterVolume())); }
-
-	if (Input::IsKeyDown(KeyCode::LeftArrow))	{ m_spSound->SetFilter(XAUDIO2_FILTER_TYPE::LowPassFilter, 0.2f);		Debug::Log("フィルタ: LowPass"); }
-	if (Input::IsKeyDown(KeyCode::RightArrow))	{ m_spSound->SetFilter(XAUDIO2_FILTER_TYPE::HighPassFilter, 0.3f);		Debug::Log("フィルタ: HighPass"); }
-	if (Input::IsKeyDown(KeyCode::Space))		{ m_spSound->SetFilter(XAUDIO2_FILTER_TYPE::LowPassFilter, 1.0f, 1.0f);	Debug::Log("フィルタ: リセット"); }
-
-	if (Input::IsKeyDown(KeyCode::R)) m_pGraphicsDevice->ToggleScreen(true);
-
 	m_pAudioDevice->Update(Matrix());
 }
 
@@ -113,9 +105,9 @@ void GameDemo::Update()
 //-----------------------------------------------------------------------------
 void GameDemo::Draw()
 {
-	m_pGraphicsDevice->Begin();
+	//m_pGraphicsDevice->Begin();
 
-	m_pGraphicsDevice->End();
+	//m_pGraphicsDevice->End();
 }
 
 //-----------------------------------------------------------------------------
@@ -131,6 +123,7 @@ void GameDemo::LateUpdate()
 void GameDemo::Finalize()
 {
 	m_pAudioDevice->Finalize();
+	m_pVideoDevice->Finalize();
 	m_pGraphicsDevice->Finalize();
 	m_pWindow->Finalize();
 

@@ -11,8 +11,50 @@ class VideoDevice
 public:
 
 	VideoDevice();
-	~VideoDevice();
+	~VideoDevice()= default;
+
+	bool Initialize();
+	void Finalize();
+
+	static void SetWindowHwnd(HWND hwnd) { m_hwnd = hwnd; }
 
 private:
+
+	static HWND m_hwnd;
+	std::wstring m_filepath = L"../test_360p.mp4";
+
+	IMFSourceResolver* pSourceResolver = NULL;
+	IUnknown* uSource = NULL;
+	IMFTopology* pTopology = NULL;
+	IMFPresentationDescriptor* pSourcePD = NULL;
+	IMFStreamDescriptor* pSourceSD = NULL;
+	IMFMediaSource* pSource = NULL;
+	IMFMediaSession* pSession = NULL;
+	MF_OBJECT_TYPE ObjectType = MF_OBJECT_TYPE::MF_OBJECT_INVALID;
+	IMFMediaTypeHandler* pHandler = NULL;
+	IMFActivate* pAudioActivate = NULL, * pVideoActivate = NULL;
+	PROPVARIANT varStart;
+	DWORD sourceStreamCount = 0;
+	IMFStreamSink* pOutputSink = NULL;
+	IMFMediaType* pOutputNodeMediaType = NULL;
+	IMFTopologyNode* pAudioSourceNode = NULL, * pVideoSourceNode = NULL;
+	IMFTopologyNode* pAudioSinkNode = NULL, * pVideoSinkNode = NULL;
+
+private:
+
+	//@brief Add a source node to a topology.
+	//@param pTopology Topology.
+	//@param pSource Media source.
+	//@param pPD Presentation descriptor.
+	//@param pSD Stream descriptor.
+	//@param ppNode Receives the node pointer.
+	HRESULT AddSourceNode(IMFTopology* pTopology, IMFMediaSource* pSource, IMFPresentationDescriptor* pPD, IMFStreamDescriptor* pSD, IMFTopologyNode** ppNode);
+
+	//@brief Add an output node to a topology.
+	//@param pTopology Topology.
+	//@param pActivate Media sink activation object.
+	//@param dwId Identifier of the stream sink.
+	//@param ppNode Receives the node pointer.
+	HRESULT AddOutputNode(IMFTopology* pTopology, IMFActivate* pActivate, DWORD dwId, IMFTopologyNode** ppNode);
 
 };

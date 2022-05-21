@@ -167,16 +167,16 @@ bool AudioDevice::CreateVolumeMeter()
         Debug::Log("XAudio2CreateVolumeMeter失敗."); return false;
     }
 
-    XAUDIO2_VOICE_DETAILS details;
+    XAUDIO2_VOICE_DETAILS details{};
     m_pMasteringVoice->GetVoiceDetails(&details);
 
     //エフェクトチェイン作成
-    XAUDIO2_EFFECT_DESCRIPTOR descriptor;
+    XAUDIO2_EFFECT_DESCRIPTOR descriptor{};
     descriptor.InitialState     = true;
     descriptor.OutputChannels   = details.InputChannels;
     descriptor.pEffect          = pVolumeMeterAPO;
 
-    XAUDIO2_EFFECT_CHAIN chain;
+    XAUDIO2_EFFECT_CHAIN chain{};
     chain.EffectCount           = 1;
     chain.pEffectDescriptors    = &descriptor;
     if (FAILED(m_pMasteringVoice->SetEffectChain(&chain)))
@@ -200,10 +200,10 @@ void AudioDevice::UpdateVolumeMeter()
     m_peakLevels.fill(0);
     m_RMSLevels.fill(0);
 
-    XAUDIO2_VOICE_DETAILS details;
+    XAUDIO2_VOICE_DETAILS details{};
     m_pMasteringVoice->GetVoiceDetails(&details);
 
-    XAUDIO2FX_VOLUMEMETER_LEVELS Levels;
+    XAUDIO2FX_VOLUMEMETER_LEVELS Levels{};
     Levels.pPeakLevels  = &m_peakLevels[0];
     Levels.pRMSLevels   = &m_RMSLevels[0];
     Levels.ChannelCount = details.InputChannels;

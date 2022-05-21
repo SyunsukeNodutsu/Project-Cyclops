@@ -137,10 +137,10 @@ void Sound::SetPan(float pan)
     float right = 0.5f + pan / 2;
 
     //チャンネル取得
-    XAUDIO2_VOICE_DETAILS VoiceDetails;
+    XAUDIO2_VOICE_DETAILS VoiceDetails{};
     m_pSourceVoice->GetVoiceDetails(&VoiceDetails);
 
-    XAUDIO2_VOICE_DETAILS MasterVoiceDetails;
+    XAUDIO2_VOICE_DETAILS MasterVoiceDetails{};
     m_audioDevice->m_pMasteringVoice->GetVoiceDetails(&MasterVoiceDetails);
 
     UINT32 source_channels = VoiceDetails.InputChannels;
@@ -150,21 +150,9 @@ void Sound::SetPan(float pan)
     float outputMatrix[8];
     for (int i = 0; i < 8; i++) outputMatrix[i] = 0;
     
-    DWORD dwChannelMask;
+    DWORD dwChannelMask{};
     m_audioDevice->m_pMasteringVoice->GetChannelMask(&dwChannelMask);
 
-    //TOOD: 環境によってパンできない
-    if (dwChannelMask == SPEAKER_MONO) Debug::Log("SPEAKER_MONO");
-    if (dwChannelMask == SPEAKER_STEREO) Debug::Log("SPEAKER_STEREO");
-    if (dwChannelMask == SPEAKER_2POINT1) Debug::Log("SPEAKER_2POINT1");
-    if (dwChannelMask == SPEAKER_SURROUND) Debug::Log("SPEAKER_SURROUND");
-    if (dwChannelMask == SPEAKER_QUAD) Debug::Log("SPEAKER_QUAD");
-    if (dwChannelMask == SPEAKER_4POINT1) Debug::Log("SPEAKER_4POINT1");
-    if (dwChannelMask == SPEAKER_5POINT1) Debug::Log("SPEAKER_5POINT1");
-    if (dwChannelMask == SPEAKER_7POINT1) Debug::Log("SPEAKER_7POINT1");
-    if (dwChannelMask == SPEAKER_5POINT1_SURROUND) Debug::Log("SPEAKER_5POINT1_SURROUND");
-    if (dwChannelMask == SPEAKER_7POINT1_SURROUND) Debug::Log("SPEAKER_7POINT1_SURROUND");
-    
     outputMatrix[0] = outputMatrix[1] = left;
     outputMatrix[2] = outputMatrix[3] = right;
 

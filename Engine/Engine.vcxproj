@@ -25,6 +25,7 @@
     <ClCompile Include="Source\Audio\Sound3D.cpp" />
     <ClCompile Include="Source\Audio\Vender\WaveBankReader.cpp" />
     <ClCompile Include="Source\Audio\Vender\WAVFileReader.cpp" />
+    <ClCompile Include="Source\Graphics\Buffer.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsDevice.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsDeviceChild.cpp" />
     <ClCompile Include="Source\Graphics\Texture.cpp" />
@@ -57,6 +58,7 @@
     <ClInclude Include="Source\Audio\Vender\WaveBankReader.h" />
     <ClInclude Include="Source\Audio\Vender\WAVFileReader.h" />
     <ClInclude Include="Source\Engine.h" />
+    <ClInclude Include="Source\Graphics\Buffer.h" />
     <ClInclude Include="Source\Graphics\GraphicsDevice.h" />
     <ClInclude Include="Source\Graphics\GraphicsDeviceChild.h" />
     <ClInclude Include="Source\Graphics\Texture.h" />

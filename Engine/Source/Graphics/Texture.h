@@ -12,11 +12,11 @@ class Texture : public GraphicsDeviceChild
 public:
 
 	Texture();
-	Texture(const std::string& filename) { Load(filename); }
+	Texture(const std::string& filepath) { Load(filepath); }
 
 	~Texture() = default;
 
-	bool Load(const std::string& filename, bool renderTarget = false, bool depthStencil = false, bool generateMipmap = true);
+	bool Load(const std::string& filepath, bool renderTarget = false, bool depthStencil = false, bool mipmap = true);
 
 	bool Create(ID3D11Texture2D* pTexture2D);
 	bool Create(const D3D11_TEXTURE2D_DESC& desc, const D3D11_SUBRESOURCE_DATA* fillData = nullptr);
@@ -34,7 +34,6 @@ public:
 	const std::string& GetFilepath() const { return m_filepath; }
 
 	ID3D11Texture2D* GetResource() const;
-
 
 	inline ID3D11RenderTargetView* RTV() const { return m_cpRTV.Get(); }
 	inline ID3D11RenderTargetView* const* RTVAddress() const { return m_cpRTV.GetAddressOf(); }
