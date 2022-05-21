@@ -16,12 +16,15 @@ public:
 	bool Initialize();
 	void Finalize();
 
+	void Play();
+
 	static void SetWindowHwnd(HWND hwnd) { m_hwnd = hwnd; }
 
 private:
 
 	static HWND m_hwnd;
-	std::wstring m_filepath = L"../test_360p.mp4";
+	//std::wstring m_filepath = L"../test_360p.mp4";
+	std::wstring m_filepath = L"../test.mp4";
 
 	IMFSourceResolver* pSourceResolver = NULL;
 	IUnknown* uSource = NULL;

@@ -21,13 +21,14 @@ bool VideoDevice::Initialize()
 
 	hr = MFCreateSourceResolver(&pSourceResolver);
 	if (FAILED(hr)) { Debug::Log("Failed to create source resolved."); return false; }
-
+	
+	//ファイルパスからメディアソース作成
 	hr = pSourceResolver->CreateObjectFromURL(
 		m_filepath.c_str(),
-		MF_RESOLUTION_MEDIASOURCE,	//Create a source object.
-		nullptr,					//Optional property store.
-		&ObjectType,				//Receives the created object type. 
-		&uSource);					//Receives a pointer to the media source.
+		MF_RESOLUTION_MEDIASOURCE,	//ソースオブジェクトを作成します
+		nullptr,					//オプションのプロパティストアです
+		&ObjectType,				//作成されたオブジェクトタイプを受信する
+		&uSource);					//メディアソースへのポインタを受信する
 	if (FAILED(hr)) { Debug::Log("Failed to create media object from URL."); return false; }
 
 	hr = MFCreateMediaSession(NULL, &pSession);
@@ -49,7 +50,7 @@ bool VideoDevice::Initialize()
 
 	Debug::Log("Source stream count: " + ToString(sourceStreamCount));
 
-	//Iterate over the available source streams and create renderer's.
+	//利用可能なソースストリームを反復処理し レンダラーを作成する
 	for (DWORD i = 0; i < sourceStreamCount; i++)
 	{
 		BOOL fSelected = FALSE;
@@ -108,9 +109,6 @@ bool VideoDevice::Initialize()
 
 	PropVariantInit(&varStart);
 
-	hr = pSession->Start(&GUID_NULL, &varStart);
-	if (FAILED(hr)) { Debug::Log("Failed to start session."); return false; }
-
 	return true;
 }
 
@@ -137,6 +135,15 @@ void VideoDevice::Finalize()
 	SafeRelease(pOutputNodeMediaType);
 
 	MFShutdown();
+}
+
+//-----------------------------------------------------------------------------
+// 再生
+//-----------------------------------------------------------------------------
+void VideoDevice::Play()
+{
+	if (FAILED(pSession->Start(&GUID_NULL, &varStart)))
+		Debug::Log("Failed to start session.");
 }
 
 //-----------------------------------------------------------------------------

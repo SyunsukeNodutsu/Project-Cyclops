@@ -78,6 +78,8 @@ void GameDemo::Initialize()
 	Debug::Log("サブシステムの初期化に要した時間(ミリ秒): " + ToString(msec));
 	//2022/05/21: 250～270ミリ秒
 
+	m_pVideoDevice->Play();
+
 	m_pAudioDevice->SetMasterVolume(0.2f);
 	return;
 	std::thread([&] {
