@@ -28,28 +28,13 @@ bool GraphicsDevice::Initialize()
 		Debug::Log("DXGIファクトリー作成失敗."); return false;
 	}
 
-	if (!CreateDevice())
-	{
-		Debug::Log("デバイス/デバイスコンテキスト作成失敗."); return false;
-	}
-
-	if (!CreateSwapChain())
-	{
-		Debug::Log("スワップチェイン作成失敗."); return false;
-	}
-
-	if (!CreateBackBuffer())
-	{
-		Debug::Log("バックバッファー作成失敗."); return false;
-	}
+	if (!CreateDevice()) { Debug::Log("デバイス/デバイスコンテキスト作成失敗."); return false; }
+	if (!CreateSwapChain()) { Debug::Log("スワップチェイン作成失敗."); return false; }
+	if (!CreateBackBuffer()) { Debug::Log("バックバッファー作成失敗."); return false; }
+	if (!CreateViewport()) { Debug::Log("ビューポート変換行列の登録失敗."); return false; }
 
 	//初期レンダーターゲット設定
 	m_cpContext->OMSetRenderTargets(1, m_spBackbuffer->RTVAddress(), m_spDefaultZbuffer->DSV());
-
-	if (!CreateViewport())
-	{
-		Debug::Log("ビューポート変換行列の登録失敗."); return false;
-	}
 
 	return true;
 }
@@ -154,7 +139,7 @@ void GraphicsDevice::Resize(WPARAM wparam, UINT width, UINT height)
 
 	if (FAILED(m_cpGISwapChain->ResizeBuffers(swapChainDesc.BufferCount, width, height, swapChainDesc.BufferDesc.Format, swapChainDesc.Flags)))
 	{
-		Debug::Log("ResizeBuffers失敗."); return; //throw std::runtime_error("バックバッファのサイズ変更に失敗");
+		Debug::Log("ResizeBuffers失敗."); return;
 	}
 
 	if (!CreateBackBuffer())

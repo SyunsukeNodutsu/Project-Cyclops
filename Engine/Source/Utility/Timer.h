@@ -39,7 +39,6 @@ private:
 
 //FPS計測用タイマー
 //TODO: 時間のスケーリングはここで管理するべきではないかも
-//TODO: staticでいい
 class FpsTimer
 {
 public:
@@ -54,8 +53,8 @@ public:
 	double GetDeltaTime(bool modeRaw = false) const { return TicksToSeconds(m_deltaTicks) * (modeRaw ? 1 : m_scaling); }
 	double GetTotalTime() const { return TicksToSeconds(m_totalTicks); }
 
-	std::uint32_t GetFPS() const { return m_fps; }
-	std::uint32_t GetTotalFrameCount() const { return m_totalFrameCount; }
+	uint32_t GetFPS() const { return m_fps; }
+	uint32_t GetTotalFrameCount() const { return m_totalFrameCount; }
 
 	void SetTimeScale(double scale) { m_scaling = scale; }
 
@@ -63,25 +62,18 @@ public:
 	static double TicksToSeconds(const std::uint64_t ticks) { return static_cast<double>(ticks) / TicksPerSecond; }
 	static std::uint64_t SecondsToTicks(const double seconds) { return static_cast<std::uint64_t>(seconds * TicksPerSecond); }
 
-public:
-
-	static std::uint64_t DeltaTime;
-
 private:
 
 	LARGE_INTEGER	m_frequency;		//高解像度タイマの周波数
 	LARGE_INTEGER	m_lastTime;			//前回計測時間
 
-	std::uint64_t	m_maxDelta;			//許容する最大のデルタタイム
-	std::uint64_t	m_deltaTicks;		//前フレームからのデルタティック
-	std::uint64_t	m_totalTicks;		//このタイマの総経過ティック
-
-	std::uint32_t	m_totalFrameCount;	//総フレーム数
-	std::uint32_t	m_frameThisCount;	//現在の1秒のフレーム数を数える
-
-	std::uint32_t	m_fps;				//前の1秒のフレームレート
-	std::uint64_t	m_secondCounter;	//1秒を計測
-
+	uint64_t		m_maxDelta;			//許容する最大のデルタタイム
+	uint64_t		m_deltaTicks;		//前フレームからのデルタティック
+	uint64_t		m_totalTicks;		//このタイマの総経過ティック
+	uint32_t		m_totalFrameCount;	//総フレーム数
+	uint32_t		m_frameThisCount;	//現在の1秒のフレーム数を数える
+	uint32_t		m_fps;				//前の1秒のフレームレート
+	uint64_t		m_secondCounter;	//1秒を計測
 	double			m_scaling;			//時間の経過をスケーリング
 
 };

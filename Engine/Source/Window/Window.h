@@ -19,29 +19,14 @@ class Window
 {
 public:
 
-	//@brief コンストラクタ
-	//@param createParam 作成情報
 	Window(WINDOE_CREATE_PARAM createParam);
-
-	//@brief デストラクタ
 	~Window() = default;
 
-	//@brief 初期化
-	//@return 成功...true 失敗...false
 	bool Initialize();
-
-	//@brief 終了処理
 	void Finalize();
-
-	//@brief メッセージ処理
-	//@return false ... WM_QUITメッセージが来た
 	bool ProcessMessage();
+	bool MoveDesktopCenterWindow(HWND hwnd);
 
-	//@brief ウィンドウをデスクトップの中心に移動
-	//@return 成功...true 失敗...false
-	static bool MoveDesktopCenterWindow(HWND hwnd);
-
-	//@brief ウィンドウハンドルを返す
 	HWND GetHwnd() const { return m_hWnd; }
 
 private:

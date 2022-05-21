@@ -31,7 +31,7 @@ void FpsTimer::Tick()
 	QueryPerformanceCounter(&currentTime);
 
 	//前回のTickからの経過時間
-	std::uint64_t deltaTime = currentTime.QuadPart - m_lastTime.QuadPart;
+	uint64_t deltaTime = currentTime.QuadPart - m_lastTime.QuadPart;
 	m_lastTime = currentTime;
 	m_secondCounter += deltaTime;
 
@@ -52,7 +52,7 @@ void FpsTimer::Tick()
 	++m_frameThisCount;
 
 	//1秒経過したら呼び出されたTick()の数をfpsとする ※FPSは1秒更新
-	if (static_cast<std::uint64_t>(m_frequency.QuadPart) <= m_secondCounter)
+	if (static_cast<uint64_t>(m_frequency.QuadPart) <= m_secondCounter)
 	{
 		m_fps = m_frameThisCount;
 		m_frameThisCount = 0;
