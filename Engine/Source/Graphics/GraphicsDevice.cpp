@@ -67,10 +67,9 @@ bool GraphicsDevice::CreateDevice()
 {
 	D3D_FEATURE_LEVEL featureLevel;
 	D3D_FEATURE_LEVEL featureLevels[] = {
-		D3D_FEATURE_LEVEL_12_1,
-		D3D_FEATURE_LEVEL_12_0,
-		D3D_FEATURE_LEVEL_11_1,
 		D3D_FEATURE_LEVEL_11_0,
+		D3D_FEATURE_LEVEL_10_1,
+		D3D_FEATURE_LEVEL_10_0,
 	};
 
 	UINT flags = 0;

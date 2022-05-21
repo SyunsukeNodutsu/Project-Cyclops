@@ -75,7 +75,7 @@ void GameDemo::Initialize()
 	Debug::Log("サブシステムの初期化に要した時間(ミリ秒): " + ToString(msec));
 	//2022/05/21: 250～270ミリ秒
 
-	m_pAudioDevice->SetMasterVolume(0.0f);
+	m_pAudioDevice->SetMasterVolume(0.6f);
 
 	std::thread([&] {
 		m_spSound = std::make_shared<Sound>(m_soundPath, true, true);

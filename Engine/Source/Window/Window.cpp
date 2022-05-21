@@ -163,8 +163,11 @@ LRESULT Window::WindowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam
 	}
 
 	case WM_SIZE:
-		if (GraphicsDeviceChild::GetDevice())
-			GraphicsDeviceChild::GetDevice()->Resize(wparam, LOWORD(lparam), HIWORD(lparam));
+		if (wparam != SIZE_MINIMIZED)
+		{
+			if (GraphicsDeviceChild::GetDevice())
+				GraphicsDeviceChild::GetDevice()->Resize(wparam, LOWORD(lparam), HIWORD(lparam));
+		}
 		break;
 
 	case WM_CLOSE:
