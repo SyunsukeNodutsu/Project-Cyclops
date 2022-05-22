@@ -87,5 +87,7 @@
 #include "Input/GamePad.h"
 
 //高レベル層
-#include "HighLevel/Behaviour/Behaviour.h"
 #include "HighLevel/Component/Component.h"
+#include "HighLevel/Component/Transform.h"
+
+#include "HighLevel/Behaviour/Behaviour.h"

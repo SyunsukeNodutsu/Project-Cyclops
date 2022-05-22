@@ -30,7 +30,7 @@ public:
 	void Begin(bool linear = false, bool disableZBuffer = true);
 	void End();
 
-	void DrawTexture(const Texture* pTexture, Vector2 pos, Vector2 pivot = 0.5f);
+	void DrawTexture(const Texture* pTexture, Vector2 pos, Vector2 pivot = Vector2(0.5f));
 
 private:
 

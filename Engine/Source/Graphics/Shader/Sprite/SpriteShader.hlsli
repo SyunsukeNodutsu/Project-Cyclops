@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------
 
 //定数バッファ
-cbuffer cdObject : register(b0)
+cbuffer cdObject : register(b2)
 {
     float4 g_color;
 };

@@ -14,5 +14,5 @@ float4 main(VertexOutput In) : SV_TARGET
      float4 color = g_inputTexture.Sample(g_samplerState, In.m_uv);
     if (color.a <= 0.0f) discard;
 
-    return color * g_color;
+    return color/* * g_color*/;
 }
