@@ -35,7 +35,7 @@ public:
     IXAudio2MasteringVoice*     m_pMasteringVoice;
     IXAudio2SubmixVoice*        m_pSubmixVoice;
 
-private:
+//private:
 
     std::list<std::shared_ptr<Sound>>   m_soundList;    //サウンドリスト
     std::array<float, 8>                m_peakLevels;   //ピークメータ ※瞬間最大値

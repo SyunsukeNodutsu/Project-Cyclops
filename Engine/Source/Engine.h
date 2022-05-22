@@ -57,6 +57,7 @@
 #include "Utility/Timer.h"
 
 //プロファイリング
+#include "Profile/ImGuiProfile.h"
 #include "Profile/Profile.h"
 
 //ウィンドウ

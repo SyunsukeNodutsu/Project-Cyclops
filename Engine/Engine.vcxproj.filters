@@ -165,6 +165,9 @@
     <ClCompile Include="Source\Profile\Profile.cpp">
       <Filter>Source\Profile</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Profile\ImGuiProfile.cpp">
+      <Filter>Source\Profile</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window\Window.h">
@@ -302,10 +305,10 @@
     <ClInclude Include="..\imGui\imstb_textedit.h">
       <Filter>Library\imGui</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Utility\Profile.h">
+    <ClInclude Include="Source\Profile\Profile.h">
       <Filter>Source\Profile</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Profile\Profile.h">
+    <ClInclude Include="Source\Profile\ImGuiProfile.h">
       <Filter>Source\Profile</Filter>
     </ClInclude>
   </ItemGroup>

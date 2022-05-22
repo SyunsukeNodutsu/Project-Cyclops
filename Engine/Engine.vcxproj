@@ -55,6 +55,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="Source\Physics\Collision.cpp" />
+    <ClCompile Include="Source\Profile\ImGuiProfile.cpp" />
     <ClCompile Include="Source\Profile\Profile.cpp" />
     <ClCompile Include="Source\Subsystem.cpp" />
     <ClCompile Include="Source\Utility\Timer.cpp" />
@@ -103,9 +104,9 @@
     <ClInclude Include="Source\Math\Vector4Int.h" />
     <ClInclude Include="Source\Pch.h" />
     <ClInclude Include="Source\Physics\Collision.h" />
+    <ClInclude Include="Source\Profile\ImGuiProfile.h" />
     <ClInclude Include="Source\Profile\Profile.h" />
     <ClInclude Include="Source\Subsystem.h" />
-    <ClInclude Include="Source\Utility\Profile.h" />
     <ClInclude Include="Source\Utility\Timer.h" />
     <ClInclude Include="Source\Utility\Utility.h" />
     <ClInclude Include="Source\Video\VideoDevice.h" />

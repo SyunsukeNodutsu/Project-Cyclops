@@ -5,13 +5,14 @@ FpsTimer*		GameDemo::m_pFpsTimer		= nullptr;
 
 GraphicsDevice* GameDemo::m_pGraphicsDevice = nullptr;
 AudioDevice*	GameDemo::m_pAudioDevice	= nullptr;
+ImGuiProfile*	GameDemo::m_pImGuiProfile	= nullptr;
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
 GameDemo::GameDemo()
-	: m_windowWidth(1280)
-	, m_windowHeight(720)
+	: m_windowWidth(1600)
+	, m_windowHeight(900)
 	, m_spTexture(nullptr)
 	, m_profile()
 {
@@ -70,33 +71,22 @@ void GameDemo::Initialize()
 	};
 	m_pGraphicsDevice = new GraphicsDevice(device_param);
 	m_pAudioDevice = new AudioDevice();
+	m_pImGuiProfile = new ImGuiProfile();
 
 	GraphicsDeviceChild::SetDevice(m_pGraphicsDevice);
 	AudioDeviceChild::SetDevice(m_pAudioDevice);
 
 	m_pGraphicsDevice->Initialize();
 	m_pAudioDevice->Initialize();
+	m_pImGuiProfile->Initialize();
+
+	m_pImGuiProfile->SetWindow(m_pWindow);
+	m_pImGuiProfile->SetFpsTimer(m_pFpsTimer);
+	m_pImGuiProfile->SetGraphicsDevice(m_pGraphicsDevice);
+	m_pImGuiProfile->SetAudioDevice(m_pAudioDevice);
+
 	m_profile.End();
 	//<-------------------------サブシステムを適切な順番で生成ここまで
-
-	{
-		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
-
-		ImGui::StyleColorsClassic();
-
-		ImGui_ImplWin32_Init(m_pWindow->GetHwnd());
-		ImGui_ImplDX11_Init(m_pGraphicsDevice->m_cpDevice.Get(), m_pGraphicsDevice->m_cpContext.Get());
-
-		ImFontConfig config;
-		config.MergeMode = true;
-
-		ImGuiIO& io = ImGui::GetIO();
-		io.Fonts->AddFontDefault();
-		io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\msgothic.ttc", 13.0f, &config, glyphRangesJapanese);
-
-		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	}
 
 	m_pAudioDevice->SetMasterVolume(1.0f);
 	
@@ -107,8 +97,6 @@ void GameDemo::Initialize()
 		if (new_sound)
 		{
 			new_sound->Play();
-			new_sound->SetVolume(0.0f);
-			new_sound->SetFade(1.0f, 0.4f);
 			m_pAudioDevice->AddSound(new_sound);
 		}
 		m_profile.End();
@@ -144,8 +132,6 @@ void GameDemo::Update()
 			if (new_sound)
 			{
 				new_sound->Play();
-				new_sound->SetVolume(0.0f);
-				new_sound->SetFade(1.0f, 0.4f);
 				m_pAudioDevice->AddSound(new_sound);
 			}
 			m_profile.End();
@@ -171,26 +157,7 @@ void GameDemo::Draw()
 
 	m_pGraphicsDevice->m_spShaderManager->m_spriteShader.End();
 
-	{
-		ImGui_ImplDX11_NewFrame();
-		ImGui_ImplWin32_NewFrame();
-		ImGui::NewFrame();
-
-		//ここでImGui描画
-
-		if (!ImGui::Begin("Audio Monitor", nullptr, ImGuiWindowFlags_NoCollapse)) {
-			ImGui::End();
-			return;
-		}
-
-		ImGui::Text("XAudio2 version. (2.9)");
-
-		ImGui::End();
-
-
-		ImGui::Render();
-		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-	}
+	m_pImGuiProfile->DrawProfileMonitor();
 
 	m_pGraphicsDevice->End();
 }
@@ -208,20 +175,13 @@ void GameDemo::LateUpdate()
 //-----------------------------------------------------------------------------
 void GameDemo::Finalize()
 {
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.IniFilename = NULL;
-
-		ImGui_ImplDX11_Shutdown();
-		ImGui_ImplWin32_Shutdown();
-		ImGui::DestroyContext();
-	}
-
+	m_pImGuiProfile->Finalize();
 	m_pAudioDevice->Finalize();
 	m_pGraphicsDevice->Finalize();
 	m_pWindow->Finalize();
 
 	SafeDelete(m_pFpsTimer);
+	SafeDelete(m_pImGuiProfile);
 	SafeDelete(m_pAudioDevice);
 	SafeDelete(m_pGraphicsDevice);
 	SafeDelete(m_pWindow);

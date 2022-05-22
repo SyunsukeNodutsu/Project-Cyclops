@@ -26,6 +26,7 @@ private:
 
 	static GraphicsDevice*	m_pGraphicsDevice;
 	static AudioDevice*		m_pAudioDevice;
+	static ImGuiProfile*	m_pImGuiProfile;
 
 	int						m_windowWidth;
 	int						m_windowHeight;
