@@ -10,17 +10,7 @@ class Component
 {
 public:
 
-	//@brief コンストラクタ
-	//@param owner 所持者
-	Component(Behaviour& owner)
-		: m_owner(owner)
-	{
-	}
-
 protected:
-
-	//このコンポーネントの所持者
-	Behaviour& m_owner;
 
 };
 

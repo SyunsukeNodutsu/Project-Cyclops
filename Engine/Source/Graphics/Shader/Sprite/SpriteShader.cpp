@@ -29,8 +29,8 @@ bool SpriteShader::Initialize()
 
 		//頂点インプットレイアウト作成
 		std::vector<D3D11_INPUT_ELEMENT_DESC> layout = {
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,	0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,		0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,	0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,		0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 
 		if (FAILED(m_graphicsDevice->m_cpDevice.Get()->CreateInputLayout(&layout[0], (UINT)layout.size(), compiledBuffer, sizeof(compiledBuffer), m_cpInputLayout.GetAddressOf())))
@@ -76,6 +76,7 @@ void SpriteShader::Begin(bool linear, bool disableZBuffer)
 
 	m_graphicsDevice->m_spRendererStatus->m_cb5Camera.Work().m_projMatrix = DirectX::XMMatrixOrthographicLH(
 		m_graphicsDevice->m_viewport.Width, m_graphicsDevice->m_viewport.Height, 0, 1);
+	m_graphicsDevice->m_spRendererStatus->m_cb5Camera.Write();
 
 	//ステート設定
 	if (disableZBuffer) m_graphicsDevice->m_spRendererStatus->SetDepthStencil(false, false);

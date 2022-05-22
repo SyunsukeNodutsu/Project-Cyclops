@@ -53,6 +53,7 @@
 //ユーティリティ
 #include "Utility/Utility.h"
 #include "Utility/Timer.h"
+#include "Utility/Profile.h"
 
 //ウィンドウ
 #include "Window/Window.h"

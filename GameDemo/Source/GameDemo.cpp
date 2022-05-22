@@ -43,8 +43,8 @@ void GameDemo::Run()
 //-----------------------------------------------------------------------------
 void GameDemo::Initialize()
 {
-	std::chrono::system_clock::time_point start, end;
-	start = std::chrono::system_clock::now();
+	Profile profile;
+	profile.Start();
 
 	//ウィンドウ作成
 	WINDOE_CREATE_PARAM window_param = {
@@ -85,11 +85,7 @@ void GameDemo::Initialize()
 	m_pAudioDevice->Initialize();
 	//<-------------------------サブシステムを適切な順番で生成ここまで
 
-	end = std::chrono::system_clock::now();//計測終了時間
-	auto time = end - start;//処理に要した時間
-	
-	auto msec = std::chrono::duration_cast<std::chrono::milliseconds>(time).count();
-	Debug::Log("サブシステムの初期化に要した時間(ミリ秒): " + ToString(msec));
+	profile.End();
 	//2022/05/21: 250～270ミリ秒
 	//2022/05/22: 360～401ミリ秒
 
@@ -125,23 +121,18 @@ void GameDemo::Update()
 //-----------------------------------------------------------------------------
 void GameDemo::Draw()
 {
+	static float x = 0.0f, y = 0.0f;
+	float total_time = static_cast<float>(m_pFpsTimer->GetTotalTime());
+
 	m_pGraphicsDevice->Begin();
 
-	//3DModel
-	{
+	m_pGraphicsDevice->m_spShaderManager->m_spriteShader.Begin();
 
-	}
+	x = sinf(total_time) * 100.0f;
+	y = tanf(total_time) * 100.0f;
+	m_pGraphicsDevice->m_spShaderManager->m_spriteShader.DrawTexture(m_spTexture.get(), Vector2(x, y));
 
-	//Sprite
-	{
-		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.Begin();
-
-		
-
-		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.DrawTexture(m_spTexture.get(), Vector2(600, 0));
-
-		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.End();
-	}
+	m_pGraphicsDevice->m_spShaderManager->m_spriteShader.End();
 
 	m_pGraphicsDevice->End();
 }

@@ -87,6 +87,7 @@
     <ClInclude Include="Source\Pch.h" />
     <ClInclude Include="Source\Physics\Collision.h" />
     <ClInclude Include="Source\Subsystem.h" />
+    <ClInclude Include="Source\Utility\Profile.h" />
     <ClInclude Include="Source\Utility\Timer.h" />
     <ClInclude Include="Source\Utility\Utility.h" />
     <ClInclude Include="Source\Video\VideoDevice.h" />

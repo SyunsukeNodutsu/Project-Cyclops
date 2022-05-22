@@ -242,6 +242,9 @@
     <ClInclude Include="Source\Graphics\Shader\ShaderManager.h">
       <Filter>Source\Graphics\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Utility\Profile.h">
+      <Filter>Source\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Source\Graphics\Shader\Sprite\SpriteShader_VS.hlsl">
