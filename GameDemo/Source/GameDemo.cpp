@@ -15,6 +15,7 @@ GameDemo::GameDemo()
 	, m_windowHeight(720)
 	, m_spSound(nullptr)
 	, m_soundPath(L"Assets/キューピーMIX.wav")
+	, m_spTexture(nullptr)
 {
 }
 
@@ -90,6 +91,7 @@ void GameDemo::Initialize()
 	auto msec = std::chrono::duration_cast<std::chrono::milliseconds>(time).count();
 	Debug::Log("サブシステムの初期化に要した時間(ミリ秒): " + ToString(msec));
 	//2022/05/21: 250～270ミリ秒
+	//2022/05/22: 360～401ミリ秒
 
 	//m_pVideoDevice->Play();
 
@@ -103,6 +105,9 @@ void GameDemo::Initialize()
 			m_pAudioDevice->AddSound(m_spSound);
 		}}
 	).detach();
+
+	m_spTexture = std::make_shared<Texture>();
+	m_spTexture->Load(L"Assets/test.jpg");
 }
 
 //-----------------------------------------------------------------------------
@@ -120,9 +125,25 @@ void GameDemo::Update()
 //-----------------------------------------------------------------------------
 void GameDemo::Draw()
 {
-	//m_pGraphicsDevice->Begin();
+	m_pGraphicsDevice->Begin();
 
-	//m_pGraphicsDevice->End();
+	//3DModel
+	{
+
+	}
+
+	//Sprite
+	{
+		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.Begin();
+
+		
+
+		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.DrawTexture(m_spTexture.get(), Vector2(600, 0));
+
+		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.End();
+	}
+
+	m_pGraphicsDevice->End();
 }
 
 //-----------------------------------------------------------------------------

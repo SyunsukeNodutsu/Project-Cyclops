@@ -16,8 +16,6 @@ public:
 
 	bool Initialize();
 
-private:
-
 	SpriteShader m_spriteShader;
 
 };

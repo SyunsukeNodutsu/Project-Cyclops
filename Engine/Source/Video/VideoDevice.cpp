@@ -12,6 +12,9 @@ VideoDevice::VideoDevice()
 //-----------------------------------------------------------------------------
 bool VideoDevice::Initialize()
 {
+	MFStartup(MF_VERSION/*, MFSTARTUP_NOSOCKET*/);
+	return true;
+
 	HRESULT hr = S_FALSE;
 
 	hr = MFStartup(MF_VERSION/*, MFSTARTUP_NOSOCKET*/);
@@ -115,6 +118,8 @@ bool VideoDevice::Initialize()
 //-----------------------------------------------------------------------------
 void VideoDevice::Finalize()
 {
+	MFShutdown();
+
 	SafeRelease(pSourceResolver);
 	SafeRelease(uSource);
 	SafeRelease(pTopology);
@@ -131,8 +136,6 @@ void VideoDevice::Finalize()
 	SafeRelease(pVideoSinkNode);
 	SafeRelease(pOutputSink);
 	SafeRelease(pOutputNodeMediaType);
-
-	MFShutdown();
 }
 
 //-----------------------------------------------------------------------------

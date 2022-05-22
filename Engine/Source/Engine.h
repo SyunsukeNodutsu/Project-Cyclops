@@ -65,6 +65,8 @@
 #include "Graphics/Texture.h"
 #include "Graphics/RendererStatus.h"
 
+#include "Graphics/Shader/ShaderManager.h"
+
 //ビデオ
 #include "Video/VideoDevice.h"
 

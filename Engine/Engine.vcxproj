@@ -29,6 +29,7 @@
     <ClCompile Include="Source\Graphics\GraphicsDevice.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsDeviceChild.cpp" />
     <ClCompile Include="Source\Graphics\RendererStatus.cpp" />
+    <ClCompile Include="Source\Graphics\Shader\ShaderManager.cpp" />
     <ClCompile Include="Source\Graphics\Shader\Sprite\SpriteShader.cpp" />
     <ClCompile Include="Source\Graphics\Texture.cpp" />
     <ClCompile Include="Source\HighLevel\Component\Transform.cpp" />
@@ -65,6 +66,7 @@
     <ClInclude Include="Source\Graphics\GraphicsDevice.h" />
     <ClInclude Include="Source\Graphics\GraphicsDeviceChild.h" />
     <ClInclude Include="Source\Graphics\RendererStatus.h" />
+    <ClInclude Include="Source\Graphics\Shader\ShaderManager.h" />
     <ClInclude Include="Source\Graphics\Shader\Sprite\SpriteShader.h" />
     <ClInclude Include="Source\Graphics\Texture.h" />
     <ClInclude Include="Source\HighLevel\Behaviour\Behaviour.h" />
@@ -148,6 +150,11 @@
     <None Include="Source\Graphics\Shader\ConstantBuffer.hlsli" />
     <None Include="Source\Graphics\Shader\Sprite\SpriteShader.hlsli" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DirectXTex\DirectXTex_Desktop_2019_Win10.vcxproj">
+      <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -202,19 +209,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>./Source;$(IncludePath)</IncludePath>
+    <IncludePath>../DirectXTex;./Source;$(IncludePath)</IncludePath>
+    <LibraryPath>../DirectXTK/Bin/Desktop_2019_Win10/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>./Source;$(IncludePath)</IncludePath>
+    <IncludePath>../DirectXTex;./Source;$(IncludePath)</IncludePath>
+    <LibraryPath>../DirectXTK/Bin/Desktop_2019_Win10/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>./Source;$(IncludePath)</IncludePath>
+    <IncludePath>../DirectXTex;./Source;$(IncludePath)</IncludePath>
+    <LibraryPath>../DirectXTK/Bin/Desktop_2019_Win10/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>./Source;$(IncludePath)</IncludePath>
+    <IncludePath>../DirectXTex;./Source;$(IncludePath)</IncludePath>
+    <LibraryPath>../DirectXTK/Bin/Desktop_2019_Win10/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

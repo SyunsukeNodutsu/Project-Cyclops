@@ -12,10 +12,10 @@ class Texture : public GraphicsDeviceChild
 public:
 
 	Texture();
-	Texture(const std::string& filepath) { Load(filepath); }
+	Texture(const std::wstring& filepath) { Load(filepath); }
 	~Texture() = default;
 
-	bool Load(const std::string& filepath, bool renderTarget = false, bool depthStencil = false, bool mipmap = true);
+	bool Load(const std::wstring& filepath, bool renderTarget = false, bool depthStencil = false, bool mipmap = true);
 
 	bool Create(ID3D11Texture2D* pTexture2D);
 	bool Create(const D3D11_TEXTURE2D_DESC& desc, const D3D11_SUBRESOURCE_DATA* fillData = nullptr);
@@ -31,7 +31,7 @@ public:
 	float GetAspectRatio() const { return (float)m_desc.Width / m_desc.Height; }
 
 	const D3D11_TEXTURE2D_DESC& GetInfo() const { return m_desc; }
-	const std::string& GetFilepath() const { return m_filepath; }
+	const std::wstring& GetFilepath() const { return m_filepath; }
 
 	ID3D11Texture2D* GetResource() const;
 
@@ -47,7 +47,7 @@ private:
 	ComPtr<ID3D11RenderTargetView>		m_cpRTV;		//RTV
 	ComPtr<ID3D11DepthStencilView>		m_cpDSV;		//DSV 深度バッファ書き込み用
 	D3D11_TEXTURE2D_DESC				m_desc;			//テクスチャ情報
-	std::string							m_filepath;		//Load時のファイルパス
+	std::wstring						m_filepath;		//Load時のファイルパス
 
 private:
 

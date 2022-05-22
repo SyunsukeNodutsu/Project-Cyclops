@@ -52,6 +52,9 @@
     <Filter Include="Source\Graphics\Shader\Sprite">
       <UniqueIdentifier>{8c8345dd-73d1-42e5-b41f-e27c1dd80673}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Graphics\Vender">
+      <UniqueIdentifier>{d16260f1-49c5-457e-8b25-bccbcd8b5915}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Window\Window.cpp">
@@ -125,6 +128,9 @@
     </ClCompile>
     <ClCompile Include="Source\Graphics\RendererStatus.cpp">
       <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Shader\ShaderManager.cpp">
+      <Filter>Source\Graphics\Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +238,9 @@
     </ClInclude>
     <ClInclude Include="Source\Graphics\RendererStatus.h">
       <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Shader\ShaderManager.h">
+      <Filter>Source\Graphics\Shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

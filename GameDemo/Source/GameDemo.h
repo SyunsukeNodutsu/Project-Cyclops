@@ -33,6 +33,8 @@ private:
 	std::shared_ptr<Sound>	m_spSound;
 	std::wstring			m_soundPath;
 
+	std::shared_ptr<Texture>m_spTexture;
+
 private:
 
 	void Initialize();

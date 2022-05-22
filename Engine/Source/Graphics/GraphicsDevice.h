@@ -26,6 +26,7 @@ enum class SHADER_STAGE
 	CS,
 };
 
+class ShaderManager;
 class RendererStatus;
 class Texture;
 class Buffer;
@@ -53,6 +54,7 @@ public://TODO: アクセス制限 例)"ACCESS_ENGINE"みたいな
 
 	GRAPHICS_DEVICE_CREATE_PARAM	m_createParam;
 	std::shared_ptr<RendererStatus> m_spRendererStatus;
+	std::shared_ptr<ShaderManager> m_spShaderManager;
 
 	ComPtr<ID3D11Device>		m_cpDevice;
 	ComPtr<ID3D11DeviceContext> m_cpContext;		//即時コンテキスト

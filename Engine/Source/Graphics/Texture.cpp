@@ -8,7 +8,7 @@ Texture::Texture()
 	, m_cpRTV(nullptr)
 	, m_cpDSV(nullptr)
 	, m_desc()
-	, m_filepath("")
+	, m_filepath(L"")
 {
 }
 
@@ -37,11 +37,111 @@ ID3D11Texture2D* Texture::GetResource() const
 //-----------------------------------------------------------------------------
 // パスから読み込み
 //-----------------------------------------------------------------------------
-bool Texture::Load(const std::string& filepath, bool renderTarget, bool depthStencil, bool mipmap)
+bool Texture::Load(const std::wstring& filepath, bool renderTarget, bool depthStencil, bool mipmap)
 {
-	//TODO: なにかしらのテクスチャローダーを...
+	if (m_graphicsDevice == nullptr) return false;
+	if (m_graphicsDevice->m_cpDevice == nullptr) return false;
+	if (filepath.empty()) return false;
 
-	return false;
+	UINT bindFlags = 0;
+	bindFlags |= D3D11_BIND_SHADER_RESOURCE;
+	if (renderTarget)bindFlags |= D3D11_BIND_RENDER_TARGET;
+	if (depthStencil)bindFlags |= D3D11_BIND_DEPTH_STENCIL;
+
+
+	// ※DirectX Texライブラリを使用して画像を読み込む
+
+	DirectX::TexMetadata meta;
+	DirectX::ScratchImage image;
+
+	bool bLoaded = false;
+
+	// WIC画像読み込み
+	//  WIC_FLAGS_ALL_FRAMES … gifアニメなどの複数フレームを読み込んでくれる
+	if (SUCCEEDED(DirectX::LoadFromWICFile(filepath.c_str(), DirectX::WIC_FLAGS_ALL_FRAMES, &meta, image)))
+	{
+		bLoaded = true;
+	}
+
+	// DDS画像読み込み
+	if (bLoaded == false) {
+		if (SUCCEEDED(DirectX::LoadFromDDSFile(filepath.c_str(), DirectX::DDS_FLAGS_NONE, &meta, image)))
+		{
+			bLoaded = true;
+		}
+	}
+
+	// TGA画像読み込み
+	if (bLoaded == false) {
+		if (SUCCEEDED(DirectX::LoadFromTGAFile(filepath.c_str(), &meta, image)))
+		{
+			bLoaded = true;
+		}
+	}
+
+	// HDR画像読み込み
+	if (bLoaded == false) {
+		if (SUCCEEDED(DirectX::LoadFromHDRFile(filepath.c_str(), &meta, image)))
+		{
+			bLoaded = true;
+		}
+	}
+
+	// 読み込み失敗
+	if (bLoaded == false)
+	{
+		return false;
+	}
+
+	// ミップマップ生成
+	if (meta.mipLevels == 1 && mipmap)
+	{
+		DirectX::ScratchImage mipChain;
+		if (SUCCEEDED(DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_DEFAULT, 0, mipChain)))
+		{
+			image.Release();
+			image = std::move(mipChain);
+		}
+	}
+
+	//------------------------------------
+	// テクスチャリソース作成
+	//------------------------------------
+	ID3D11Texture2D* tex2D = nullptr;
+	HRESULT hr = DirectX::CreateTextureEx(
+		m_graphicsDevice->m_cpDevice.Get(),
+		image.GetImages(), image.GetImageCount(), image.GetMetadata(),
+		D3D11_USAGE_DEFAULT,//Usage
+		bindFlags,//BindFlags
+		0, 0, false,
+		(ID3D11Resource**)&tex2D);
+
+	if (FAILED(hr))
+	{
+		Debug::Log("CreateTextureEx失敗."); return false;
+	}
+
+	//各ビュー作成
+	if (!CreateViewsFromTexture2D(tex2D, m_cpSRV.GetAddressOf(), m_cpRTV.GetAddressOf(), m_cpDSV.GetAddressOf()))
+	{
+		tex2D->Release();
+		return false;
+	}
+
+	if (tex2D == nullptr)
+	{
+		Debug::Log("aaaa");
+	}
+
+	// 画像情報取得
+	tex2D->GetDesc(&m_desc);
+	tex2D->Release();
+
+	m_filepath = filepath;
+
+	Debug::Log(L"テクスチャ読み込み: " + m_filepath);
+
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -57,7 +157,7 @@ bool Texture::Create(ID3D11Texture2D* pTexture2D)
 	}
 
 	pTexture2D->GetDesc(&m_desc);
-	m_filepath = "";
+	m_filepath = L"";
 
 	return true;
 }

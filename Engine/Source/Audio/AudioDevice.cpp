@@ -62,7 +62,7 @@ bool AudioDevice::Initialize()
 void AudioDevice::Finalize()
 {
     //最終フェードアウト ※TODO: Soudクラスとロジックは一緒なので共通化
-    SetAllFade(0.0f, 0.6f);
+    SetAllFade(0.0f, 0.2f);
     while (true)
     {
         UpdateFade();

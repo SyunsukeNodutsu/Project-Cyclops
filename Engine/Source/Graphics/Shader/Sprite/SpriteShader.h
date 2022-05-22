@@ -30,7 +30,7 @@ public:
 	void Begin(bool linear = false, bool disableZBuffer = true);
 	void End();
 
-	void DrawTexture(const Texture* texture, Vector2 pos, Vector2 pivot = 0.5f);
+	void DrawTexture(const Texture* pTexture, Vector2 pos, Vector2 pivot = 0.5f);
 
 private:
 
@@ -38,10 +38,11 @@ private:
 	ComPtr<ID3D11PixelShader>	m_cpPS;
 	ComPtr<ID3D11InputLayout>	m_cpInputLayout;
 
+	std::array<Vertex, 4>		m_vertices;
 	ConstantBuffer<CBSprite>	m_cb0Sprite;
 	Matrix						m_prevProjMatrix;
 	bool						m_begin;
 
-	Vertex* SetVertex(const Texture* texture, Vector2 pos, Vector2 pivot = 0.5f);
+	void SetVertex(const Texture* pTexture, Vector2 pos, Vector2 pivot = 0.5f);
 
 };

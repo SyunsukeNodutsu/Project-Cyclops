@@ -7,6 +7,7 @@
 GraphicsDevice::GraphicsDevice(GRAPHICS_DEVICE_CREATE_PARAM createParam)
 	: m_createParam(createParam)
 	, m_spRendererStatus(nullptr)
+	, m_spShaderManager(nullptr)
 	, m_cpDevice(nullptr)
 	, m_cpContext(nullptr)
 	, m_cpGISwapChain(nullptr)
@@ -40,14 +41,12 @@ bool GraphicsDevice::Initialize()
 	//初期レンダーターゲット設定
 	m_cpContext->OMSetRenderTargets(1, m_spBackbuffer->RTVAddress(), m_spDefaultZbuffer->DSV());
 
+	//所持マネージャ初期化
 	m_spRendererStatus = std::make_shared<RendererStatus>();
-	if (m_spRendererStatus)
-	{
-		if (!m_spRendererStatus->Initialize())
-		{
-			Debug::Log("RendererStatusの初期化失敗."); return false;
-		}
-	}
+	if (!m_spRendererStatus->Initialize()) { Debug::Log("RendererStatusの初期化失敗."); return false; }
+
+	m_spShaderManager = std::make_shared<ShaderManager>();
+	if (!m_spShaderManager->Initialize()) { Debug::Log("ShaderManagerの初期化失敗."); return false; }
 
 	//使いまわしバッファ
 	UINT bufferSize = 80;

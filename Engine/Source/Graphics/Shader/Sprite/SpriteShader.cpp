@@ -110,25 +110,37 @@ void SpriteShader::End()
 //-----------------------------------------------------------------------------
 // テクスチャ描画
 //-----------------------------------------------------------------------------
-void SpriteShader::DrawTexture(const Texture* texture, Vector2 pos, Vector2 pivot)
+void SpriteShader::DrawTexture(const Texture* pTexture, Vector2 pos, Vector2 pivot)
 {
 	if (m_graphicsDevice == nullptr) return;
 	if (m_graphicsDevice->m_cpContext == nullptr) return;
 	if (m_graphicsDevice->m_spRendererStatus == nullptr) return;
 
-	if (!m_begin) return;
-	if (texture == nullptr) return;
+	//if (!m_begin) return;
+	if (pTexture == nullptr) return;
 
 	m_graphicsDevice->m_spRendererStatus->m_cb4Behaviour.Work().m_worldMatrix = Matrix();
 	m_graphicsDevice->m_spRendererStatus->m_cb4Behaviour.Write();
 
-	m_graphicsDevice->m_cpContext->PSSetShaderResources(0, 1, texture->SRVAddress());
+	m_graphicsDevice->m_cpContext->PSSetShaderResources(0, 1, pTexture->SRVAddress());
+
+	SetVertex(pTexture, pos, pivot);
+
+	m_graphicsDevice->DrawVertices(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, 4, m_vertices.data(), sizeof(Vertex));
 
 	//TODO: 関数化
-	const float width = (float)texture->GetWidth();
-	const float height = (float)texture->GetWidth();
+	ID3D11ShaderResourceView* resource_zero = nullptr;
+	m_graphicsDevice->m_cpContext->PSSetShaderResources(0, 1, &resource_zero);
+}
 
-	//頂点作成
+//-----------------------------------------------------------------------------
+// 頂点情報設定
+//-----------------------------------------------------------------------------
+void SpriteShader::SetVertex(const Texture* pTexture, Vector2 pos, Vector2 pivot)
+{
+	const float width	= static_cast<float>(pTexture->GetWidth());
+	const float height	= static_cast<float>(pTexture->GetWidth());
+
 	float x_01 = pos.x;
 	float y_01 = pos.y;
 	float x_02 = pos.x + width;
@@ -141,48 +153,8 @@ void SpriteShader::DrawTexture(const Texture* texture, Vector2 pos, Vector2 pivo
 	y_02 -= pivot.y * height;
 
 	//左上 -> 右上 -> 左下 -> 右下
-	Vertex vertex[] = {
-		{ Vector3(x_01, y_01, 0), Vector2(0, 1) },
-		{ Vector3(x_01, y_02, 0), Vector2(0, 0) },
-		{ Vector3(x_02, y_01, 0), Vector2(1, 1) },
-		{ Vector3(x_02, y_02, 0), Vector2(1, 0) },
-	};
-	//TODO: 関数化ここまで
-
-	m_graphicsDevice->DrawVertices(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, 4, vertex, sizeof(Vertex));
-
-	//TODO: 関数化
-	ID3D11ShaderResourceView* resource_zero = nullptr;
-	m_graphicsDevice->m_cpContext->PSSetShaderResources(0, 1, &resource_zero);
-}
-
-//-----------------------------------------------------------------------------
-// 動いたら置き換え
-//-----------------------------------------------------------------------------
-SpriteShader::Vertex* SpriteShader::SetVertex(const Texture* texture, Vector2 pos, Vector2 pivot)
-{
-	const float width = (float)texture->GetWidth();
-	const float height = (float)texture->GetWidth();
-
-	//頂点作成
-	float x_01 = pos.x;
-	float y_01 = pos.y;
-	float x_02 = pos.x + width;
-	float y_02 = pos.y + height;
-
-	//基準点(Pivot)ぶんずらす
-	x_01 -= pivot.x * width;
-	x_02 -= pivot.x * width;
-	y_01 -= pivot.y * height;
-	y_02 -= pivot.y * height;
-
-	//左上 -> 右上 -> 左下 -> 右下
-	Vertex vertex[4] = {
-		{ Vector3(x_01, y_01, 0), Vector2(0, 1) },
-		{ Vector3(x_01, y_02, 0), Vector2(0, 0) },
-		{ Vector3(x_02, y_01, 0), Vector2(1, 1) },
-		{ Vector3(x_02, y_02, 0), Vector2(1, 0) },
-	};
-
-	return vertex;
+	m_vertices[0] = Vertex(Vector3(x_01, y_01, 0), Vector2(0, 1));
+	m_vertices[1] = Vertex(Vector3(x_01, y_02, 0), Vector2(0, 0));
+	m_vertices[2] = Vertex(Vector3(x_02, y_01, 0), Vector2(1, 1));
+	m_vertices[3] = Vertex(Vector3(x_02, y_02, 0), Vector2(1, 0));
 }
