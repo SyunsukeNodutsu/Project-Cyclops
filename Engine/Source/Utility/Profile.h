@@ -14,6 +14,7 @@ public:
 	~Profile() = default;
 
 	//@brief 計測開始
+	//@note string wstring のオーバーライドではなく関数によっては変換入れたほうが使いやすい
 	void Start(const std::string &stampName, const std::source_location& location = std::source_location::current())
 	{
 		m_stampName = stampName;

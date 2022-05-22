@@ -61,6 +61,7 @@ bool Window::ProcessMessage()
 	//TODO: OnXXX()のようなイベント関数を取得し、InputDevice側で処理を行う
 	// そうすればstatic/publicにしなくて済む
 	Input::Refresh();
+	GamePad::Update();
 
 	MSG msg;
 	while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))

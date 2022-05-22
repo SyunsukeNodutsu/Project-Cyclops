@@ -22,6 +22,99 @@ const std::wstring& Utility::GetFilenameFromFullpath(const std::wstring& fullpat
 	return result;
 }
 
+//-----------------------------------------------------------------------------
+// ダイアログからファイルのパスを取得
+//-----------------------------------------------------------------------------
+bool Utility::OpenFileDialog(std::string& filepath, HWND hwnd, const std::string& title, const char* filters, const bool relative)
+{
+	auto current = std::filesystem::current_path();
+	auto filename = std::filesystem::path(filepath).filename();
+
+	static char fname[1000];
+	strcpy_s(fname, sizeof(fname), filename.string().c_str());
+
+	//デフォルトフォルダ
+	std::string dir;
+	if (filepath.size() == 0)
+	{
+		dir = current.string() + "\\";
+	}
+	else
+	{
+		auto path = std::filesystem::absolute(filepath);
+		dir = path.parent_path().string() + "\\";
+	}
+
+	OPENFILENAMEA o{};
+	ZeroMemory(&o, sizeof(o));
+
+	o.lStructSize = sizeof(o);
+	o.hwndOwner = hwnd;//親ウィンドウのハンドル
+	o.lpstrInitialDir = dir.c_str();
+	o.lpstrFile = fname;
+	o.nMaxFile = sizeof(fname);
+	o.lpstrFilter = filters;//拡張子でフィルター
+	o.lpstrDefExt = "";
+	o.lpstrTitle = title.c_str();
+	o.nFilterIndex = 1;
+	if (GetOpenFileNameA(&o))
+	{
+		//カレントディレクトリを元に戻す
+		std::filesystem::current_path(current);
+		//相対パスへ変換
+		if (relative) filepath = std::filesystem::relative(fname).string();
+		else filepath = std::filesystem::absolute(fname).string();
+		return true;
+	}
+	std::filesystem::current_path(current);
+	return false;
+}
+bool Utility::OpenFileDialog(std::wstring& filepath, HWND hwnd, const std::string& title, const char* filters, const bool relative)
+{
+	auto current = std::filesystem::current_path();
+	auto filename = std::filesystem::path(filepath).filename();
+
+	static char fname[1000];
+	strcpy_s(fname, sizeof(fname), filename.string().c_str());
+
+	//デフォルトフォルダ
+	std::string dir;
+	if (filepath.size() == 0)
+	{
+		dir = current.string() + "\\";
+	}
+	else
+	{
+		auto path = std::filesystem::absolute(filepath);
+		dir = path.parent_path().string() + "\\";
+	}
+
+	OPENFILENAMEA o{};
+	ZeroMemory(&o, sizeof(o));
+
+	o.lStructSize = sizeof(o);
+	o.hwndOwner = hwnd;//親ウィンドウのハンドル
+	o.lpstrInitialDir = dir.c_str();
+	o.lpstrFile = fname;
+	o.nMaxFile = sizeof(fname);
+	o.lpstrFilter = filters;//拡張子でフィルター
+	o.lpstrDefExt = "";
+	o.lpstrTitle = title.c_str();
+	o.nFilterIndex = 1;
+	if (GetOpenFileNameA(&o))//dllのエラー表示はWin10のせい 無視でok
+	{
+		//カレントディレクトリを元に戻す
+		std::filesystem::current_path(current);
+		//相対パスへ変換
+		if (relative) filepath = std::filesystem::relative(fname).wstring();
+		else filepath = std::filesystem::absolute(fname).wstring();
+
+		return true;
+	}
+	std::filesystem::current_path(current);
+	return false;
+}
+
 
 //=============================================================================
 // 

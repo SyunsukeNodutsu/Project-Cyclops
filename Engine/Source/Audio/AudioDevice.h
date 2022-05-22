@@ -26,7 +26,8 @@ public:
     void SetMasterVolume(float volume);
     float GetMasterVolume();
 
-    void SetAllFade(float volume, float time);
+    void SetFadeMaster(float volume, float time);
+    void SetFadeSoundList(float volume, float time);
 
 public:
 

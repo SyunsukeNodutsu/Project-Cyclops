@@ -62,7 +62,7 @@ bool AudioDevice::Initialize()
 void AudioDevice::Finalize()
 {
     //最終フェードアウト ※TODO: Soudクラスとロジックは一緒なので共通化
-    SetAllFade(0.0f, 0.2f);
+    SetFadeMaster(0.0f, 0.2f);
     while (true)
     {
         UpdateFade();
@@ -132,7 +132,7 @@ float AudioDevice::GetMasterVolume()
 //-----------------------------------------------------------------------------
 // マスター音量をフェードさせる
 //-----------------------------------------------------------------------------
-void AudioDevice::SetAllFade(float volume, float time)
+void AudioDevice::SetFadeMaster(float volume, float time)
 {
     if (m_pX2Audio == nullptr) return;
     if (m_pMasteringVoice == nullptr) return;
@@ -150,6 +150,18 @@ void AudioDevice::SetAllFade(float volume, float time)
 
     //タイマ計測開始
     m_timer.Record();
+}
+
+//-----------------------------------------------------------------------------
+// サウンドリストすべてをフェードさせる
+//-----------------------------------------------------------------------------
+void AudioDevice::SetFadeSoundList(float volume, float time)
+{
+    if (m_pX2Audio == nullptr) return;
+    if (m_pMasteringVoice == nullptr) return;
+
+    for (const auto& sound : m_soundList)
+        sound->SetFade(volume, time);
 }
 
 //-----------------------------------------------------------------------------

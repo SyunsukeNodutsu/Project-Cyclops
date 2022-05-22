@@ -26,14 +26,12 @@ private:
 
 	static GraphicsDevice*	m_pGraphicsDevice;
 	static AudioDevice*		m_pAudioDevice;
-	static VideoDevice*		m_pVideoDevice;
 
 	int						m_windowWidth;
 	int						m_windowHeight;
-	std::shared_ptr<Sound>	m_spSound;
-	std::wstring			m_soundPath;
 
 	std::shared_ptr<Texture>m_spTexture;
+	Profile					m_profile;
 
 private:
 

@@ -5,7 +5,6 @@ FpsTimer*		GameDemo::m_pFpsTimer		= nullptr;
 
 GraphicsDevice* GameDemo::m_pGraphicsDevice = nullptr;
 AudioDevice*	GameDemo::m_pAudioDevice	= nullptr;
-VideoDevice*	GameDemo::m_pVideoDevice	= nullptr;
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -13,9 +12,8 @@ VideoDevice*	GameDemo::m_pVideoDevice	= nullptr;
 GameDemo::GameDemo()
 	: m_windowWidth(1280)
 	, m_windowHeight(720)
-	, m_spSound(nullptr)
-	, m_soundPath(L"Assets/Sunshine.mp3")
 	, m_spTexture(nullptr)
+	, m_profile()
 {
 }
 
@@ -59,8 +57,7 @@ void GameDemo::Initialize()
 	
 	//サブシステムを適切な順番で生成 -------------------------------->
 	//いずれこの一連の初期化はエンジンが提供します
-	Profile profile;
-	profile.Start("サブシステム起動");
+	m_profile.Start("サブシステム起動");
 	GRAPHICS_DEVICE_CREATE_PARAM device_param = {
 		.BufferCount	= 2,
 		.Width			= m_windowWidth,
@@ -72,35 +69,36 @@ void GameDemo::Initialize()
 		.DebugMode		= true,
 	};
 	m_pGraphicsDevice = new GraphicsDevice(device_param);
-
-	m_pVideoDevice = new VideoDevice();
 	m_pAudioDevice = new AudioDevice();
 
 	GraphicsDeviceChild::SetDevice(m_pGraphicsDevice);
 	AudioDeviceChild::SetDevice(m_pAudioDevice);
 
 	m_pGraphicsDevice->Initialize();
-	m_pVideoDevice->Initialize();
 	m_pAudioDevice->Initialize();
-	profile.End();
+	m_profile.End();
 	//<-------------------------サブシステムを適切な順番で生成ここまで
 
-	//m_pVideoDevice->Play();
-	m_pAudioDevice->SetMasterVolume(0.2f);
+	m_pAudioDevice->SetMasterVolume(1.0f);
 	
-	std::thread([&] {
-		m_spSound = std::make_shared<Sound>(m_soundPath, true, true);
-		if (m_spSound)
+	if (std::wstring path = L""; Utility::OpenFileDialog(path, m_pWindow->GetHwnd(),"再生ファイルを選択."))
+	{
+		m_profile.Start("Sound読み込み");
+		std::shared_ptr<Sound> new_sound = std::make_shared<Sound>(path, true, true);
+		if (new_sound)
 		{
-			m_spSound->Play();
-			m_pAudioDevice->AddSound(m_spSound);
-		}}
-	).detach();
+			new_sound->Play();
+			new_sound->SetVolume(0.0f);
+			new_sound->SetFade(1.0f, 0.4f);
+			m_pAudioDevice->AddSound(new_sound);
+		}
+		m_profile.End();
+	}
 
-	profile.Start("テクスチャ読み込み");
+	m_profile.Start("テクスチャ読み込み");
 	m_spTexture = std::make_shared<Texture>();
 	m_spTexture->Load(L"Assets/test.jpg");
-	profile.End();
+	m_profile.End();
 }
 
 //-----------------------------------------------------------------------------
@@ -108,9 +106,32 @@ void GameDemo::Initialize()
 //-----------------------------------------------------------------------------
 void GameDemo::Update()
 {
-	GamePad::Update();
 	m_pFpsTimer->Tick();
-	m_pAudioDevice->Update(Matrix());
+
+	const auto& mvol = m_pAudioDevice->GetMasterVolume();
+	if (Input::IsKeyDown(KeyCode::UpArrow)) { m_pAudioDevice->SetMasterVolume(mvol + 0.1f); Debug::Log("音量変更: " + ToString(m_pAudioDevice->GetMasterVolume())); }
+	if (Input::IsKeyDown(KeyCode::DownArrow)) { m_pAudioDevice->SetMasterVolume(mvol - 0.1f); Debug::Log("音量変更: " + ToString(m_pAudioDevice->GetMasterVolume())); }
+
+	if (Input::IsKeyDown(KeyCode::K))
+		m_pAudioDevice->SetFadeSoundList(0.0f, 1.0f);
+
+	if (Input::IsKeyDown(KeyCode::Space))
+	{
+		if (std::wstring path = L""; Utility::OpenFileDialog(path, m_pWindow->GetHwnd(),"再生ファイルを選択."))
+		{
+			m_profile.Start("Sound読み込み");
+			std::shared_ptr<Sound> new_sound = std::make_shared<Sound>(path, true, true);
+			m_pAudioDevice->SetFadeSoundList(0.0f, 0.4f);//タイムスタンプの記憶の関係で 読み込みなどの時間がかかる処理だと破綻する(草)
+			if (new_sound)
+			{
+				new_sound->Play();
+				new_sound->SetVolume(0.0f);
+				new_sound->SetFade(1.0f, 0.4f);
+				m_pAudioDevice->AddSound(new_sound);
+			}
+			m_profile.End();
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -139,7 +160,7 @@ void GameDemo::Draw()
 //-----------------------------------------------------------------------------
 void GameDemo::LateUpdate()
 {
-
+	m_pAudioDevice->Update(Matrix());
 }
 
 //-----------------------------------------------------------------------------
@@ -148,15 +169,13 @@ void GameDemo::LateUpdate()
 void GameDemo::Finalize()
 {
 	m_pAudioDevice->Finalize();
-	m_pVideoDevice->Finalize();
 	m_pGraphicsDevice->Finalize();
 	m_pWindow->Finalize();
 
-	delete m_pFpsTimer;
-	delete m_pAudioDevice;
-	delete m_pVideoDevice;
-	delete m_pGraphicsDevice;
-	delete m_pWindow;
+	SafeDelete(m_pFpsTimer);
+	SafeDelete(m_pAudioDevice);
+	SafeDelete(m_pGraphicsDevice);
+	SafeDelete(m_pWindow);
 
 	Debug::Log("終了.");
 }

@@ -15,12 +15,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
 
 	//COM初期化
-	Microsoft::WRL::Wrappers::RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
-	if (FAILED(initialize))
-	{
-		MessageBoxA(nullptr, "COM initialization failed.", "Failed", MB_OK);
-		return -1;
-	}
+	CoInitialize(NULL);
+
+	MFStartup(MF_VERSION, MFSTARTUP_NOSOCKET);
 
 	//APP実行
 	GameDemo* app = new GameDemo();
@@ -29,6 +26,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		app->Run();
 		delete app;
 	}
+
+	MFShutdown();
 
 	CoUninitialize();
 

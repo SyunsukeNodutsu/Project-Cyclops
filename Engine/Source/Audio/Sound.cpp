@@ -13,7 +13,7 @@ Sound::Sound(const std::wstring& filepath, bool loop, bool useFilter)
     , m_targetTime(0.0f)
     , m_fade(false)
     , m_done(false)
-    , m_prevVolume(0.0f)
+    , m_prevVolume(1.0f)
 {
     if (!Load(filepath, loop, useFilter))
         Release();
@@ -86,7 +86,7 @@ void Sound::SetVolume(float volume)
 {
     if (m_pSourceVoice == nullptr) return;
     if (volume == m_prevVolume) { Debug::Log("以前の音量と同じなのでSetVolumeを飛ばします."); return; }
-    if (const float subb = fabsf(m_prevVolume - volume); subb <= 0.02f) { Debug::Log("変化量が極小なのでSetVolumeを飛ばします. 変化量: " + ToString(subb)); return; }
+    if (const float subb = fabsf(m_prevVolume - volume); subb <= 0.01f) { /*Debug::Log("変化量が極小なのでSetVolumeを飛ばします. 変化量: " + ToString(subb));*/ return; }
     
     volume = std::clamp(volume, -XAUDIO2_MAX_VOLUME_LEVEL, XAUDIO2_MAX_VOLUME_LEVEL);
     m_pSourceVoice->SetVolume(volume);
@@ -344,22 +344,22 @@ bool SoundData::Create(const std::wstring& filepath, bool loop, bool useFilter)
     UINT32 sampleRate;
     pMFMediaType->GetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, &sampleRate);
     pMFMediaType->SetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, sampleRate);
-    Debug::Log("sampleRate: " + ToString(sampleRate));
+    //Debug::Log("sampleRate: " + ToString(sampleRate));
 
     UINT32 byteParSec;
     pMFMediaType->GetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, &byteParSec);
     pMFMediaType->SetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, byteParSec);
-    Debug::Log("byteParSec: " + ToString(byteParSec));
+    //Debug::Log("byteParSec: " + ToString(byteParSec));
 
     UINT32 bitRate;
     pMFMediaType->GetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, &bitRate);
     pMFMediaType->SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, bitRate);
-    Debug::Log("bitRate: " + ToString(bitRate));
+    //Debug::Log("bitRate: " + ToString(bitRate));
 
     UINT32 channels;
     pMFMediaType->GetUINT32(MF_MT_AUDIO_NUM_CHANNELS, &channels);
     pMFMediaType->SetUINT32(MF_MT_AUDIO_NUM_CHANNELS, channels);
-    Debug::Log("channels: " + ToString(channels));
+    //Debug::Log("channels: " + ToString(channels));
 
     //メディアタイプ設定完了
     if(FAILED(pMFSourceReader->SetCurrentMediaType(MF_SOURCE_READER_FIRST_AUDIO_STREAM, nullptr, pMFMediaType)))

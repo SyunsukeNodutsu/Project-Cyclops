@@ -47,6 +47,19 @@ public:
     //@brief 完全パスからファイル名(拡張子含む)を返す
     static const std::wstring& GetFilenameFromFullpath(const std::wstring& fullpath);
 
+    //@brief ダイアログからファイルのパスを取得
+    //@note TODO: ソリューション以下のフォルダしか取得できないっぽい
+    //@param filepath 受け取るパス
+    //@param filters 拡張子フィルター
+    //@param relative 相対パスに変換を行うかどうか
+    static bool OpenFileDialog(std::string& filepath, HWND hwnd = nullptr, const std::string& title = "select file", const char* filters = nullptr, const bool relative = false);
+
+    //@brief ダイアログからファイルのパスを取得
+    //@param filepath 受け取るパス
+    //@param filters 拡張子フィルター
+    //@param relative 相対パスに変換を行うかどうか
+    static bool OpenFileDialog(std::wstring& filepath, HWND hwnd = nullptr, const std::string& title = "select file", const char* filters = nullptr, const bool relative = false);
+
 };
 
 //デバッグクラス

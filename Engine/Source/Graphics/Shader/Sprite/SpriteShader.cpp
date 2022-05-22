@@ -126,7 +126,12 @@ void SpriteShader::DrawTexture(const Texture* pTexture, Vector2 pos, Vector2 piv
 	if (pTexture == nullptr) return;
 	if (!m_begin) { Debug::Log("エラー：Begin()が呼ばれていません."); return; }
 
-	m_graphicsDevice->m_spRendererStatus->m_cb4Behaviour.Work().m_worldMatrix = Matrix();
+	//解像度に応じて拡縮
+	const float rateX = m_graphicsDevice->m_viewport.Width / 1280;
+	const float rateY = m_graphicsDevice->m_viewport.Height / 720;
+	Matrix world; world.CreateScalling(rateX, rateY, 0);
+
+	m_graphicsDevice->m_spRendererStatus->m_cb4Behaviour.Work().m_worldMatrix = world;
 	m_graphicsDevice->m_spRendererStatus->m_cb4Behaviour.Write();
 
 	m_graphicsDevice->m_cpContext->VSSetShaderResources(0, 1, pTexture->SRVAddress());
