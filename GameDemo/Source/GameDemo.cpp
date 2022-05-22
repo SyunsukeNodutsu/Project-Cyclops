@@ -14,7 +14,7 @@ GameDemo::GameDemo()
 	: m_windowWidth(1280)
 	, m_windowHeight(720)
 	, m_spSound(nullptr)
-	, m_soundPath(L"Assets/キューピーMIX.wav")
+	, m_soundPath(L"Assets/Sunshine.mp3")
 	, m_spTexture(nullptr)
 {
 }
@@ -43,9 +43,6 @@ void GameDemo::Run()
 //-----------------------------------------------------------------------------
 void GameDemo::Initialize()
 {
-	Profile profile;
-	profile.Start();
-
 	//ウィンドウ作成
 	WINDOE_CREATE_PARAM window_param = {
 		.TitleName		= L"Project Cyclops",
@@ -62,6 +59,8 @@ void GameDemo::Initialize()
 	
 	//サブシステムを適切な順番で生成 -------------------------------->
 	//いずれこの一連の初期化はエンジンが提供します
+	Profile profile;
+	profile.Start("サブシステム起動");
 	GRAPHICS_DEVICE_CREATE_PARAM device_param = {
 		.BufferCount	= 2,
 		.Width			= m_windowWidth,
@@ -83,14 +82,10 @@ void GameDemo::Initialize()
 	m_pGraphicsDevice->Initialize();
 	m_pVideoDevice->Initialize();
 	m_pAudioDevice->Initialize();
+	profile.End();
 	//<-------------------------サブシステムを適切な順番で生成ここまで
 
-	profile.End();
-	//2022/05/21: 250～270ミリ秒
-	//2022/05/22: 360～401ミリ秒
-
 	//m_pVideoDevice->Play();
-
 	m_pAudioDevice->SetMasterVolume(0.2f);
 	
 	std::thread([&] {
@@ -102,8 +97,10 @@ void GameDemo::Initialize()
 		}}
 	).detach();
 
+	profile.Start("テクスチャ読み込み");
 	m_spTexture = std::make_shared<Texture>();
 	m_spTexture->Load(L"Assets/test.jpg");
+	profile.End();
 }
 
 //-----------------------------------------------------------------------------
@@ -128,7 +125,7 @@ void GameDemo::Draw()
 
 	m_pGraphicsDevice->m_spShaderManager->m_spriteShader.Begin();
 
-	x = sinf(total_time) * 100.0f;
+	x = sinf(total_time) * 200.0f;
 	y = tanf(total_time) * 100.0f;
 	m_pGraphicsDevice->m_spShaderManager->m_spriteShader.DrawTexture(m_spTexture.get(), Vector2(x, y));
 
@@ -142,6 +139,7 @@ void GameDemo::Draw()
 //-----------------------------------------------------------------------------
 void GameDemo::LateUpdate()
 {
+
 }
 
 //-----------------------------------------------------------------------------

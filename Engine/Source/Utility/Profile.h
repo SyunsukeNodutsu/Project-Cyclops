@@ -14,23 +14,26 @@ public:
 	~Profile() = default;
 
 	//@brief 計測開始
-	void Start()
+	void Start(const std::string &stampName, const std::source_location& location = std::source_location::current())
 	{
+		m_stampName = stampName;
 		m_start = std::chrono::system_clock::now();
+		Debug::Log("計測開始(" + m_stampName + ")", location);
 	}
 
 	//@brief 計測終了 ログにミリ秒表示
-	void End()
+	void End(const std::source_location& location = std::source_location::current())
 	{
-		m_end = std::chrono::system_clock::now();//計測終了時間
-		auto time = m_end - m_start;//処理に要した時間
+		const auto& end = std::chrono::system_clock::now();//計測終了時間
+		const auto& time = end - m_start;//処理に要した時間
 
-		auto msec = std::chrono::duration_cast<std::chrono::milliseconds>(time).count();
-		Debug::Log("計測完了 時間(ミリ秒) : " + ToString(msec));
+		const auto& msec = std::chrono::duration_cast<std::chrono::milliseconds>(time).count();
+		Debug::Log("計測完了(" + m_stampName + ") 時間(ミリ秒) : " + ToString(msec), location);
 	}
 
 private:
 
-	std::chrono::system_clock::time_point m_start, m_end;
+	std::chrono::system_clock::time_point m_start;
+	std::string m_stampName;
 
 };

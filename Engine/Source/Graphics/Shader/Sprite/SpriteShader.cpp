@@ -71,11 +71,14 @@ void SpriteShader::Begin(bool linear, bool disableZBuffer)
 	if (m_graphicsDevice->m_cpContext == nullptr) return;
 	if (m_graphicsDevice->m_spRendererStatus == nullptr) return;
 
-	//定数バッファ
+	if (m_begin) return;
+	m_begin = true;
+
 	m_prevProjMatrix = m_graphicsDevice->m_spRendererStatus->m_cb5Camera.Get().m_projMatrix;
 
-	m_graphicsDevice->m_spRendererStatus->m_cb5Camera.Work().m_projMatrix = DirectX::XMMatrixOrthographicLH(
-		m_graphicsDevice->m_viewport.Width, m_graphicsDevice->m_viewport.Height, 0, 1);
+	//正射影行列をGPUに転送
+	const auto& orthographic = DirectX::XMMatrixOrthographicLH(m_graphicsDevice->m_viewport.Width, m_graphicsDevice->m_viewport.Height, 0, 1);
+	m_graphicsDevice->m_spRendererStatus->m_cb5Camera.Work().m_projMatrix = orthographic;
 	m_graphicsDevice->m_spRendererStatus->m_cb5Camera.Write();
 
 	//ステート設定
@@ -98,6 +101,9 @@ void SpriteShader::End()
 	if (m_graphicsDevice == nullptr) return;
 	if (m_graphicsDevice->m_spRendererStatus == nullptr) return;
 
+	if (!m_begin) return;
+	m_begin = false;
+
 	//射影行列を復元
 	m_graphicsDevice->m_spRendererStatus->m_cb5Camera.Work().m_projMatrix = m_prevProjMatrix;
 	m_graphicsDevice->m_spRendererStatus->m_cb5Camera.Write();
@@ -117,8 +123,8 @@ void SpriteShader::DrawTexture(const Texture* pTexture, Vector2 pos, Vector2 piv
 	if (m_graphicsDevice->m_cpContext == nullptr) return;
 	if (m_graphicsDevice->m_spRendererStatus == nullptr) return;
 
-	//if (!m_begin) return;
 	if (pTexture == nullptr) return;
+	if (!m_begin) { Debug::Log("エラー：Begin()が呼ばれていません."); return; }
 
 	m_graphicsDevice->m_spRendererStatus->m_cb4Behaviour.Work().m_worldMatrix = Matrix();
 	m_graphicsDevice->m_spRendererStatus->m_cb4Behaviour.Write();
@@ -126,32 +132,9 @@ void SpriteShader::DrawTexture(const Texture* pTexture, Vector2 pos, Vector2 piv
 	m_graphicsDevice->m_cpContext->VSSetShaderResources(0, 1, pTexture->SRVAddress());
 	m_graphicsDevice->m_cpContext->PSSetShaderResources(0, 1, pTexture->SRVAddress());
 
-	//SetVertex(pTexture, pos, pivot);
+	SetVertex(pTexture, pos, pivot);
 
-	float width = static_cast<float>(pTexture->GetWidth());
-	float height = static_cast<float>(pTexture->GetHeight());
-
-	//頂点作成
-	float x_01 = pos.x;
-	float y_01 = pos.y;
-	float x_02 = pos.x + width;
-	float y_02 = pos.y + height;
-
-	//基準点(Pivot)ぶんずらす
-	x_01 -= pivot.x * width;
-	x_02 -= pivot.x * width;
-	y_01 -= pivot.y * height;
-	y_02 -= pivot.y * height;
-
-	//左上 -> 右上 -> 左下 -> 右下
-	Vertex vertex[] = {
-		{ Vector3(x_01, y_01, 0), Vector2(0, 1) },
-		{ Vector3(x_01, y_02, 0), Vector2(0, 0) },
-		{ Vector3(x_02, y_01, 0), Vector2(1, 1) },
-		{ Vector3(x_02, y_02, 0), Vector2(1, 0) },
-	};
-
-	m_graphicsDevice->DrawVertices(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, 4, vertex/*m_vertices.data()*/, sizeof(Vertex));
+	m_graphicsDevice->DrawVertices(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, 4, m_vertices.data(), sizeof(Vertex));
 
 	//TODO: 関数化
 	ID3D11ShaderResourceView* resource_zero = nullptr;
@@ -165,7 +148,7 @@ void SpriteShader::DrawTexture(const Texture* pTexture, Vector2 pos, Vector2 piv
 void SpriteShader::SetVertex(const Texture* pTexture, Vector2 pos, Vector2 pivot)
 {
 	const float width	= static_cast<float>(pTexture->GetWidth());
-	const float height	= static_cast<float>(pTexture->GetWidth());
+	const float height	= static_cast<float>(pTexture->GetHeight());
 
 	float x_01 = pos.x;
 	float y_01 = pos.y;

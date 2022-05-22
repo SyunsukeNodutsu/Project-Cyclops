@@ -56,10 +56,10 @@ public:
 
     //@brief ログを投げる
     //@param location ログに出力するロケーション情報 この値は設定しない
-    static void Log(std::string log, std::source_location location = std::source_location::current());
+    static void Log(const std::string& log, const std::source_location& location = std::source_location::current());
 
     //@brief ログを投げる
     //@param location ログに出力するロケーション情報 この値は設定しない
-    static void Log(std::wstring log, std::source_location location = std::source_location::current());
+    static void Log(const std::wstring& log, const std::source_location& location = std::source_location::current());
 
 };

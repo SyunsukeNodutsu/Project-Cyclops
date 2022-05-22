@@ -32,7 +32,7 @@ const std::wstring& Utility::GetFilenameFromFullpath(const std::wstring& fullpat
 //-----------------------------------------------------------------------------
 // ログを投げる
 //-----------------------------------------------------------------------------
-void Debug::Log(std::string log, std::source_location location)
+void Debug::Log(const std::string& log, const std::source_location& location)
 {
 #if _DEBUG
 	const std::string& file_name = location.file_name();
@@ -43,7 +43,7 @@ void Debug::Log(std::string log, std::source_location location)
 	OutputDebugStringA(std::string(log + "\n" + "  ->" + Utility::GetFilenameFromFullpath(file_name) + ": " + func_name + "(" + ToString(line) + ", " + ToString(column) + ") : \n\n").c_str());
 #endif
 }
-void Debug::Log(std::wstring log, std::source_location location)
+void Debug::Log(const std::wstring& log, const std::source_location& location)
 {
 #if _DEBUG
 	const std::string& file_name = location.file_name();
