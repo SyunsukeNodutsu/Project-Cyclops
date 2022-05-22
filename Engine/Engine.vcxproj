@@ -145,6 +145,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Source\Graphics\Shader\ConstantBuffer.hlsli" />
     <None Include="Source\Graphics\Shader\Sprite\SpriteShader.hlsli" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

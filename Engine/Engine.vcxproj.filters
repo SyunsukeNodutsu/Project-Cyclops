@@ -246,5 +246,8 @@
     <None Include="Source\Graphics\Shader\Sprite\SpriteShader.hlsli">
       <Filter>Source\Graphics\Shader\Sprite</Filter>
     </None>
+    <None Include="Source\Graphics\Shader\ConstantBuffer.hlsli">
+      <Filter>Source\Graphics\Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

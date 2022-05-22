@@ -61,9 +61,9 @@
 #include "Graphics/GraphicsDevice.h"
 #include "Graphics/GraphicsDeviceChild.h"
 
-#include "Graphics/RendererStatus.h"
 #include "Graphics/Buffer.h"
 #include "Graphics/Texture.h"
+#include "Graphics/RendererStatus.h"
 
 //ビデオ
 #include "Video/VideoDevice.h"

@@ -10,6 +10,47 @@ bool RendererStatus::Initialize()
     SetBlend(BlendMode::Alpha);
     SetRasterize(RS_CullMode::Back, RS_FillMode::Solid);
 
+	if (m_cb4Behaviour.Create())
+	{
+		m_cb4Behaviour.SetToDevice(4, SHADER_STAGE::VS);
+		m_cb4Behaviour.SetToDevice(4, SHADER_STAGE::PS);
+		m_cb4Behaviour.Work().m_worldMatrix = Matrix();
+		m_cb4Behaviour.Work().m_uvOffset = 0;
+		m_cb4Behaviour.Work().m_uvTiling = 0;
+		m_cb4Behaviour.Write();
+	}
+	else { Debug::Log("定数バッファ(Behaviour)作成失敗."); return false; }
+
+	if (m_cb5Camera.Create())
+	{
+		m_cb5Camera.SetToDevice(5, SHADER_STAGE::VS);
+		m_cb5Camera.SetToDevice(5, SHADER_STAGE::PS);
+		m_cb5Camera.Work().m_viewMatrix = Matrix();
+		m_cb5Camera.Work().m_projMatrix = Matrix();
+		m_cb5Camera.Work().m_cameraMatrix = Matrix();
+		m_cb5Camera.Write();
+	}
+	else { Debug::Log("定数バッファ(Camera)作成失敗."); return false; }
+
+	if (m_cb6Light.Create())
+	{
+		m_cb6Light.SetToDevice(6, SHADER_STAGE::VS);
+		m_cb6Light.SetToDevice(6, SHADER_STAGE::PS);
+		m_cb6Light.Work().m_enable = true;
+		m_cb6Light.Write();
+	}
+	else { Debug::Log("定数バッファ(Light)作成失敗."); return false; }
+
+	if (m_cb7Time.Create())
+	{
+		m_cb7Time.SetToDevice(7, SHADER_STAGE::VS);
+		m_cb7Time.SetToDevice(7, SHADER_STAGE::PS);
+		m_cb7Time.Work().m_totalTime = 0.0f;
+		m_cb7Time.Work().m_deltaTime = 0.0f;
+		m_cb7Time.Write();
+	}
+	else { Debug::Log("定数バッファ(Time)作成失敗."); return false; }
+
     return true;
 }
 

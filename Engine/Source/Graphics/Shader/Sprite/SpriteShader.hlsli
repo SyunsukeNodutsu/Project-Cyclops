@@ -1,18 +1,18 @@
 //-----------------------------------------------------------------------------
-// Name: SpriteShader.hlsli
+// File: SpriteShader.hlsli
 //
 // SpriteShader共通
 //-----------------------------------------------------------------------------
 
 //定数バッファ
-cbuffer cdObject : register(b4)
+cbuffer cdObject : register(b0)
 {
-    float4 m_color;
+    float4 g_color;
 };
 
 //頂点シェーダが返す値
 struct VertexOutput
 {
-    float4 position : SV_Position;
-    float2 uv       : TEXCOORD0;
+    float4 m_position : SV_Position;
+    float2 m_uv       : TEXCOORD0;
 };

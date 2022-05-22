@@ -68,7 +68,7 @@ public:
 	void SetToDevice(int slot, SHADER_STAGE stage) const
 	{
 		if (m_graphicsDevice == nullptr) return;
-		if (m_graphicsDevice.m_cpContext() == nullptr) return;
+		if (m_graphicsDevice->m_cpContext == nullptr) return;
 
 		if (stage == SHADER_STAGE::VS) m_graphicsDevice->m_cpContext.Get()->VSSetConstantBuffers(slot, 1, m_buffer.GetAddress());
 		if (stage == SHADER_STAGE::PS) m_graphicsDevice->m_cpContext.Get()->PSSetConstantBuffers(slot, 1, m_buffer.GetAddress());

@@ -16,6 +16,8 @@ GraphicsDevice::GraphicsDevice(GRAPHICS_DEVICE_CREATE_PARAM createParam)
 	, m_adapterName(L"")
 	, m_spBackbuffer(nullptr)
 	, m_spDefaultZbuffer(nullptr)
+	, m_spTempFixedVertexBuffer()
+	, m_spTempVertexBuffer()
 {
 }
 
@@ -46,6 +48,16 @@ bool GraphicsDevice::Initialize()
 			Debug::Log("RendererStatusの初期化失敗."); return false;
 		}
 	}
+
+	//使いまわしバッファ
+	UINT bufferSize = 80;
+	for (int i = 0; i < 10; i++)
+	{
+		m_spTempFixedVertexBuffer[i] = std::make_shared<Buffer>();
+		m_spTempFixedVertexBuffer[i]->Create(D3D11_BIND_VERTEX_BUFFER, bufferSize, D3D11_USAGE_DYNAMIC, nullptr);
+		bufferSize *= 2;
+	}
+	m_spTempVertexBuffer = std::make_shared<Buffer>();
 
 	return true;
 }
@@ -178,6 +190,47 @@ void GraphicsDevice::ToggleScreen(bool fullscreen)
 	}
 
 	Resize(WPARAM(), 1920, 1080);
+}
+
+//-----------------------------------------------------------------------------
+// 頂点描画用ヘルパー関数
+//-----------------------------------------------------------------------------
+void GraphicsDevice::DrawVertices(D3D_PRIMITIVE_TOPOLOGY topology, int vCount, const void* pVStream, UINT stride)
+{
+	const UINT totalSize = vCount * stride;
+
+	//最適な固定長バッファを検索
+	std::shared_ptr<Buffer> buffer = nullptr;
+	for (auto&& n : m_spTempFixedVertexBuffer)
+	{
+		if (totalSize < n->GetSize()) {
+			buffer = n; break;
+		}
+	}
+
+	//可変長のバッファを使用
+	if (buffer == nullptr)
+	{
+		Debug::Log("固定長バッファの範囲外 バッファを新規作成します. totalSize: " + ToString(totalSize));
+		buffer = m_spTempVertexBuffer;
+
+		// 頂点バッファのサイズが小さいときは、リサイズのため再作成する
+		if (m_spTempVertexBuffer->GetSize() < totalSize)
+			m_spTempVertexBuffer->Create(D3D11_BIND_VERTEX_BUFFER, totalSize, D3D11_USAGE_DYNAMIC, nullptr);
+	}
+
+	// 単純なDISCARDでの書き込み TODO: 修正
+	buffer->WriteData(pVStream, totalSize);
+
+	// バインド
+	{
+		m_cpContext->IASetPrimitiveTopology(topology);
+
+		UINT offset = 0;
+		m_cpContext->IASetVertexBuffers(0, 1, buffer->GetAddress(), &stride, &offset);
+	}
+
+	m_cpContext->Draw(vCount, 0);
 }
 
 //-----------------------------------------------------------------------------

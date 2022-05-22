@@ -47,6 +47,8 @@ public:
 	void Resize(WPARAM wparam, UINT width, UINT height);
 	void ToggleScreen(bool fullscreen);
 
+	void DrawVertices(D3D_PRIMITIVE_TOPOLOGY topology, int vCount, const void* pVStream, UINT stride);
+
 public://TODO: アクセス制限 例)"ACCESS_ENGINE"みたいな
 
 	GRAPHICS_DEVICE_CREATE_PARAM	m_createParam;
@@ -65,8 +67,13 @@ public://TODO: アクセス制限 例)"ACCESS_ENGINE"みたいな
 
 	std::wstring				m_adapterName;		//GPUアダプタの名前
 
+private:
+
 	std::shared_ptr<Texture>	m_spBackbuffer;
 	std::shared_ptr<Texture>	m_spDefaultZbuffer;
+
+	std::shared_ptr<Buffer>		m_spTempFixedVertexBuffer[10];
+	std::shared_ptr<Buffer>		m_spTempVertexBuffer;
 
 private:
 

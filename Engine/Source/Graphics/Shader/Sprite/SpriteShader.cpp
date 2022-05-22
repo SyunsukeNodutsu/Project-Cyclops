@@ -7,7 +7,7 @@ SpriteShader::SpriteShader()
 	: m_cpVS(nullptr)
 	, m_cpPS(nullptr)
 	, m_cpInputLayout(nullptr)
-	, m_cbSprite()
+	, m_cb0Sprite()
 	, m_prevProjMatrix()
 	, m_begin(false)
 {
@@ -50,12 +50,14 @@ bool SpriteShader::Initialize()
 	}
 
 	//定数バッファ作成
-	if (!m_cbSprite.Create())
+	if (m_cb0Sprite.Create())
 	{
-		Debug::Log("定数バッファ作成失敗."); return false;
+		m_cb0Sprite.SetToDevice(0, SHADER_STAGE::VS);
+		m_cb0Sprite.SetToDevice(0, SHADER_STAGE::PS);
+		m_cb0Sprite.Work().m_color = Vector4(0, 0, 0, 0);
+		m_cb0Sprite.Write();
 	}
-	m_cbSprite.SetToDevice(0, SHADER_STAGE::VS);
-	m_cbSprite.SetToDevice(0, SHADER_STAGE::PS);
+	else { Debug::Log("定数バッファ(Sprite)作成失敗."); return false; }
 
 	return true;
 }
@@ -69,7 +71,11 @@ void SpriteShader::Begin(bool linear, bool disableZBuffer)
 	if (m_graphicsDevice->m_cpContext == nullptr) return;
 	if (m_graphicsDevice->m_spRendererStatus == nullptr) return;
 
-	//TODO: 定数バッファ書き込み
+	//定数バッファ
+	m_prevProjMatrix = m_graphicsDevice->m_spRendererStatus->m_cb5Camera.Get().m_projMatrix;
+
+	m_graphicsDevice->m_spRendererStatus->m_cb5Camera.Work().m_projMatrix = DirectX::XMMatrixOrthographicLH(
+		m_graphicsDevice->m_viewport.Width,m_graphicsDevice->m_viewport.Height, 0, 1);
 
 	//ステート設定
 	if (disableZBuffer) m_graphicsDevice->m_spRendererStatus->SetDepthStencil(false, false);
@@ -91,6 +97,11 @@ void SpriteShader::End()
 	if (m_graphicsDevice == nullptr) return;
 	if (m_graphicsDevice->m_spRendererStatus == nullptr) return;
 
+	//射影行列を復元
+	m_graphicsDevice->m_spRendererStatus->m_cb5Camera.Work().m_projMatrix = m_prevProjMatrix;
+	m_graphicsDevice->m_spRendererStatus->m_cb5Camera.Write();
+
+	//ステートを復元
 	m_graphicsDevice->m_spRendererStatus->SetDepthStencil(true, true);
 	m_graphicsDevice->m_spRendererStatus->SetSampler(SS_FilterMode::Aniso, SS_AddressMode::Wrap);
 	m_graphicsDevice->m_spRendererStatus->SetRasterize(RS_CullMode::Back, RS_FillMode::Solid);
@@ -99,7 +110,79 @@ void SpriteShader::End()
 //-----------------------------------------------------------------------------
 // テクスチャ描画
 //-----------------------------------------------------------------------------
-void SpriteShader::DrawTexture(const Texture* texture, Vector2Int pos)
+void SpriteShader::DrawTexture(const Texture* texture, Vector2 pos, Vector2 pivot)
 {
-	
+	if (m_graphicsDevice == nullptr) return;
+	if (m_graphicsDevice->m_cpContext == nullptr) return;
+	if (m_graphicsDevice->m_spRendererStatus == nullptr) return;
+
+	if (!m_begin) return;
+	if (texture == nullptr) return;
+
+	m_graphicsDevice->m_spRendererStatus->m_cb4Behaviour.Work().m_worldMatrix = Matrix();
+	m_graphicsDevice->m_spRendererStatus->m_cb4Behaviour.Write();
+
+	m_graphicsDevice->m_cpContext->PSSetShaderResources(0, 1, texture->SRVAddress());
+
+	//TODO: 関数化
+	const float width = (float)texture->GetWidth();
+	const float height = (float)texture->GetWidth();
+
+	//頂点作成
+	float x_01 = pos.x;
+	float y_01 = pos.y;
+	float x_02 = pos.x + width;
+	float y_02 = pos.y + height;
+
+	//基準点
+	x_01 -= pivot.x * width;
+	x_02 -= pivot.x * width;
+	y_01 -= pivot.y * height;
+	y_02 -= pivot.y * height;
+
+	//左上 -> 右上 -> 左下 -> 右下
+	Vertex vertex[] = {
+		{ Vector3(x_01, y_01, 0), Vector2(0, 1) },
+		{ Vector3(x_01, y_02, 0), Vector2(0, 0) },
+		{ Vector3(x_02, y_01, 0), Vector2(1, 1) },
+		{ Vector3(x_02, y_02, 0), Vector2(1, 0) },
+	};
+	//TODO: 関数化ここまで
+
+	m_graphicsDevice->DrawVertices(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, 4, vertex, sizeof(Vertex));
+
+	//TODO: 関数化
+	ID3D11ShaderResourceView* resource_zero = nullptr;
+	m_graphicsDevice->m_cpContext->PSSetShaderResources(0, 1, &resource_zero);
+}
+
+//-----------------------------------------------------------------------------
+// 動いたら置き換え
+//-----------------------------------------------------------------------------
+SpriteShader::Vertex* SpriteShader::SetVertex(const Texture* texture, Vector2 pos, Vector2 pivot)
+{
+	const float width = (float)texture->GetWidth();
+	const float height = (float)texture->GetWidth();
+
+	//頂点作成
+	float x_01 = pos.x;
+	float y_01 = pos.y;
+	float x_02 = pos.x + width;
+	float y_02 = pos.y + height;
+
+	//基準点(Pivot)ぶんずらす
+	x_01 -= pivot.x * width;
+	x_02 -= pivot.x * width;
+	y_01 -= pivot.y * height;
+	y_02 -= pivot.y * height;
+
+	//左上 -> 右上 -> 左下 -> 右下
+	Vertex vertex[4] = {
+		{ Vector3(x_01, y_01, 0), Vector2(0, 1) },
+		{ Vector3(x_01, y_02, 0), Vector2(0, 0) },
+		{ Vector3(x_02, y_01, 0), Vector2(1, 1) },
+		{ Vector3(x_02, y_02, 0), Vector2(1, 0) },
+	};
+
+	return vertex;
 }

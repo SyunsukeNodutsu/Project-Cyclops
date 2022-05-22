@@ -26,10 +26,43 @@ public:
 
 private:
 
+	//エンジンがデフォルトで提供する定数バッファ -------------------->
+	struct CBBehaviour
+	{
+		Matrix m_worldMatrix;
+		Vector2 m_uvOffset;
+		Vector2 m_uvTiling;
+	};
+	struct CBCamera
+	{
+		Matrix m_viewMatrix;
+		Matrix m_projMatrix;
+		Matrix m_cameraMatrix;
+	};
+	struct CBLight
+	{
+		float m_enable;
+		float tmp[3];
+	};
+	struct CBTime
+	{
+		float m_totalTime = 0.0f; // 総経過時間
+		float m_deltaTime = 1.0f; // デルタティック
+		float tmp[2];
+	};
+	//<--------------------エンジンがデフォルトで提供する定数バッファ
+
 	std::map<int, ComPtr<ID3D11SamplerState>>		m_samplerStates;		//サンプラーステートMap
 	std::map<int, ComPtr<ID3D11RasterizerState>>	m_rasterizerState;		//ラスタライザーステートMap
 	ComPtr<ID3D11DepthStencilState>					m_depthStencilStates[4];//デプスステンシルステート
 	ComPtr<ID3D11BlendState>						m_blendStates[3];		//ブレンドステート
+
+public:
+
+	ConstantBuffer<CBBehaviour> m_cb4Behaviour;
+	ConstantBuffer<CBCamera>	m_cb5Camera;
+	ConstantBuffer<CBLight>		m_cb6Light;
+	ConstantBuffer<CBTime>		m_cb7Time;
 
 private:
 
