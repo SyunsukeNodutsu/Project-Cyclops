@@ -32,6 +32,7 @@ public:
 private:
 
 	HWND			m_hWnd;			//ウィンドウハンドル
+	HINSTANCE		m_hInstance;
 	std::wstring	m_className;	//ウィンドウクラス名
 	std::wstring	m_titleName;	//ウィンドウのタイトルバー名
 	int				m_clientWidth;	//クライアントサイズ: 幅

@@ -14,7 +14,7 @@ class GameDemo
 {
 public:
 
-	GameDemo() = default;
+	GameDemo();
 	~GameDemo() = default;
 
 	void Run();
@@ -22,15 +22,16 @@ public:
 private:
 
 	static Window*			m_pWindow;
+	static FpsTimer*		m_pFpsTimer;
+
 	static GraphicsDevice*	m_pGraphicsDevice;
 	static AudioDevice*		m_pAudioDevice;
 	static VideoDevice*		m_pVideoDevice;
-	static FpsTimer*		m_pFpsTimer;
 
-	int						m_windowWidth = 1280;
-	int						m_windowHeight = 720;
-	std::shared_ptr<Sound>	m_spSound = nullptr;
-	std::wstring			m_soundPath = L"Assets/Sunshine.mp3";
+	int						m_windowWidth;
+	int						m_windowHeight;
+	std::shared_ptr<Sound>	m_spSound;
+	std::wstring			m_soundPath;
 
 private:
 

@@ -39,6 +39,9 @@
 // Engine
 //--------------------------------------------------
 
+//サブシステム
+#include "Subsystem.h"
+
 //算術
 #include "Math/Vector2.h"
 #include "Math/Vector3.h"
@@ -58,6 +61,7 @@
 #include "Graphics/GraphicsDevice.h"
 #include "Graphics/GraphicsDeviceChild.h"
 
+#include "Graphics/RendererStatus.h"
 #include "Graphics/Buffer.h"
 #include "Graphics/Texture.h"
 

@@ -16,8 +16,6 @@ typedef struct GRAPHICS_DEVICE_CREATE_PARAM
 	bool UseHDR;
 	bool UseMSAA;
 	bool DebugMode;
-
-	HWND Hwnd;
 }GRAPHICS_DEVICE_CREATE_PARAM;
 
 //シェーダーステージ
@@ -28,11 +26,12 @@ enum class SHADER_STAGE
 	CS,
 };
 
+class RendererStatus;
 class Texture;
 class Buffer;
 
 //グラフィックスデバイスクラス
-class GraphicsDevice
+class GraphicsDevice : public ISubsystem
 {
 public:
 
@@ -50,7 +49,8 @@ public:
 
 public://TODO: アクセス制限 例)"ACCESS_ENGINE"みたいな
 
-	GRAPHICS_DEVICE_CREATE_PARAM m_createParam;
+	GRAPHICS_DEVICE_CREATE_PARAM	m_createParam;
+	std::shared_ptr<RendererStatus> m_spRendererStatus;
 
 	ComPtr<ID3D11Device>		m_cpDevice;
 	ComPtr<ID3D11DeviceContext> m_cpContext;		//即時コンテキスト

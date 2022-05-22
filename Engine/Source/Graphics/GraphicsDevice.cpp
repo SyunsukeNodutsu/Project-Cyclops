@@ -1,10 +1,12 @@
 ﻿#include "GraphicsDevice.h"
+#include "RendererStatus.h"
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
 GraphicsDevice::GraphicsDevice(GRAPHICS_DEVICE_CREATE_PARAM createParam)
 	: m_createParam(createParam)
+	, m_spRendererStatus(nullptr)
 	, m_cpDevice(nullptr)
 	, m_cpContext(nullptr)
 	, m_cpGISwapChain(nullptr)
@@ -35,6 +37,15 @@ bool GraphicsDevice::Initialize()
 
 	//初期レンダーターゲット設定
 	m_cpContext->OMSetRenderTargets(1, m_spBackbuffer->RTVAddress(), m_spDefaultZbuffer->DSV());
+
+	m_spRendererStatus = std::make_shared<RendererStatus>();
+	if (m_spRendererStatus)
+	{
+		if (!m_spRendererStatus->Initialize())
+		{
+			Debug::Log("RendererStatusの初期化失敗."); return false;
+		}
+	}
 
 	return true;
 }
@@ -190,7 +201,7 @@ bool GraphicsDevice::CreateSwapChain()
 
 	DXGISwapChainDesc.BufferUsage	= DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_SHADER_INPUT;
 	DXGISwapChainDesc.BufferCount	= m_createParam.BufferCount;
-	DXGISwapChainDesc.OutputWindow	= m_createParam.Hwnd;
+	DXGISwapChainDesc.OutputWindow	= m_hwnd;
 	DXGISwapChainDesc.Windowed		= m_createParam.Windowed;
 	DXGISwapChainDesc.SwapEffect	= DXGISwapChainDesc.BufferCount >= 2 ? DXGI_SWAP_EFFECT_DISCARD : DXGI_SWAP_EFFECT_SEQUENTIAL;
 	DXGISwapChainDesc.Flags			= DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;

@@ -86,7 +86,7 @@ void Sound::SetVolume(float volume)
 {
     if (m_pSourceVoice == nullptr) return;
     if (volume == m_prevVolume) { Debug::Log("以前の音量と同じなのでSetVolumeを飛ばします."); return; }
-    //TODO: 人間が聞いてもわからないような変化量は飛ばしてもいいかも
+    if (const float subb = fabsf(m_prevVolume - volume); subb <= 0.02f) { Debug::Log("変化量が極小なのでSetVolumeを飛ばします. 変化量: " + ToString(subb)); return; }
     
     volume = std::clamp(volume, -XAUDIO2_MAX_VOLUME_LEVEL, XAUDIO2_MAX_VOLUME_LEVEL);
     m_pSourceVoice->SetVolume(volume);
@@ -128,6 +128,9 @@ void Sound::SetPitch(float pitch)
 //-----------------------------------------------------------------------------
 void Sound::SetPan(float pan)
 {
+    if (m_audioDevice == nullptr) return;
+    if (m_audioDevice->m_pX2Audio == nullptr) return;
+    if (m_audioDevice->m_pMasteringVoice == nullptr) return;
     if (m_pSourceVoice == nullptr) return;
 
     //左右のパンの値を計算
@@ -233,6 +236,10 @@ void Sound::UpdateFade()
 //-----------------------------------------------------------------------------
 bool Sound::Load(const std::wstring& filepath, bool loop, bool useFilter)
 {
+    if (m_audioDevice == nullptr) return false;
+    if (m_audioDevice->m_pX2Audio == nullptr) return false;
+    if (m_audioDevice->m_pMasteringVoice == nullptr) return false;
+
     //サウンドデータクラス作成/音源情報読み込み
     if (!m_soundData.Create(filepath, loop, useFilter))
     {

@@ -96,7 +96,7 @@ enum class MouseButton
 #pragma endregion
 
 //入力クラス
-class Input
+class Input : public ISubsystem
 {
 public:
 
@@ -121,8 +121,6 @@ public:
 	static void SetMouseHide(bool show);
 
 private:
-
-	static HWND m_hwnd;
 
 	static WPARAM m_mouseState;
 	static Vector2Int m_mousePos;

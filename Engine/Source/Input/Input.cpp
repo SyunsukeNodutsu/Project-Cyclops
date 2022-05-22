@@ -1,6 +1,5 @@
 ﻿#include "Input.h"
 
-HWND Input::m_hwnd;
 WPARAM Input::m_mouseState;
 Vector2Int Input::m_mousePos;
 int Input::m_mouseWheelDelta;

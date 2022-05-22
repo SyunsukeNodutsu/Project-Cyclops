@@ -49,6 +49,9 @@
     <Filter Include="Source\Physics\PhysX">
       <UniqueIdentifier>{8eee3524-c3cf-4f16-a8c5-b2abe59208e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Graphics\Shader\Sprite">
+      <UniqueIdentifier>{8c8345dd-73d1-42e5-b41f-e27c1dd80673}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Window\Window.cpp">
@@ -112,6 +115,15 @@
       <Filter>Source\Math</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\Buffer.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Subsystem.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Shader\Sprite\SpriteShader.cpp">
+      <Filter>Source\Graphics\Shader\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\RendererStatus.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -212,5 +224,27 @@
     <ClInclude Include="Source\Graphics\Buffer.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Subsystem.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Shader\Sprite\SpriteShader.h">
+      <Filter>Source\Graphics\Shader\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\RendererStatus.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Source\Graphics\Shader\Sprite\SpriteShader_VS.hlsl">
+      <Filter>Source\Graphics\Shader\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Graphics\Shader\Sprite\SpriteShader_PS.hlsl">
+      <Filter>Source\Graphics\Shader\Sprite</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Source\Graphics\Shader\Sprite\SpriteShader.hlsli">
+      <Filter>Source\Graphics\Shader\Sprite</Filter>
+    </None>
   </ItemGroup>
 </Project>

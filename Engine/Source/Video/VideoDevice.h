@@ -6,7 +6,7 @@
 #pragma once
 
 //ビデオデバイスクラス
-class VideoDevice
+class VideoDevice : public ISubsystem
 {
 public:
 
@@ -18,13 +18,10 @@ public:
 
 	void Play();
 
-	static void SetWindowHwnd(HWND hwnd) { m_hwnd = hwnd; }
-
 	HRESULT ResizeVideo(WORD width, WORD height);
 
 private:
 
-	static HWND m_hwnd;
 	//std::wstring m_filepath = L"../test_360p.mp4";
 	std::wstring m_filepath = L"../test.mp4";
 

@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 Window::Window(WINDOE_CREATE_PARAM createParam)
 	: m_hWnd(nullptr)
+	, m_hInstance(nullptr)
 	, m_className(createParam.ClassName)
 	, m_titleName(createParam.TitleName)
 	, m_clientWidth(createParam.ClientWidth)
@@ -46,6 +47,7 @@ void Window::Finalize()
 
 	DestroyWindow(m_hWnd);
 	m_hWnd = nullptr;
+	UnregisterClass(m_className.c_str(), m_hInstance);
 }
 
 //-----------------------------------------------------------------------------
@@ -126,7 +128,7 @@ ATOM Window::RegisterWindowClass()
 //-----------------------------------------------------------------------------
 bool Window::CreateWindowInstance()
 {
-	HINSTANCE hInstance = GetModuleHandle(0);
+	m_hInstance = GetModuleHandle(0);
 
 	DWORD style = WS_OVERLAPPEDWINDOW;// WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME/* & ~WS_MAXIMIZEBOX*/;
 
@@ -134,7 +136,7 @@ bool Window::CreateWindowInstance()
 		m_className.c_str(), m_titleName.c_str(),
 		style, CW_USEDEFAULT, 0,
 		m_clientWidth, m_clientHeight,
-		nullptr, nullptr, hInstance, this);
+		nullptr, nullptr, m_hInstance, this);
 
 	return (m_hWnd != nullptr);
 }
@@ -151,14 +153,10 @@ LRESULT Window::WindowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam
 	{
 	case WM_PAINT:
 	{
-		//PAINTSTRUCT ps;
-		//HDC hdc = BeginPaint(hwnd, &ps);
-		//static TCHAR szText[] = TEXT("表示テスト.");
-		//TextOut(hdc, 0, 0, szText, lstrlen(szText));
-		//SetTextColor(hdc, RGB(0, 255, 255));
-		////SetBkColor(hdc, RGB(255, 0, 0));
-
-		//EndPaint(hwnd, &ps);
+		PAINTSTRUCT ps;
+		HDC hdc = BeginPaint(hwnd, &ps);
+		//HDC使わん
+		EndPaint(hwnd, &ps);
 		break;
 	}
 
