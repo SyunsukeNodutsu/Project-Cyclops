@@ -70,6 +70,15 @@
 #include <DirectXTex.h>
 #pragma comment(lib,"DirectXTex.lib")
 
+//imGui
+#include <imgui.h>
+#define IMGUI_DEFINE_PLACEMENT_NEW
+#define IMGUI_DEFINE_MATH_OPERATORS
+#include <imgui_internal.h>
+#include <imgui_impl_win32.h>
+#include <imgui_impl_dx11.h>
+#include <imgui_glyph_ranges_jp.h>
+
 //--------------------------------------------------
 // 
 // Engine

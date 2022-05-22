@@ -55,7 +55,9 @@
 //ユーティリティ
 #include "Utility/Utility.h"
 #include "Utility/Timer.h"
-#include "Utility/Profile.h"
+
+//プロファイリング
+#include "Profile/Profile.h"
 
 //ウィンドウ
 #include "Window/Window.h"

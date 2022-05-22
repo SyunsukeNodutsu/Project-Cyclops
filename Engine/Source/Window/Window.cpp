@@ -1,5 +1,7 @@
 ﻿#include "Window.h"
 
+LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
+
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
@@ -147,6 +149,10 @@ bool Window::CreateWindowInstance()
 //-----------------------------------------------------------------------------
 LRESULT Window::WindowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 {
+	//ImGuiにイベント通知
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, message, wparam, lparam))
+		return true;
+
 	//入力情報解析
 	Input::ParseInputData(message, wparam, lparam);
 

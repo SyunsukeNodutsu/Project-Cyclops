@@ -79,6 +79,25 @@ void GameDemo::Initialize()
 	m_profile.End();
 	//<-------------------------サブシステムを適切な順番で生成ここまで
 
+	{
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+
+		ImGui::StyleColorsClassic();
+
+		ImGui_ImplWin32_Init(m_pWindow->GetHwnd());
+		ImGui_ImplDX11_Init(m_pGraphicsDevice->m_cpDevice.Get(), m_pGraphicsDevice->m_cpContext.Get());
+
+		ImFontConfig config;
+		config.MergeMode = true;
+
+		ImGuiIO& io = ImGui::GetIO();
+		io.Fonts->AddFontDefault();
+		io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\msgothic.ttc", 13.0f, &config, glyphRangesJapanese);
+
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	}
+
 	m_pAudioDevice->SetMasterVolume(1.0f);
 	
 	if (std::wstring path = L""; Utility::OpenFileDialog(path, m_pWindow->GetHwnd(),"再生ファイルを選択."))
@@ -152,6 +171,27 @@ void GameDemo::Draw()
 
 	m_pGraphicsDevice->m_spShaderManager->m_spriteShader.End();
 
+	{
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+
+		//ここでImGui描画
+
+		if (!ImGui::Begin("Audio Monitor", nullptr, ImGuiWindowFlags_NoCollapse)) {
+			ImGui::End();
+			return;
+		}
+
+		ImGui::Text("XAudio2 version. (2.9)");
+
+		ImGui::End();
+
+
+		ImGui::Render();
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	}
+
 	m_pGraphicsDevice->End();
 }
 
@@ -168,6 +208,15 @@ void GameDemo::LateUpdate()
 //-----------------------------------------------------------------------------
 void GameDemo::Finalize()
 {
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.IniFilename = NULL;
+
+		ImGui_ImplDX11_Shutdown();
+		ImGui_ImplWin32_Shutdown();
+		ImGui::DestroyContext();
+	}
+
 	m_pAudioDevice->Finalize();
 	m_pGraphicsDevice->Finalize();
 	m_pWindow->Finalize();

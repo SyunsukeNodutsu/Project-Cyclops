@@ -55,6 +55,15 @@
     <Filter Include="Source\Graphics\Vender">
       <UniqueIdentifier>{d16260f1-49c5-457e-8b25-bccbcd8b5915}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Library">
+      <UniqueIdentifier>{a9117c26-298c-4f72-9d3f-76420733a8c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\imGui">
+      <UniqueIdentifier>{3402aadc-b010-434e-98dc-2336ff33a61f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Profile">
+      <UniqueIdentifier>{db5773ed-8c01-48f4-9862-b8928a9543a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Window\Window.cpp">
@@ -131,6 +140,30 @@
     </ClCompile>
     <ClCompile Include="Source\Graphics\Shader\ShaderManager.cpp">
       <Filter>Source\Graphics\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\imGui\imgui.cpp">
+      <Filter>Library\imGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\imGui\imgui_demo.cpp">
+      <Filter>Library\imGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\imGui\imgui_draw.cpp">
+      <Filter>Library\imGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\imGui\imgui_impl_dx11.cpp">
+      <Filter>Library\imGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\imGui\imgui_impl_win32.cpp">
+      <Filter>Library\imGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\imGui\imgui_tables.cpp">
+      <Filter>Library\imGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\imGui\imgui_widgets.cpp">
+      <Filter>Library\imGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Profile\Profile.cpp">
+      <Filter>Source\Profile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -242,8 +275,38 @@
     <ClInclude Include="Source\Graphics\Shader\ShaderManager.h">
       <Filter>Source\Graphics\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="..\imGui\imstb_truetype.h">
+      <Filter>Library\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\imGui\imconfig.h">
+      <Filter>Library\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\imGui\imgui.h">
+      <Filter>Library\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\imGui\imgui_glyph_ranges_jp.h">
+      <Filter>Library\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\imGui\imgui_impl_dx11.h">
+      <Filter>Library\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\imGui\imgui_impl_win32.h">
+      <Filter>Library\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\imGui\imgui_internal.h">
+      <Filter>Library\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\imGui\imstb_rectpack.h">
+      <Filter>Library\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\imGui\imstb_textedit.h">
+      <Filter>Library\imGui</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Utility\Profile.h">
-      <Filter>Source\Utility</Filter>
+      <Filter>Source\Profile</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Profile\Profile.h">
+      <Filter>Source\Profile</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
