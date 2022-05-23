@@ -88,20 +88,6 @@ void GameDemo::Initialize()
 	m_profile.End();
 	//<-------------------------サブシステムを適切な順番で生成ここまで
 
-	m_pAudioDevice->SetMasterVolume(1.0f);
-	
-	if (std::wstring path = L""; Utility::OpenFileDialog(path, m_pWindow->GetHwnd(),"再生ファイルを選択."))
-	{
-		m_profile.Start("Sound読み込み");
-		std::shared_ptr<Sound> new_sound = std::make_shared<Sound>(path, true, true);
-		if (new_sound)
-		{
-			new_sound->Play();
-			m_pAudioDevice->AddSound(new_sound);
-		}
-		m_profile.End();
-	}
-
 	m_profile.Start("テクスチャ読み込み");
 	m_spTexture = std::make_shared<Texture>();
 	m_spTexture->Load(L"Assets/test.jpg");
@@ -124,7 +110,7 @@ void GameDemo::Update()
 
 	if (Input::IsKeyDown(KeyCode::Space))
 	{
-		if (std::wstring path = L""; Utility::OpenFileDialog(path, m_pWindow->GetHwnd(),"再生ファイルを選択."))
+		if (std::string path = ""; Utility::OpenFileDialog(path, m_pWindow->GetHwnd(),"再生ファイルを選択."))
 		{
 			m_profile.Start("Sound読み込み");
 			std::shared_ptr<Sound> new_sound = std::make_shared<Sound>(path, true, true);
@@ -188,3 +174,277 @@ void GameDemo::Finalize()
 
 	Debug::Log("終了.");
 }
+
+/*
+
+#pragma once
+
+#include "../GameObject.h"
+
+class Missile : public GameObject
+{
+public:
+
+	// コンストラクタ
+	Missile();
+
+	// デストラクタ
+	~Missile();
+
+	// 初期化
+	void Deserialize(const json11::Json& jsonObj) override;
+
+	// 更新
+	void Update() override;
+
+	// 半透明物描画
+	void DrawEffect() override;
+
+	// オーナーの設定
+	inline void SetOwner(const std::shared_ptr<GameObject>& spOwner) { m_wpOwner = spOwner; }
+
+	// 目標の設定
+	inline void SetTarget(const std::shared_ptr<GameObject>& spTarget) { m_wpTarget = spTarget; }
+
+private:
+	KdVec3						m_prevPos;		// 1フレーム前の座標
+	std::weak_ptr<GameObject>	m_wpOwner;		// 発射したGameObject
+	float						m_speed;		// 速度
+	int							m_lifeSpan;		// 生存期間
+	std::weak_ptr<GameObject>	m_wpTarget;		// ターゲットのGameObject
+	KdTrailPolygon				m_trailSmoke;	// 煙の軌跡ポリゴン
+	float						m_trailRotate;	// 煙の軌跡の回転
+
+private:
+
+	// 衝突判定
+	void UpdateCollision();
+
+	//  軌跡の更新
+	void UpdateTrail();
+
+	// 爆発
+	void Explosion();
+};
+
+#include "Aircraft.h"
+#include "Missile.h"
+#include "EffectObject.h"
+#include "AnimationEffect.h"
+
+#include "Application/main.h"
+#include "../Scene.h"
+#include "../../Component/ModelComponent.h"
+
+Missile::Missile()
+	: m_prevPos({ 0.0f,0.0f,0.0f })
+	, m_wpOwner({})
+	, m_speed(0.5f)
+	, m_lifeSpan(0)
+	, m_wpTarget({})
+	, m_trailSmoke({})
+	, m_trailRotate(0.0f)
+{
+}
+
+Missile::~Missile() {}
+
+void Missile::Deserialize(const json11::Json& jsonObj)
+{
+	// 生存期間の設定
+	m_lifeSpan = APP.m_maxFps * 10;
+
+	// 基底クラスのDeserialize
+	GameObject::Deserialize(jsonObj);
+
+	// JsonObject確認
+	if (jsonObj.is_null()) { return; }
+
+	// 速度
+	if (!jsonObj["Speed"].is_null()) m_speed = static_cast<float>(jsonObj["Speed"].number_value());
+
+	// テクスチャ設定
+	m_trailSmoke.SetTexture(KdResFac.GetTexture("Data/Texture/smokeline2.png"));// 煙
+}
+
+void Missile::Update()
+{
+	// 生存確認
+	if (!m_alive) return;
+
+	// 生存期間確認.おらもう終わるよ...
+	if (--m_lifeSpan <= 0)
+	{
+		Explosion();
+		Destroy();
+		return;
+	}
+
+	// ターゲットをshared_ptr化 ※weak_ptrは使用時に基本的にlockする
+	auto target = m_wpTarget.lock();
+	if (target)
+	{
+		// 情報設定
+		KdVec3 targetPos = target->GetMatrix().GetTranslation();// 目標の座標
+		KdVec3 vTarget = targetPos - m_mWorld.GetTranslation();	// 自身からターゲットへのベクトル
+		KdVec3 vZ = m_mWorld.GetAxisZ();						// 自分のZ方向(前方向)
+
+		// 単位ベクトル化 ※拡大率が入っていると計算がおかしくなる
+		vTarget.Normalize();
+		vZ.Normalize();
+
+		// 今の前方向のベクトルをターゲット方向のベクトルに指定の角度を向ける
+		vZ.Complement(vTarget, 1.5f);
+
+		// 求めた新しい軸をミサイルの前方向にセットする
+		m_mWorld.SetAxisZ(vZ);
+	}
+
+	// 移動設定
+	KdVec3 move = m_mWorld.GetAxisZ();
+	move.Normalize();
+	move *= m_speed;// 速度考慮
+
+	// 移動前の座標を覚える
+	m_prevPos = m_mWorld.GetTranslation();
+
+	// 移動
+	m_mWorld.Move(move);
+
+	// 判定
+	UpdateCollision();
+
+	// 軌跡の更新
+	UpdateTrail();
+}
+
+void Missile::DrawEffect()
+{
+	// 生存確認
+	if (!m_alive) return;
+
+	SHADER.m_effectShader.SetWorldMatrix(KdMatrix());
+	SHADER.m_effectShader.WriteToCB();
+
+	m_trailSmoke.DrawBillboard(0.5f);
+}
+
+void Missile::UpdateCollision()
+{
+	// 発射した主人のshared_ptr所得
+	auto spOwner = m_wpOwner.lock();
+
+	// 球判定用
+	SphereInfo sphereInfo = {};
+	sphereInfo.m_pos = m_mWorld.GetTranslation();
+	sphereInfo.m_radius = 2.0f;
+
+	// レイ判定用
+	RayInfo rayInfo = {};
+	rayInfo.m_pos = m_mWorld.GetTranslation();
+	rayInfo.m_dir = m_mWorld.GetTranslation() - m_prevPos;
+	rayInfo.m_maxRange = rayInfo.m_dir.Length();
+	rayInfo.m_dir.Normalize();
+
+	// レイ判定の結果を受け取る
+	KdRayResult rayResult;
+
+	for (auto& obj : Scene::GetInstance().GetObjects())
+	{
+		// 自身は無視
+		if (obj.get() == this) { continue; }
+
+		// 主人は無視
+		if (obj.get() == spOwner.get()) { continue; }
+
+		// TAG_Characterとは球判定
+		bool hit = false;
+		if (obj.get()->GetTag() & TAG_Character)
+		{
+			// 球判定
+			hit = obj->HitCheckBySphere(sphereInfo);
+			if (hit)
+			{
+				// ダウンキャスト ※危険だし、重たいのでこれがたくさん発生する場合は設計が間違っている
+				std::shared_ptr<Aircraft> aircraft = std::dynamic_pointer_cast<Aircraft>(obj);
+				if (aircraft)
+				{
+					// ダメージ通知
+					aircraft->OnNotfiy_Damage(5);
+				}
+			}
+		}
+
+		// TAG_StageObjectとはレイ判定
+		if (obj.get()->GetTag() & TAG_StageObject)
+		{
+			hit = obj->HitCheckByRay(rayInfo, rayResult);
+		}
+
+		// 当たったら
+		if (hit)
+		{
+			Explosion();
+			Destroy();
+		}
+	}
+}
+
+void Missile::UpdateTrail()
+{
+	// 軌跡の座標を先頭に追加
+	m_trailSmoke.AddPoint(m_mWorld);
+
+	// 軌跡の数制限(100以前の軌跡は消去)
+	const int LIST_MAX = 100;
+	if (m_trailSmoke.GetNumPoints() > LIST_MAX)
+	{
+		// 一番後ろを消す
+		m_trailSmoke.DeletePoint_Back();
+	}
+}
+
+void Missile::Explosion()
+{
+	// アニメーションエフェクトをインスタンス化
+	std::shared_ptr<AnimationEffect> effect = std::make_shared<AnimationEffect>();
+
+	// 情報を設定
+	effect->SetAnimationInfo(KdResFac.GetTexture("Data/Texture/Explosion00.png"), 10.0f, 5, 5,static_cast<float>(rand() % 360), 0.5f, false);
+
+	// 場所をミサイル(自身)の位置に合わせる
+	effect->SetMatrix(m_mWorld);
+
+	// リストに追加
+	SCENE.AddObject(effect);
+}
+
+
+// 渡されたベクトルに自身を向ける aDegreeで上限を設定
+	inline void Complement(const KdVec3& aTarget, float aDegree)
+	{
+		// 回転軸作成(この軸で回転する)
+		KdVec3 vRotAxis = KdVec3::Cross(*this, aTarget);
+
+		// ベクトルの内積
+		float dot = KdVec3::Dot(*this, aTarget);
+
+		// 誤差を補正(クランプ)
+		dot = std::clamp(dot, -1.0f, 1.0f);
+
+		// ベクトル間の角度
+		float radian = acos(dot);
+
+		// 角度制限
+		const float RAD_LIMIT = aDegree * KdToRadians;
+		if (radian > RAD_LIMIT) radian = RAD_LIMIT;
+
+		// KdMatrix使えないからXMMATRIXで
+		DirectX::XMMATRIX matrix = {};
+		matrix = DirectX::XMMatrixRotationAxis(vRotAxis, radian);
+
+		// 軸回転行列をベクトルに変換
+		TransformNormal(matrix);
+	}
+
+*/

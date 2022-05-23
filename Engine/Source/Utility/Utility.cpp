@@ -1,4 +1,5 @@
 ﻿#include "Utility.h"
+//#include "../Profile/ImGuiProfile.h"
 
 //-----------------------------------------------------------------------------
 // 完全パスからファイル名(拡張子含む)を返す
@@ -133,18 +134,16 @@ void Debug::Log(const std::string& log, const std::source_location& location)
 	const UINT32& line = location.line();
 	const UINT32& column = location.column();
 
-	OutputDebugStringA(std::string(log + "\n" + "  ->" + Utility::GetFilenameFromFullpath(file_name) + ": " + func_name + "(" + ToString(line) + ", " + ToString(column) + ") : \n\n").c_str());
+	const auto& final_log = std::string(log + "\n" + "  ->" + Utility::GetFilenameFromFullpath(file_name) + ": " + func_name + "(" + ToString(line) + ", " + ToString(column) + ") : \n\n");
+	OutputDebugStringA(final_log.c_str());
+
+	ImGuiProfile::AddLog(final_log);
+
 #endif
 }
 void Debug::Log(const std::wstring& log, const std::source_location& location)
 {
 #if _DEBUG
-	const std::string& file_name = location.file_name();
-	const std::string& func_name = location.function_name();
-	const UINT32& line = location.line();
-	const UINT32& column = location.column();
-
-	OutputDebugStringW(std::wstring(log + L"\n").c_str());
-	OutputDebugStringA(std::string("  ->" + Utility::GetFilenameFromFullpath(file_name) + ": " + func_name + "(" + ToString(line) + ", " + ToString(column) + ")\n\n").c_str());
+	Log(wide_to_sjis(log), location);
 #endif
 }

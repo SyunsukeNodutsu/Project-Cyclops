@@ -20,6 +20,9 @@ public:
 	void Finalize();
 	void DrawProfileMonitor();
 
+	static void AddLog(std::string_view log, const std::source_location& location = std::source_location::current());
+	static void ClearLog() { m_logBuffer.clear(); }
+
 	void SetWindow(Window* pDevice) { m_pWindow = pDevice; }
 	void SetFpsTimer(FpsTimer* pDevice) { m_pFpsTimer = pDevice; }
 	void SetGraphicsDevice(GraphicsDevice* pDevice) { m_pGraphicsDevice = pDevice; }
@@ -27,6 +30,8 @@ public:
 
 private:
 
+	static ImGuiTextBuffer m_logBuffer;//ログ用のImGui専用バッファー
+	static bool m_addLog;//ログを追加
 	bool m_inifile;//iniを作成するかどうか
 
 	//監視サブシステム群
@@ -37,6 +42,9 @@ private:
 
 private:
 
+	void SceneMonitor(ImGuiWindowFlags wflags);
+	void AudioMonitor(ImGuiWindowFlags wflags);
+	void LogMonitor(ImGuiWindowFlags wflags);
 	void PlotVolumeMeter(const float refreshRate = 30.0f);
 
 };

@@ -11,14 +11,14 @@ class SoundData : public AudioDeviceChild
 {
 public:
 
-	bool Create(const std::wstring& filepath, bool loop, bool useFilter);
+	bool Create(const std::string& filepath, bool loop, bool useFilter);
 	void Release();
 
 	XAUDIO2_BUFFER		m_buffer;
 	WAVEFORMATEX*		m_pWaveFormat;//WAVデータのフォーマット
 	std::vector<BYTE>	m_mediaData;
 
-	std::wstring		m_filepath;
+	std::string			m_filepath;
 	bool				m_loop;
 	bool				m_useFilter;
 
@@ -29,7 +29,7 @@ class Sound : public AudioDeviceChild
 {
 public:
 
-	Sound(const std::wstring& filepath, bool loop, bool useFilter);
+	Sound(const std::string& filepath, bool loop, bool useFilter);
 	~Sound() { Release(); }
 
 	void Update();
@@ -46,6 +46,8 @@ public:
 
 	float GetVolume();
 	bool IsPlaying();
+
+	const std::string GetName();
 
 private:
 
@@ -64,7 +66,7 @@ private:
 private:
 
 	void UpdateFade();
-	bool Load(const std::wstring& filepath, bool loop, bool useFilter);//任意のタイミングで呼びたいかもしれない
+	bool Load(const std::string& filepath, bool loop, bool useFilter);//任意のタイミングで呼びたいかもしれない
 	bool SubmitBuffer(bool loop, UINT32 playBegin);
 
 };

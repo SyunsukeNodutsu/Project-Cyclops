@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
-Sound::Sound(const std::wstring& filepath, bool loop, bool useFilter)
+Sound::Sound(const std::string& filepath, bool loop, bool useFilter)
     : m_soundData()
     , m_pSourceVoice(nullptr)
     , m_timer()
@@ -211,6 +211,14 @@ bool Sound::IsPlaying()
 }
 
 //-----------------------------------------------------------------------------
+// 名前を返す
+//-----------------------------------------------------------------------------
+const std::string Sound::GetName()
+{
+    return Utility::GetFilenameFromFullpath(m_soundData.m_filepath);
+}
+
+//-----------------------------------------------------------------------------
 // フェード更新
 //-----------------------------------------------------------------------------
 void Sound::UpdateFade()
@@ -234,7 +242,7 @@ void Sound::UpdateFade()
 //-----------------------------------------------------------------------------
 // 読み込み
 //-----------------------------------------------------------------------------
-bool Sound::Load(const std::wstring& filepath, bool loop, bool useFilter)
+bool Sound::Load(const std::string& filepath, bool loop, bool useFilter)
 {
     if (m_audioDevice == nullptr) return false;
     if (m_audioDevice->m_pX2Audio == nullptr) return false;
@@ -266,7 +274,7 @@ bool Sound::Load(const std::wstring& filepath, bool loop, bool useFilter)
     if (!SubmitBuffer(loop, 0))
         return false;
 
-    Debug::Log(L"SourceVoice作成: " + Utility::GetFilenameFromFullpath(m_soundData.m_filepath));
+    Debug::Log("SourceVoice作成: " + Utility::GetFilenameFromFullpath(m_soundData.m_filepath));
     return true;
 }
 
@@ -301,7 +309,7 @@ bool Sound::SubmitBuffer(bool loop, UINT32 playBegin)
 //-----------------------------------------------------------------------------
 // 作成
 //-----------------------------------------------------------------------------
-bool SoundData::Create(const std::wstring& filepath, bool loop, bool useFilter)
+bool SoundData::Create(const std::string& filepath, bool loop, bool useFilter)
 {
     //ユーザーデータ取得
     m_filepath = filepath;
@@ -310,7 +318,7 @@ bool SoundData::Create(const std::wstring& filepath, bool loop, bool useFilter)
 
     //ソースリーダー作成
     IMFSourceReader* pMFSourceReader = nullptr;
-    if (FAILED(MFCreateSourceReaderFromURL(filepath.c_str(), nullptr, &pMFSourceReader)))
+    if (FAILED(MFCreateSourceReaderFromURL(sjis_to_wide(filepath).c_str(), nullptr, &pMFSourceReader)))
     {
         Debug::Log("MFCreateSourceReaderFromURL失敗."); return false;
     }

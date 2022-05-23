@@ -66,6 +66,9 @@
 // 
 //--------------------------------------------------
 
+//StringConverter
+#include <strconv.h>
+
 //DirectXTex
 #include <DirectXTex.h>
 #pragma comment(lib,"DirectXTex.lib")
