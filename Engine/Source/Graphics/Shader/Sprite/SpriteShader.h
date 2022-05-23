@@ -43,6 +43,6 @@ private:
 	Matrix						m_prevProjMatrix;
 	bool						m_begin;
 
-	void SetVertex(const Texture* pTexture, Vector2 pos, Vector2 pivot = Vector2(0.5f));
+	void SetVertices(const Texture* pTexture, Vector2 pos, Vector2 pivot = Vector2(0.5f));
 
 };

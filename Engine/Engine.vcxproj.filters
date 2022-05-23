@@ -168,6 +168,9 @@
     <ClCompile Include="Source\Profile\ImGuiProfile.cpp">
       <Filter>Source\Profile</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Math\Vector2.cpp">
+      <Filter>Source\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window\Window.h">

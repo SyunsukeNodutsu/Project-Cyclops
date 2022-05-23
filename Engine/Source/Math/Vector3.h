@@ -54,9 +54,6 @@ public:
 
 	static const Vector3 Zero;
 	static const Vector3 One;
-	static const Vector3 UnitX;
-	static const Vector3 UnitY;
-	static const Vector3 UnitZ;
 	static const Vector3 Up;
 	static const Vector3 Down;
 	static const Vector3 Right;

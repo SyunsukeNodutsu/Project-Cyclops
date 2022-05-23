@@ -90,7 +90,7 @@ void GameDemo::Initialize()
 
 	m_profile.Start("テクスチャ読み込み");
 	m_spTexture = std::make_shared<Texture>();
-	m_spTexture->Load(L"Assets/test.jpg");
+	m_spTexture->Load(L"Assets/test2.jpg");
 	m_profile.End();
 }
 

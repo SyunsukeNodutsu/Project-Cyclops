@@ -30,4 +30,7 @@ public:
 	static float Dot(const Vector2& v1, const Vector2& v2) { return DirectX::XMVector2Dot(v1, v2).m128_f32[0]; }
 	static Vector2 Cross(const Vector2& v1, const Vector2& v2) { return DirectX::XMVector2Cross(v1, v2); }
 
+	static const Vector2 Zero;
+	static const Vector2 One;
+
 };

@@ -147,3 +147,19 @@ void Debug::Log(const std::wstring& log, const std::source_location& location)
 	Log(wide_to_sjis(log), location);
 #endif
 }
+
+//-----------------------------------------------------------------------------
+// エラーログを投げる
+//-----------------------------------------------------------------------------
+void Debug::LogError(const std::string& log, const std::source_location& location)
+{
+#if _DEBUG
+	Log(log, location);
+#endif
+}
+void Debug::LogError(const std::wstring& log, const std::source_location& location)
+{
+#if _DEBUG
+	Log(wide_to_sjis(log), location);
+#endif
+}

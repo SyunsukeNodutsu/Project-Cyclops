@@ -137,7 +137,7 @@ void SpriteShader::DrawTexture(const Texture* pTexture, Vector2 pos, Vector2 piv
 	m_graphicsDevice->m_cpContext->VSSetShaderResources(0, 1, pTexture->SRVAddress());
 	m_graphicsDevice->m_cpContext->PSSetShaderResources(0, 1, pTexture->SRVAddress());
 
-	SetVertex(pTexture, pos, pivot);
+	SetVertices(pTexture, pos, pivot);
 
 	m_graphicsDevice->DrawVertices(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, 4, m_vertices.data(), sizeof(Vertex));
 
@@ -150,8 +150,11 @@ void SpriteShader::DrawTexture(const Texture* pTexture, Vector2 pos, Vector2 piv
 //-----------------------------------------------------------------------------
 // 頂点情報設定
 //-----------------------------------------------------------------------------
-void SpriteShader::SetVertex(const Texture* pTexture, Vector2 pos, Vector2 pivot)
+void SpriteShader::SetVertices(const Texture* pTexture, Vector2 pos, Vector2 pivot)
 {
+	pivot.x = std::clamp(pivot.x, 0.0f, 1.0f);
+	pivot.y = std::clamp(pivot.y, 0.0f, 1.0f);
+
 	const float width	= static_cast<float>(pTexture->GetWidth());
 	const float height	= static_cast<float>(pTexture->GetHeight());
 
