@@ -141,27 +141,6 @@
     <ClCompile Include="Source\Graphics\Shader\ShaderManager.cpp">
       <Filter>Source\Graphics\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="..\imGui\imgui.cpp">
-      <Filter>Library\imGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\imGui\imgui_demo.cpp">
-      <Filter>Library\imGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\imGui\imgui_draw.cpp">
-      <Filter>Library\imGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\imGui\imgui_impl_dx11.cpp">
-      <Filter>Library\imGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\imGui\imgui_impl_win32.cpp">
-      <Filter>Library\imGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\imGui\imgui_tables.cpp">
-      <Filter>Library\imGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\imGui\imgui_widgets.cpp">
-      <Filter>Library\imGui</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Profile\Profile.cpp">
       <Filter>Source\Profile</Filter>
     </ClCompile>
@@ -170,6 +149,27 @@
     </ClCompile>
     <ClCompile Include="Source\Math\Vector2.cpp">
       <Filter>Source\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\imGui\imgui.cpp">
+      <Filter>Library\imGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\imGui\imgui_demo.cpp">
+      <Filter>Library\imGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\imGui\imgui_draw.cpp">
+      <Filter>Library\imGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\imGui\imgui_impl_dx11.cpp">
+      <Filter>Library\imGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\imGui\imgui_impl_win32.cpp">
+      <Filter>Library\imGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\imGui\imgui_tables.cpp">
+      <Filter>Library\imGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\imGui\imgui_widgets.cpp">
+      <Filter>Library\imGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -281,38 +281,38 @@
     <ClInclude Include="Source\Graphics\Shader\ShaderManager.h">
       <Filter>Source\Graphics\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="..\imGui\imstb_truetype.h">
-      <Filter>Library\imGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\imGui\imconfig.h">
-      <Filter>Library\imGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\imGui\imgui.h">
-      <Filter>Library\imGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\imGui\imgui_glyph_ranges_jp.h">
-      <Filter>Library\imGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\imGui\imgui_impl_dx11.h">
-      <Filter>Library\imGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\imGui\imgui_impl_win32.h">
-      <Filter>Library\imGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\imGui\imgui_internal.h">
-      <Filter>Library\imGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\imGui\imstb_rectpack.h">
-      <Filter>Library\imGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\imGui\imstb_textedit.h">
-      <Filter>Library\imGui</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Profile\Profile.h">
       <Filter>Source\Profile</Filter>
     </ClInclude>
     <ClInclude Include="Source\Profile\ImGuiProfile.h">
       <Filter>Source\Profile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\imGui\imconfig.h">
+      <Filter>Library\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\imGui\imgui.h">
+      <Filter>Library\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\imGui\imgui_glyph_ranges_jp.h">
+      <Filter>Library\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\imGui\imgui_impl_dx11.h">
+      <Filter>Library\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\imGui\imgui_impl_win32.h">
+      <Filter>Library\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\imGui\imgui_internal.h">
+      <Filter>Library\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\imGui\imstb_rectpack.h">
+      <Filter>Library\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\imGui\imstb_textedit.h">
+      <Filter>Library\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\imGui\imstb_truetype.h">
+      <Filter>Library\imGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
