@@ -162,6 +162,7 @@ void ImGuiProfile::AudioMonitor(ImGuiWindowFlags wflags)
 	if (ImGui::SliderFloat("Main", &volume, 0.0f, 1.0f, "%.2f"))
 		m_pAudioDevice->SetMasterVolume(volume);
 
+	//サウンドリスト列挙
 	static std::weak_ptr<Sound> wpSound;
 	for (auto& sound : m_pAudioDevice->GetSoundList())
 	{
@@ -174,6 +175,9 @@ void ImGuiProfile::AudioMonitor(ImGuiWindowFlags wflags)
 		ImGui::PopID();
 	}
 
+	ImGui::Separator();
+
+	//サウンドリストで選んだサウンドを編集
 	if (wpSound.lock())
 	{
 		ImGui::Text(std::string("Select: " + wpSound.lock()->GetName()).c_str());
@@ -183,9 +187,9 @@ void ImGuiProfile::AudioMonitor(ImGuiWindowFlags wflags)
 			wpSound.lock()->SetVolume(val);
 
 		static float frequencym = 0.0f;
-		if (ImGui::SliderFloat("Frequencym", &frequencym, 0.0f, XAUDIO2_MAX_FILTER_FREQUENCY, "%.2f")) {}
-		static float oneOverQ = 1.414f;
-		if (ImGui::SliderFloat("OneOverQ", &oneOverQ, 0.1f, XAUDIO2_MAX_FILTER_ONEOVERQ, "%.3f")) {}
+		if (ImGui::SliderFloat("Frequencym", &frequencym, 0.0f, XAUDIO2_MAX_FILTER_FREQUENCY, "%.4f")) {}
+		static float oneOverQ = 1.4142f;
+		if (ImGui::SliderFloat("OneOverQ", &oneOverQ, 0.1f, XAUDIO2_MAX_FILTER_ONEOVERQ, "%.4f")) {}
 		static float pan = 0.0f;
 		if (ImGui::SliderFloat("Pan", &pan, -1.0f, 1.0f, "%.2f")) {}
 
@@ -200,6 +204,8 @@ void ImGuiProfile::AudioMonitor(ImGuiWindowFlags wflags)
 
 	}
 	else ImGui::Text("Select: none");
+
+	ImGui::Separator();
 
 	PlotVolumeMeter(30.0f);
 
