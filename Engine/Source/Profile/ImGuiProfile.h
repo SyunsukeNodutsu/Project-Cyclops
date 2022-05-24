@@ -20,8 +20,8 @@ public:
 	void Finalize();
 	void DrawProfileMonitor();
 
-	static void AddLog(std::string_view log, const std::source_location& location = std::source_location::current());
-	static void ClearLog() { m_logBuffer.clear(); }
+	static void AddLog(std::string_view log, const Vector3& color = Vector3(1, 1, 1) , const std::source_location& location = std::source_location::current());
+	static void ClearLog() { m_logDatas.clear(); }
 
 	void SetWindow(Window* pDevice) { m_pWindow = pDevice; }
 	void SetFpsTimer(FpsTimer* pDevice) { m_pFpsTimer = pDevice; }
@@ -30,9 +30,17 @@ public:
 
 private:
 
-	static ImGuiTextBuffer m_logBuffer;//ログ用のImGui専用バッファー
+	//色のあるログ
+	struct LogData
+	{
+		std::string log = "";
+		Vector3 color = Vector3::Zero;
+	};
+	static std::list<LogData> m_logDatas;
 	static bool m_addLog;//ログを追加
+
 	bool m_inifile;//iniを作成するかどうか
+	bool m_showDemo;
 
 	//監視サブシステム群
 	Window*			m_pWindow;

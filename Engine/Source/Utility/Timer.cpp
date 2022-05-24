@@ -39,7 +39,7 @@ void FpsTimer::Tick()
 	//そのまま使うと時間が大きすぎてゲームの処理が破綻するのを防ぐ
 	if (deltaTime > m_maxDelta) {
 		deltaTime = m_maxDelta;
-		Debug::Log("処理落ちしました システム起動からの経過時間: " + ToString(TicksToSeconds(m_totalTicks)));
+		Debug::LogWarning("処理落ちしました システム起動からの経過時間: " + ToString(TicksToSeconds(m_totalTicks)));
 	}
 
 	//時間として扱えるように計算

@@ -19,7 +19,7 @@ bool RendererStatus::Initialize()
 		m_cb4Behaviour.Work().m_uvTiling = 0;
 		m_cb4Behaviour.Write();
 	}
-	else { Debug::Log("定数バッファ(Behaviour)作成失敗."); return false; }
+	else { Debug::LogError("定数バッファ(Behaviour)作成失敗."); return false; }
 
 	if (m_cb5Camera.Create())
 	{
@@ -34,7 +34,7 @@ bool RendererStatus::Initialize()
 		m_cb5Camera.Work().m_cameraMatrix = Matrix();
 		m_cb5Camera.Write();
 	}
-	else { Debug::Log("定数バッファ(Camera)作成失敗."); return false; }
+	else { Debug::LogError("定数バッファ(Camera)作成失敗."); return false; }
 
 	if (m_cb6Light.Create())
 	{
@@ -43,7 +43,7 @@ bool RendererStatus::Initialize()
 		m_cb6Light.Work().m_enable = true;
 		m_cb6Light.Write();
 	}
-	else { Debug::Log("定数バッファ(Light)作成失敗."); return false; }
+	else { Debug::LogError("定数バッファ(Light)作成失敗."); return false; }
 
 	if (m_cb7Time.Create())
 	{
@@ -53,7 +53,7 @@ bool RendererStatus::Initialize()
 		m_cb7Time.Work().m_deltaTime = 0.0f;
 		m_cb7Time.Write();
 	}
-	else { Debug::Log("定数バッファ(Time)作成失敗."); return false; }
+	else { Debug::LogError("定数バッファ(Time)作成失敗."); return false; }
 
     return true;
 }
@@ -162,40 +162,22 @@ bool RendererStatus::CreateSampler(SS_FilterMode filter, SS_AddressMode address)
 	//フィルタリングモード
 	switch (filter)
 	{
-	case SS_FilterMode::Linear:
-		desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-		break;
-
-	case SS_FilterMode::Point:
-		desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-		break;
-
-	case SS_FilterMode::Aniso:
-		desc.Filter = D3D11_FILTER_ANISOTROPIC;
-		desc.MaxAnisotropy = 4;
-		break;
+	case SS_FilterMode::Linear: desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;					break;
+	case SS_FilterMode::Point:	desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;					break;
+	case SS_FilterMode::Aniso:	desc.Filter = D3D11_FILTER_ANISOTROPIC; desc.MaxAnisotropy = 4; break;
 	}
-
 	//アドレッシングモード
 	switch (address)
 	{
-	case SS_AddressMode::Wrap:
-		desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-		break;
-
-	case SS_AddressMode::Mirror:
-		desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_MIRROR;
-		break;
-
-	case SS_AddressMode::Clamp:
-		desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-		break;
+	case SS_AddressMode::Wrap:		desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;		break;
+	case SS_AddressMode::Mirror:	desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_MIRROR;	break;
+	case SS_AddressMode::Clamp:		desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;	break;
 	}
 
 	ComPtr<ID3D11SamplerState> state = nullptr;
 	if (FAILED(m_graphicsDevice->m_cpDevice.Get()->CreateSamplerState(&desc, state.GetAddressOf())))
 	{
-		Debug::Log("エラー：サンプラーステート作成失敗"); return false;
+		Debug::LogError("サンプラーステート作成失敗"); return false;
 	}
 
 	//登録/追加
@@ -217,15 +199,15 @@ bool RendererStatus::CreateRasterrize(RS_CullMode cull, RS_FillMode fill)
 	//カリングモード
 	switch (cull)
 	{
-	case RS_CullMode::CullNone: desc.CullMode = D3D11_CULL_NONE; break;
-	case RS_CullMode::Front: desc.CullMode = D3D11_CULL_FRONT; break;
-	case RS_CullMode::Back: desc.CullMode = D3D11_CULL_BACK; break;
+	case RS_CullMode::CullNone: desc.CullMode	= D3D11_CULL_NONE;	break;
+	case RS_CullMode::Front: desc.CullMode		= D3D11_CULL_FRONT; break;
+	case RS_CullMode::Back: desc.CullMode		= D3D11_CULL_BACK;	break;
 	}
 	//塗りつぶし設定
 	switch (fill)
 	{
-	case RS_FillMode::Solid: desc.FillMode = D3D11_FILL_SOLID; break;
-	case RS_FillMode::Wire:  desc.FillMode = D3D11_FILL_WIREFRAME; break;
+	case RS_FillMode::Solid: desc.FillMode = D3D11_FILL_SOLID;		break;
+	case RS_FillMode::Wire:  desc.FillMode = D3D11_FILL_WIREFRAME;	break;
 	}
 
 	desc.FrontCounterClockwise	= FALSE;
@@ -240,7 +222,7 @@ bool RendererStatus::CreateRasterrize(RS_CullMode cull, RS_FillMode fill)
 	ComPtr<ID3D11RasterizerState> state = nullptr;
 	if (FAILED(m_graphicsDevice->m_cpDevice.Get()->CreateRasterizerState(&desc, state.GetAddressOf())))
 	{
-		Debug::Log("エラー：ラスタライザーステート作成失敗"); return false;
+		Debug::LogError("ラスタライザーステート作成失敗"); return false;
 	}
 
 	m_rasterizerState[(cull | fill)] = state;
@@ -257,23 +239,17 @@ ComPtr<ID3D11DepthStencilState> RendererStatus::CreateDepthStencil(bool zUse, bo
 	if (m_graphicsDevice->m_cpContext == nullptr) return nullptr;
 
 	D3D11_DEPTH_STENCIL_DESC desc{};
-
-	//深度テスト
-	desc.DepthEnable = zUse;
-	desc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;//判定方法
-
-	//深度書き込み
-	desc.DepthWriteMask = zWrite ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
-
-	//Stencil使用せず
-	desc.StencilEnable = FALSE;
-	desc.StencilReadMask = 0;
-	desc.StencilWriteMask = 0;
+	desc.DepthEnable		= zUse;
+	desc.DepthFunc			= D3D11_COMPARISON_LESS_EQUAL;//判定方法
+	desc.DepthWriteMask		= zWrite ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
+	desc.StencilEnable		= FALSE;//Stencil使用せず
+	desc.StencilReadMask	= 0;
+	desc.StencilWriteMask	= 0;
 
 	ComPtr<ID3D11DepthStencilState> state = nullptr;
 	if (FAILED(m_graphicsDevice->m_cpDevice.Get()->CreateDepthStencilState(&desc, &state)))
 	{
-		Debug::Log("エラー：デプスステンシルステート作成失敗"); return nullptr;
+		Debug::LogError("デプスステンシルステート作成失敗"); return nullptr;
 	}
 
 	return state;
@@ -288,40 +264,39 @@ ComPtr<ID3D11BlendState> RendererStatus::CreateBlend(BlendMode flag)
 	if (m_graphicsDevice->m_cpContext == nullptr) return nullptr;
 
 	D3D11_BLEND_DESC desc{};
-	desc.RenderTarget[0].BlendEnable = TRUE;
-	//書き込みマスク ALL...RGBA全て出力
-	desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-	desc.IndependentBlendEnable = FALSE;
-	desc.AlphaToCoverageEnable = FALSE;
+	desc.IndependentBlendEnable					= FALSE;
+	desc.AlphaToCoverageEnable					= FALSE;
+	desc.RenderTarget[0].BlendEnable			= TRUE;
+	desc.RenderTarget[0].RenderTargetWriteMask	= D3D11_COLOR_WRITE_ENABLE_ALL;//RGBA全て出力
 
 	switch (flag)
 	{
 	case BlendMode::Alpha:
 		//色の合成方法
-		desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-		desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-		desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+		desc.RenderTarget[0].BlendOp		= D3D11_BLEND_OP_ADD;
+		desc.RenderTarget[0].SrcBlend		= D3D11_BLEND_SRC_ALPHA;
+		desc.RenderTarget[0].DestBlend		= D3D11_BLEND_INV_SRC_ALPHA;
 		//アルファの合成方法
-		desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-		desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		desc.RenderTarget[0].BlendOpAlpha	= D3D11_BLEND_OP_ADD;
+		desc.RenderTarget[0].SrcBlendAlpha	= D3D11_BLEND_ONE;
 		desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
 		break;
 
 	case BlendMode::Add://加算ブレンド
-		desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-		desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-		desc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
-		desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-		desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		desc.RenderTarget[0].BlendOp		= D3D11_BLEND_OP_ADD;
+		desc.RenderTarget[0].SrcBlend		= D3D11_BLEND_SRC_ALPHA;
+		desc.RenderTarget[0].DestBlend		= D3D11_BLEND_ONE;
+		desc.RenderTarget[0].BlendOpAlpha	= D3D11_BLEND_OP_ADD;
+		desc.RenderTarget[0].SrcBlendAlpha	= D3D11_BLEND_ONE;
 		desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
 		break;
 
 	case BlendMode::BlendNone://ブレンドしない
-		desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-		desc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
-		desc.RenderTarget[0].DestBlend = D3D11_BLEND_ZERO;
-		desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-		desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		desc.RenderTarget[0].BlendOp		= D3D11_BLEND_OP_ADD;
+		desc.RenderTarget[0].SrcBlend		= D3D11_BLEND_ONE;
+		desc.RenderTarget[0].DestBlend		= D3D11_BLEND_ZERO;
+		desc.RenderTarget[0].BlendOpAlpha	= D3D11_BLEND_OP_ADD;
+		desc.RenderTarget[0].SrcBlendAlpha	= D3D11_BLEND_ONE;
 		desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 		break;
 	}
@@ -329,7 +304,7 @@ ComPtr<ID3D11BlendState> RendererStatus::CreateBlend(BlendMode flag)
 	ComPtr<ID3D11BlendState> state = nullptr;
 	if (FAILED(m_graphicsDevice->m_cpDevice.Get()->CreateBlendState(&desc, state.GetAddressOf())))
 	{
-		Debug::Log("エラー：ブレンドステート作成失敗."); return nullptr;
+		Debug::LogError("ブレンドステート作成失敗."); return nullptr;
 	}
 
 	return state;

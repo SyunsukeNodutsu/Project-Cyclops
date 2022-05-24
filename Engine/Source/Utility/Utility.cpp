@@ -149,17 +149,49 @@ void Debug::Log(const std::wstring& log, const std::source_location& location)
 }
 
 //-----------------------------------------------------------------------------
+// 警告ログを投げる
+//-----------------------------------------------------------------------------
+void Debug::LogWarning(const std::string& log, const std::source_location& location)
+{
+#if _DEBUG
+	const std::string& file_name = location.file_name();
+	const std::string& func_name = location.function_name();
+	const UINT32& line = location.line();
+	const UINT32& column = location.column();
+
+	const auto& final_log = std::string(log + "\n" + "  ->" + Utility::GetFilenameFromFullpath(file_name) + ": " + func_name + "(" + ToString(line) + ", " + ToString(column) + ") : \n\n");
+	OutputDebugStringA(final_log.c_str());
+
+	ImGuiProfile::AddLog(final_log, Vector3(1, 1, 0));
+#endif
+}
+void Debug::LogWarning(const std::wstring& log, const std::source_location& location)
+{
+#if _DEBUG
+	LogWarning(wide_to_sjis(log), location);
+#endif
+}
+
+//-----------------------------------------------------------------------------
 // エラーログを投げる
 //-----------------------------------------------------------------------------
 void Debug::LogError(const std::string& log, const std::source_location& location)
 {
 #if _DEBUG
-	Log(log, location);
+	const std::string& file_name = location.file_name();
+	const std::string& func_name = location.function_name();
+	const UINT32& line = location.line();
+	const UINT32& column = location.column();
+
+	const auto& final_log = std::string(log + "\n" + "  ->" + Utility::GetFilenameFromFullpath(file_name) + ": " + func_name + "(" + ToString(line) + ", " + ToString(column) + ") : \n\n");
+	OutputDebugStringA(final_log.c_str());
+
+	ImGuiProfile::AddLog(final_log, Vector3(1, 0, 0));
 #endif
 }
 void Debug::LogError(const std::wstring& log, const std::source_location& location)
 {
 #if _DEBUG
-	Log(wide_to_sjis(log), location);
+	LogError(wide_to_sjis(log), location);
 #endif
 }

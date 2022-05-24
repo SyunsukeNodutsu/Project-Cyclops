@@ -30,23 +30,23 @@ bool GraphicsDevice::Initialize()
 	//DXGIファクトリー作成
 	if (FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), reinterpret_cast<void**>(m_cpFactory.GetAddressOf()))))
 	{
-		Debug::Log("DXGIファクトリー作成失敗."); return false;
+		Debug::LogError("DXGIファクトリー作成失敗."); return false;
 	}
 
-	if (!CreateDevice()) { Debug::Log("デバイス/デバイスコンテキスト作成失敗."); return false; }
-	if (!CreateSwapChain()) { Debug::Log("スワップチェイン作成失敗."); return false; }
-	if (!CreateBackBuffer()) { Debug::Log("バックバッファー作成失敗."); return false; }
-	if (!CreateViewport()) { Debug::Log("ビューポート変換行列の登録失敗."); return false; }
+	if (!CreateDevice()) { Debug::LogError("デバイス/デバイスコンテキスト作成失敗."); return false; }
+	if (!CreateSwapChain()) { Debug::LogError("スワップチェイン作成失敗."); return false; }
+	if (!CreateBackBuffer()) { Debug::LogError("バックバッファー作成失敗."); return false; }
+	if (!CreateViewport()) { Debug::LogError("ビューポート変換行列の登録失敗."); return false; }
 
 	//初期レンダーターゲット設定
 	m_cpContext->OMSetRenderTargets(1, m_spBackbuffer->RTVAddress(), m_spDefaultZbuffer->DSV());
 
 	//所持マネージャ初期化
 	m_spRendererStatus = std::make_shared<RendererStatus>();
-	if (!m_spRendererStatus->Initialize()) { Debug::Log("RendererStatusの初期化失敗."); return false; }
+	if (!m_spRendererStatus->Initialize()) { Debug::LogError("RendererStatusの初期化失敗."); return false; }
 
 	m_spShaderManager = std::make_shared<ShaderManager>();
-	if (!m_spShaderManager->Initialize()) { Debug::Log("ShaderManagerの初期化失敗."); return false; }
+	if (!m_spShaderManager->Initialize()) { Debug::LogError("ShaderManagerの初期化失敗."); return false; }
 
 	//使いまわしバッファ
 	UINT bufferSize = 80;
@@ -160,12 +160,12 @@ void GraphicsDevice::Resize(WPARAM wparam, UINT width, UINT height)
 
 	if (FAILED(m_cpGISwapChain->ResizeBuffers(swapChainDesc.BufferCount, width, height, swapChainDesc.BufferDesc.Format, swapChainDesc.Flags)))
 	{
-		Debug::Log("ResizeBuffers失敗."); return;
+		Debug::LogError("ResizeBuffers失敗."); return;
 	}
 
 	if (!CreateBackBuffer())
 	{
-		Debug::Log("バックバッファー作成失敗."); return;
+		Debug::LogError("バックバッファー作成失敗."); return;
 	}
 
 	CreateViewport();
@@ -181,11 +181,11 @@ void GraphicsDevice::ToggleScreen(bool fullscreen)
 	ComPtr<IDXGIOutput> pOutput;
 	if (m_cpAdapter->EnumOutputs(0, pOutput.GetAddressOf()) == DXGI_ERROR_NOT_FOUND)
 	{
-		Debug::Log("アダプターの出力先が見つかりません."); return;
+		Debug::LogError("アダプターの出力先が見つかりません."); return;
 	}
 	if (FAILED(m_cpGISwapChain->SetFullscreenState(fullscreen, NULL)))
 	{
-		Debug::Log("SetFullscreenState失敗."); return;
+		Debug::LogError("SetFullscreenState失敗."); return;
 	}
 
 	Resize(WPARAM(), 1920, 1080);

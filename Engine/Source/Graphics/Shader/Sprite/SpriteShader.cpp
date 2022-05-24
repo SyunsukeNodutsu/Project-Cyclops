@@ -24,7 +24,7 @@ bool SpriteShader::Initialize()
 
 		if (FAILED(m_graphicsDevice->m_cpDevice.Get()->CreateVertexShader(compiledBuffer, sizeof(compiledBuffer), nullptr, m_cpVS.GetAddressOf())))
 		{
-			Debug::Log("頂点シェーダー作成失敗."); return false;
+			Debug::LogError("頂点シェーダー作成失敗."); return false;
 		}
 
 		//頂点インプットレイアウト作成
@@ -35,7 +35,7 @@ bool SpriteShader::Initialize()
 
 		if (FAILED(m_graphicsDevice->m_cpDevice.Get()->CreateInputLayout(&layout[0], (UINT)layout.size(), compiledBuffer, sizeof(compiledBuffer), m_cpInputLayout.GetAddressOf())))
 		{
-			Debug::Log("CreateInputLayout失敗."); return false;
+			Debug::LogError("CreateInputLayout失敗."); return false;
 		}
 	}
 
@@ -45,7 +45,7 @@ bool SpriteShader::Initialize()
 
 		if (FAILED(m_graphicsDevice->m_cpDevice.Get()->CreatePixelShader(compiledBuffer, sizeof(compiledBuffer), nullptr, m_cpPS.GetAddressOf())))
 		{
-			Debug::Log("ピクセルシェーダー作成失敗."); return false;
+			Debug::LogError("ピクセルシェーダー作成失敗."); return false;
 		}
 	}
 
@@ -57,7 +57,7 @@ bool SpriteShader::Initialize()
 		m_cb0Sprite.Work().m_color = Vector4(0, 0, 0, 0);
 		m_cb0Sprite.Write();
 	}
-	else { Debug::Log("定数バッファ(Sprite)作成失敗."); return false; }
+	else { Debug::LogError("定数バッファ(Sprite)作成失敗."); return false; }
 
 	return true;
 }
@@ -124,7 +124,7 @@ void SpriteShader::DrawTexture(const Texture* pTexture, Vector2 pos, Vector2 piv
 	if (m_graphicsDevice->m_spRendererStatus == nullptr) return;
 
 	if (pTexture == nullptr) return;
-	if (!m_begin) { Debug::Log("エラー：Begin()が呼ばれていません."); return; }
+	if (!m_begin) { Debug::LogError("Begin()が呼ばれていません."); return; }
 
 	//解像度に応じて拡縮
 	const float rateX = m_graphicsDevice->m_viewport.Width / 1280;

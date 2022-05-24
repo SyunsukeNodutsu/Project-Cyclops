@@ -23,7 +23,7 @@ bool Buffer::Create(UINT bindFlags, UINT bufferSize, D3D11_USAGE bufferUsage, co
 	{
 		if (bufferSize % 16 != 0)
 		{
-			Debug::Log("エラー：定数バッファ アライメント."); return false;
+			Debug::LogError("定数バッファ アライメント."); return false;
 		}
 	}
 
@@ -56,7 +56,7 @@ bool Buffer::Create(UINT bindFlags, UINT bufferSize, D3D11_USAGE bufferUsage, co
 
 	if (FAILED(m_graphicsDevice->m_cpDevice.Get()->CreateBuffer(&desc, initData, &m_cpBuffer)))
 	{
-		Debug::Log("エラー：バッファ作成失敗."); return false;
+		Debug::LogError("バッファ作成失敗."); return false;
 	}
 
 	m_usage = bufferUsage;
@@ -108,7 +108,7 @@ void Buffer::CopyFrom(const Buffer& srcBuffer)
 {
 	if (m_graphicsDevice == nullptr) return;
 	if (m_graphicsDevice->m_cpContext == nullptr) return;
-	if (m_cpBuffer.Get() == nullptr) return;
+
 	if (srcBuffer.Get() == nullptr) return;
 
 	m_graphicsDevice->m_cpContext.Get()->CopyResource(m_cpBuffer.Get(), srcBuffer.Get());

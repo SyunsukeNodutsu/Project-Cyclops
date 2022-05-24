@@ -25,8 +25,7 @@ ID3D11Texture2D* Texture::GetResource() const
 	ID3D11Texture2D* texture;
 	if (FAILED(res->QueryInterface<ID3D11Texture2D>(&texture)))
 	{
-		res->Release();
-		return nullptr;
+		res->Release(); return nullptr;
 	}
 	res->Release();
 	texture->Release();
@@ -35,7 +34,7 @@ ID3D11Texture2D* Texture::GetResource() const
 }
 
 //-----------------------------------------------------------------------------
-// パスから読み込み
+// パスから読み込み(DirectX Texライブラリを使用して画像を読み込む)
 //-----------------------------------------------------------------------------
 bool Texture::Load(const std::wstring& filepath, bool renderTarget, bool depthStencil, bool mipmap)
 {
@@ -45,55 +44,36 @@ bool Texture::Load(const std::wstring& filepath, bool renderTarget, bool depthSt
 
 	UINT bindFlags = 0;
 	bindFlags |= D3D11_BIND_SHADER_RESOURCE;
-	if (renderTarget)bindFlags |= D3D11_BIND_RENDER_TARGET;
-	if (depthStencil)bindFlags |= D3D11_BIND_DEPTH_STENCIL;
-
-
-	// ※DirectX Texライブラリを使用して画像を読み込む
+	if (renderTarget) bindFlags |= D3D11_BIND_RENDER_TARGET;
+	if (depthStencil) bindFlags |= D3D11_BIND_DEPTH_STENCIL;
 
 	DirectX::TexMetadata meta;
 	DirectX::ScratchImage image;
 
-	bool bLoaded = false;
-
-	// WIC画像読み込み
-	//  WIC_FLAGS_ALL_FRAMES … gifアニメなどの複数フレームを読み込んでくれる
+	//WIC画像読み込み
 	if (SUCCEEDED(DirectX::LoadFromWICFile(filepath.c_str(), DirectX::WIC_FLAGS_ALL_FRAMES, &meta, image)))
+		goto done;
+
+	//DDS画像読み込み
+	if (SUCCEEDED(DirectX::LoadFromDDSFile(filepath.c_str(), DirectX::DDS_FLAGS_NONE, &meta, image)))
+		goto done;
+
+	//TGA画像読み込み
+	if (SUCCEEDED(DirectX::LoadFromTGAFile(filepath.c_str(), &meta, image)))
+		goto done;
+
+	//HDR画像読み込み
+	if (SUCCEEDED(DirectX::LoadFromHDRFile(filepath.c_str(), &meta, image)))
+		goto done;
+
+	if (image.GetImages() == nullptr)
 	{
-		bLoaded = true;
+		Debug::LogError("テクスチャ読み込み失敗."); return false;
 	}
 
-	// DDS画像読み込み
-	if (bLoaded == false) {
-		if (SUCCEEDED(DirectX::LoadFromDDSFile(filepath.c_str(), DirectX::DDS_FLAGS_NONE, &meta, image)))
-		{
-			bLoaded = true;
-		}
-	}
+done:
 
-	// TGA画像読み込み
-	if (bLoaded == false) {
-		if (SUCCEEDED(DirectX::LoadFromTGAFile(filepath.c_str(), &meta, image)))
-		{
-			bLoaded = true;
-		}
-	}
-
-	// HDR画像読み込み
-	if (bLoaded == false) {
-		if (SUCCEEDED(DirectX::LoadFromHDRFile(filepath.c_str(), &meta, image)))
-		{
-			bLoaded = true;
-		}
-	}
-
-	// 読み込み失敗
-	if (bLoaded == false)
-	{
-		return false;
-	}
-
-	// ミップマップ生成
+	//ミップマップ生成
 	if (meta.mipLevels == 1 && mipmap)
 	{
 		DirectX::ScratchImage mipChain;
@@ -104,36 +84,23 @@ bool Texture::Load(const std::wstring& filepath, bool renderTarget, bool depthSt
 		}
 	}
 
-	//------------------------------------
-	// テクスチャリソース作成
-	//------------------------------------
+	//テクスチャリソース作成
 	ID3D11Texture2D* tex2D = nullptr;
-	HRESULT hr = DirectX::CreateTextureEx(
-		m_graphicsDevice->m_cpDevice.Get(),
+	HRESULT hr = DirectX::CreateTextureEx(m_graphicsDevice->m_cpDevice.Get(),
 		image.GetImages(), image.GetImageCount(), image.GetMetadata(),
-		D3D11_USAGE_DEFAULT,//Usage
-		bindFlags,//BindFlags
-		0, 0, false,
-		(ID3D11Resource**)&tex2D);
+		D3D11_USAGE_DEFAULT, bindFlags, 0, 0, false, (ID3D11Resource**)&tex2D);
 
 	if (FAILED(hr))
 	{
-		Debug::Log("CreateTextureEx失敗."); return false;
+		Debug::LogError("CreateTextureEx失敗."); return false;
 	}
 
 	//各ビュー作成
 	if (!CreateViewsFromTexture2D(tex2D, m_cpSRV.GetAddressOf(), m_cpRTV.GetAddressOf(), m_cpDSV.GetAddressOf()))
 	{
-		tex2D->Release();
-		return false;
+		Debug::LogError("CreateViewsFromTexture2D失敗."); tex2D->Release(); return false;
 	}
 
-	if (tex2D == nullptr)
-	{
-		Debug::Log("aaaa");
-	}
-
-	// 画像情報取得
 	tex2D->GetDesc(&m_desc);
 	tex2D->Release();
 
@@ -173,12 +140,12 @@ bool Texture::Create(const D3D11_TEXTURE2D_DESC& desc, const D3D11_SUBRESOURCE_D
 	ID3D11Texture2D* resource;
 	if (FAILED(m_graphicsDevice->m_cpDevice->CreateTexture2D(&desc, fillData, &resource)))
 	{
-		Debug::Log("CreateTexture2D失敗."); return false;
+		Debug::LogError("CreateTexture2D失敗."); return false;
 	}
 
 	if (CreateViewsFromTexture2D(resource, m_cpSRV.GetAddressOf(), m_cpRTV.GetAddressOf(), m_cpDSV.GetAddressOf()) == false)
 	{
-		Debug::Log("CreateViewsFromTexture2D失敗."); return false;
+		Debug::LogError("CreateViewsFromTexture2D失敗."); return false;
 	}
 
 	resource->GetDesc(&m_desc);
@@ -299,7 +266,7 @@ bool Texture::CreateViewsFromTexture2D(ID3D11Texture2D* resource, ID3D11ShaderRe
 
 		if (FAILED(m_graphicsDevice->m_cpDevice->CreateRenderTargetView(resource, &RTV_desc, ppRTV)))
 		{
-			Debug::Log("CreateRenderTargetView失敗."); return false;
+			Debug::LogError("CreateRenderTargetView失敗."); return false;
 		}
 	}
 
@@ -316,7 +283,7 @@ bool Texture::CreateViewsFromTexture2D(ID3D11Texture2D* resource, ID3D11ShaderRe
 			case DXGI_FORMAT_R16_TYPELESS: SRV_desc.Format = DXGI_FORMAT_R16_UNORM; break;//16ビット
 			case DXGI_FORMAT_R32_TYPELESS: SRV_desc.Format = DXGI_FORMAT_R32_FLOAT; break;//32ビット
 			case DXGI_FORMAT_R24G8_TYPELESS: SRV_desc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS; break;//24ビット(Zバッファ) + 8ビット(ステンシルバッファ) 
-			default: Debug::Log("非対応フォーマット."); break/*return false*/;
+			default: Debug::LogError("非対応フォーマット."); break/*return false*/;
 			}
 		}
 		//Zバッファでない場合は、そのまま同じフォーマットを使用
@@ -348,7 +315,7 @@ bool Texture::CreateViewsFromTexture2D(ID3D11Texture2D* resource, ID3D11ShaderRe
 
 		if (FAILED(m_graphicsDevice->m_cpDevice->CreateShaderResourceView(resource, &SRV_desc, ppSRV)))
 		{
-			Debug::Log("CreateShaderResourceView失敗."); return false;
+			Debug::LogError("CreateShaderResourceView失敗."); return false;
 		}
 	}
 
@@ -363,7 +330,7 @@ bool Texture::CreateViewsFromTexture2D(ID3D11Texture2D* resource, ID3D11ShaderRe
 		case DXGI_FORMAT_R16_TYPELESS: DSV_desc.Format = DXGI_FORMAT_D16_UNORM; break;//16ビット
 		case DXGI_FORMAT_R32_TYPELESS: DSV_desc.Format = DXGI_FORMAT_D32_FLOAT; break;//32ビット
 		case DXGI_FORMAT_R24G8_TYPELESS: DSV_desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; break;//24ビット(Zバッファ) + 8ビット(ステンシルバッファ) 
-		default: Debug::Log("非対応フォーマット."); break/*return false*/;
+		default: Debug::LogError("非対応フォーマット."); break/*return false*/;
 		}
 
 		//単品テクスチャの場合
@@ -383,7 +350,7 @@ bool Texture::CreateViewsFromTexture2D(ID3D11Texture2D* resource, ID3D11ShaderRe
 
 		if (FAILED(m_graphicsDevice->m_cpDevice->CreateDepthStencilView(resource, &DSV_desc, ppDSV)))
 		{
-			Debug::Log("CreateDepthStencilView失敗."); return false;
+			Debug::LogError("CreateDepthStencilView失敗."); return false;
 		}
 	}
 

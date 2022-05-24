@@ -75,6 +75,14 @@ public:
     //@param location ログに出力するロケーション情報 この値は設定しない
     static void Log(const std::wstring& log, const std::source_location& location = std::source_location::current());
 
+    //@brief 警告ログを投げる
+    //@param location ログに出力するロケーション情報 この値は設定しない
+    static void LogWarning(const std::string& log, const std::source_location& location = std::source_location::current());
+
+    //@brief 警告ログを投げる
+    //@param location ログに出力するロケーション情報 この値は設定しない
+    static void LogWarning(const std::wstring& log, const std::source_location& location = std::source_location::current());
+
     //@brief エラーログを投げる
     //@param location ログに出力するロケーション情報 この値は設定しない
     static void LogError(const std::string& log, const std::source_location& location = std::source_location::current());

@@ -1,7 +1,7 @@
 ﻿#include "Pch.h"
 #include "ImGuiProfile.h"
 
-ImGuiTextBuffer ImGuiProfile::m_logBuffer;
+std::list<ImGuiProfile::LogData> ImGuiProfile::m_logDatas;
 bool ImGuiProfile::m_addLog = false;
 
 //-----------------------------------------------------------------------------
@@ -9,6 +9,7 @@ bool ImGuiProfile::m_addLog = false;
 //-----------------------------------------------------------------------------
 ImGuiProfile::ImGuiProfile()
 	: m_inifile(false)
+	, m_showDemo(true)
 	, m_pWindow(nullptr)
 	, m_pFpsTimer(nullptr)
 	, m_pGraphicsDevice(nullptr)
@@ -69,6 +70,9 @@ void ImGuiProfile::DrawProfileMonitor()
 	if (true) wflags = ImGuiWindowFlags_NoCollapse;
 	else wflags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
 
+	if (m_showDemo)
+		ImGui::ShowDemoWindow();
+
 	SceneMonitor(wflags);
 	AudioMonitor(wflags);
 	LogMonitor(wflags);
@@ -81,20 +85,21 @@ void ImGuiProfile::DrawProfileMonitor()
 //-----------------------------------------------------------------------------
 // ログを追加
 //-----------------------------------------------------------------------------
-void ImGuiProfile::AddLog(std::string_view log, const std::source_location& location)
+void ImGuiProfile::AddLog(std::string_view log, const Vector3& color, const std::source_location& location)
 {
-	time_t jikoku;
-	tm ltime;
+	time_t times_day; tm localtime;
 
-	time(&jikoku);
-	localtime_s(&ltime, &jikoku);
+	time(&times_day);
+	localtime_s(&localtime, &times_day);
 
-	std::string buff;
-	buff += "[" + ToString(ltime.tm_hour) + ":" + ToString(ltime.tm_min) + ":" + ToString(ltime.tm_sec) + "]: ";
-	buff += log.substr();
-	buff += "\n";
+	LogData data{};
+	data.log += "[" + ToString(localtime.tm_hour) + ":" + ToString(localtime.tm_min) + ":" + ToString(localtime.tm_sec) + "]: ";
+	data.log += log.substr();
+	data.log += "\n";//TODO: もともと改行コードが入っているか確認
+	data.color = color;
 
-	m_logBuffer.append(buff.c_str());
+	m_logDatas.push_back(data);
+
 	m_addLog = true;
 }
 
@@ -109,6 +114,7 @@ void ImGuiProfile::SceneMonitor(ImGuiWindowFlags wflags)
 	ImGui::Text(std::string("DeltaTime: " + std::to_string(m_pFpsTimer->GetDeltaTime())).c_str());
 	ImGui::Text(std::string("TotalTime: " + std::to_string(m_pFpsTimer->GetTotalTime())).c_str());
 	ImGui::Text(std::string("TimeScale: " + std::to_string(m_pFpsTimer->GetTimeScale())).c_str());
+	ImGui::Text(std::string("\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e").c_str());
 
 	ImGui::End();
 }
@@ -188,19 +194,24 @@ void ImGuiProfile::LogMonitor(ImGuiWindowFlags wflags)
 		}
 		if (ImGui::Button("Clear"))
 		{
-			m_logBuffer.clear();
+			ClearLog();
 		}
 		if (ImGui::Button("Copy"))
 		{
-			ImGui::SetClipboardText(m_logBuffer.c_str());
+			ImGui::Text("todo: fix");
 			AddLog("INFO: Log copy done.");
 		}
 		ImGui::EndMenuBar();
 	}
 
-	ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 255, 255));
-	ImGui::TextUnformatted(m_logBuffer.begin());
-	ImGui::PopStyleColor();
+	//ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 255, 255));
+	//ImGui::TextUnformatted(m_logBuffer.begin());
+	//ImGui::PopStyleColor();
+
+	for (const auto& log : m_logDatas)
+	{
+		ImGui::TextColored(ImVec4(log.color.x, log.color.y, log.color.z, 1.0f), log.log.c_str());
+	}
 
 	if (m_addLog)
 	{

@@ -85,7 +85,7 @@ void Sound::Stop(bool flush)
 void Sound::SetVolume(float volume)
 {
     if (m_pSourceVoice == nullptr) return;
-    if (volume == m_prevVolume) { Debug::Log("以前の音量と同じなのでSetVolumeを飛ばします."); return; }
+    if (volume == m_prevVolume) { Debug::LogWarning("以前の音量と同じなのでSetVolumeを飛ばします."); return; }
     if (const float subb = fabsf(m_prevVolume - volume); subb <= 0.01f) { /*Debug::Log("変化量が極小なのでSetVolumeを飛ばします. 変化量: " + ToString(subb));*/ return; }
     
     volume = std::clamp(volume, -XAUDIO2_MAX_VOLUME_LEVEL, XAUDIO2_MAX_VOLUME_LEVEL);
@@ -161,7 +161,7 @@ void Sound::SetPan(float pan)
 
     if (FAILED(m_pSourceVoice->SetOutputMatrix(m_audioDevice->m_pMasteringVoice, source_channels, destination_channels, outputMatrix)))
     {
-        Debug::Log("SetOutputMatrix失敗.");
+        Debug::LogError("SetOutputMatrix失敗.");
     }
 }
 
@@ -182,7 +182,7 @@ void Sound::SetFilter(XAUDIO2_FILTER_TYPE type, float frequencym, float oneOverQ
 
     if (FAILED(m_pSourceVoice->SetFilterParameters(&FilterParams)))
     {
-        Debug::Log("SetFilterParameters失敗.useFilterフラグを確認してください.");
+        Debug::LogError("SetFilterParameters失敗.useFilterフラグを確認してください.");
     }
 }
 
@@ -251,7 +251,7 @@ bool Sound::Load(const std::string& filepath, bool loop, bool useFilter)
     //サウンドデータクラス作成/音源情報読み込み
     if (!m_soundData.Create(filepath, loop, useFilter))
     {
-        Debug::Log("SoundData作成失敗."); return false;
+        Debug::LogError("SoundData作成失敗."); return false;
     }
 
     //送信先になるの宛先ボイスを定義
@@ -267,7 +267,7 @@ bool Sound::Load(const std::string& filepath, bool loop, bool useFilter)
         &m_pSourceVoice, m_soundData.m_pWaveFormat,
         useFilter ? XAUDIO2_VOICE_USEFILTER : 0, 2.0f, nullptr, &sendList, nullptr)))
     {
-        Debug::Log("CreateSourceVoice失敗."); return false;
+        Debug::LogError("CreateSourceVoice失敗."); return false;
     }
 
     //オーディオバッファを追加
@@ -293,7 +293,7 @@ bool Sound::SubmitBuffer(bool loop, UINT32 playBegin)
 
     if (FAILED(m_pSourceVoice->SubmitSourceBuffer(&m_soundData.m_buffer)))
     {
-        Debug::Log("SubmitSourceBuffer失敗."); return false;
+        Debug::LogError("SubmitSourceBuffer失敗."); return false;
     }
     return true;
 }
@@ -320,7 +320,7 @@ bool SoundData::Create(const std::string& filepath, bool loop, bool useFilter)
     IMFSourceReader* pMFSourceReader = nullptr;
     if (FAILED(MFCreateSourceReaderFromURL(sjis_to_wide(filepath).c_str(), nullptr, &pMFSourceReader)))
     {
-        Debug::Log("MFCreateSourceReaderFromURL失敗."); return false;
+        Debug::LogError("MFCreateSourceReaderFromURL失敗."); return false;
     }
 
     //メディアタイプ初期設定(PCMで読み込むため)
@@ -328,14 +328,14 @@ bool SoundData::Create(const std::string& filepath, bool loop, bool useFilter)
     if (FAILED(MFCreateMediaType(&pMFMediaType)))
     {
         pMFSourceReader->Release();
-        Debug::Log("MFCreateMediaType失敗."); return false;
+        Debug::LogError("MFCreateMediaType失敗."); return false;
     }
     pMFMediaType->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
     pMFMediaType->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_PCM);
     if (FAILED(pMFSourceReader->SetCurrentMediaType(MF_SOURCE_READER_FIRST_AUDIO_STREAM, nullptr, pMFMediaType)))
     {
         pMFSourceReader->Release();
-        Debug::Log("SetCurrentMediaType失敗."); return false;
+        Debug::LogError("SetCurrentMediaType失敗."); return false;
     }
 
     pMFMediaType->Release();
@@ -345,7 +345,7 @@ bool SoundData::Create(const std::string& filepath, bool loop, bool useFilter)
     if (FAILED(pMFSourceReader->GetCurrentMediaType(MF_SOURCE_READER_FIRST_AUDIO_STREAM, &pMFMediaType)))
     {
         pMFSourceReader->Release();
-        Debug::Log("GetCurrentMediaType失敗."); return false;
+        Debug::LogError("GetCurrentMediaType失敗."); return false;
     }
 
     //TOOD: 一部を除き設定する必要がある？
@@ -373,7 +373,7 @@ bool SoundData::Create(const std::string& filepath, bool loop, bool useFilter)
     if(FAILED(pMFSourceReader->SetCurrentMediaType(MF_SOURCE_READER_FIRST_AUDIO_STREAM, nullptr, pMFMediaType)))
     {
         pMFSourceReader->Release();
-        Debug::Log("SetCurrentMediaType失敗."); return false;
+        Debug::LogError("SetCurrentMediaType失敗."); return false;
     }
 
     //設定したメディアタイプをもとにオーディオデータ形式の作成
@@ -381,7 +381,7 @@ bool SoundData::Create(const std::string& filepath, bool loop, bool useFilter)
     if (FAILED(MFCreateWaveFormatExFromMFMediaType(pMFMediaType, &m_pWaveFormat, &formatSize)))
     {
         pMFSourceReader->Release();
-        Debug::Log("MFCreateWaveFormatExFromMFMediaType失敗."); return false;
+        Debug::LogError("MFCreateWaveFormatExFromMFMediaType失敗."); return false;
     }
     pMFMediaType->Release();
     pMFMediaType = nullptr;
@@ -394,7 +394,7 @@ bool SoundData::Create(const std::string& filepath, bool loop, bool useFilter)
         if (FAILED(pMFSourceReader->ReadSample(MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, nullptr, &dwStreamFlags, nullptr, &pMFSample)))
         {
             pMFSourceReader->Release();
-            Debug::Log("ReadSample失敗."); return false;
+            Debug::LogError("ReadSample失敗."); return false;
         }
 
         //ストリームの終端 ->読み込み完了
@@ -405,7 +405,7 @@ bool SoundData::Create(const std::string& filepath, bool loop, bool useFilter)
         if(FAILED(pMFSample->ConvertToContiguousBuffer(&pMFMediaBuffer)))
         {
             pMFSourceReader->Release();
-            Debug::Log("ConvertToContiguousBuffer失敗."); return false;
+            Debug::LogError("ConvertToContiguousBuffer失敗."); return false;
         }
 
         {
@@ -416,7 +416,7 @@ bool SoundData::Create(const std::string& filepath, bool loop, bool useFilter)
             {
                 pMFMediaBuffer->Release();
                 pMFSourceReader->Release();
-                Debug::Log("Lock失敗."); return false;
+                Debug::LogError("Lock失敗."); return false;
             }
 
             m_mediaData.resize(m_mediaData.size() + cbCurrentLength);
