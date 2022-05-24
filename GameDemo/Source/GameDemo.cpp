@@ -100,29 +100,6 @@ void GameDemo::Initialize()
 void GameDemo::Update()
 {
 	m_pFpsTimer->Tick();
-
-	const auto& mvol = m_pAudioDevice->GetMasterVolume();
-	if (Input::IsKeyDown(KeyCode::UpArrow)) { m_pAudioDevice->SetMasterVolume(mvol + 0.1f); Debug::Log("音量変更: " + ToString(m_pAudioDevice->GetMasterVolume())); }
-	if (Input::IsKeyDown(KeyCode::DownArrow)) { m_pAudioDevice->SetMasterVolume(mvol - 0.1f); Debug::Log("音量変更: " + ToString(m_pAudioDevice->GetMasterVolume())); }
-
-	if (Input::IsKeyDown(KeyCode::K))
-		m_pAudioDevice->SetFadeSoundList(0.0f, 1.0f);
-
-	if (Input::IsKeyDown(KeyCode::Space))
-	{
-		if (std::string path = ""; Utility::OpenFileDialog(path, m_pWindow->GetHwnd(),"再生ファイルを選択."))
-		{
-			m_profile.Start("Sound読み込み");
-			std::shared_ptr<Sound> new_sound = std::make_shared<Sound>(path, true, true);
-			m_pAudioDevice->SetFadeSoundList(0.0f, 0.4f);//タイムスタンプの記憶の関係で 読み込みなどの時間がかかる処理だと破綻する(草)
-			if (new_sound)
-			{
-				new_sound->Play();
-				m_pAudioDevice->AddSound(new_sound);
-			}
-			m_profile.End();
-		}
-	}
 }
 
 //-----------------------------------------------------------------------------

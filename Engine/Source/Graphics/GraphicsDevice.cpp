@@ -328,7 +328,7 @@ void GraphicsDevice::CheckAdapter()
 		}
 	}
 	adapters.clear();
-	Debug::Log(L"使用アダプタ決定: " + m_adapterName);
+	Debug::Log(L"Adapter decision: " + m_adapterName);
 }
 
 //-----------------------------------------------------------------------------

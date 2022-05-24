@@ -106,7 +106,7 @@ done:
 
 	m_filepath = filepath;
 
-	Debug::Log(L"テクスチャ読み込み: " + m_filepath);
+	Debug::Log(L"Texture loading: " + m_filepath);
 
 	return true;
 }

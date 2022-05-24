@@ -85,7 +85,7 @@ void Sound::Stop(bool flush)
 void Sound::SetVolume(float volume)
 {
     if (m_pSourceVoice == nullptr) return;
-    if (volume == m_prevVolume) { Debug::LogWarning("以前の音量と同じなのでSetVolumeを飛ばします."); return; }
+    if (volume == m_prevVolume) { /*Debug::LogWarning("以前の音量と同じなのでSetVolumeを飛ばします.");*/ return; }
     if (const float subb = fabsf(m_prevVolume - volume); subb <= 0.01f) { /*Debug::Log("変化量が極小なのでSetVolumeを飛ばします. 変化量: " + ToString(subb));*/ return; }
     
     volume = std::clamp(volume, -XAUDIO2_MAX_VOLUME_LEVEL, XAUDIO2_MAX_VOLUME_LEVEL);

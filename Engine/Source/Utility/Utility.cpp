@@ -134,7 +134,7 @@ void Debug::Log(const std::string& log, const std::source_location& location)
 	const UINT32& line = location.line();
 	const UINT32& column = location.column();
 
-	const auto& final_log = std::string(log + "\n" + "  ->" + Utility::GetFilenameFromFullpath(file_name) + ": " + func_name + "(" + ToString(line) + ", " + ToString(column) + ") : \n\n");
+	const auto& final_log = std::string(log + "\n" + "          : " + Utility::GetFilenameFromFullpath(file_name) + ": " + func_name + "(" + ToString(line) + ", " + ToString(column) + ")\n\n");
 	OutputDebugStringA(final_log.c_str());
 
 	ImGuiProfile::AddLog(final_log);
@@ -159,7 +159,7 @@ void Debug::LogWarning(const std::string& log, const std::source_location& locat
 	const UINT32& line = location.line();
 	const UINT32& column = location.column();
 
-	const auto& final_log = std::string(log + "\n" + "  ->" + Utility::GetFilenameFromFullpath(file_name) + ": " + func_name + "(" + ToString(line) + ", " + ToString(column) + ") : \n\n");
+	const auto& final_log = std::string(log + "\n" + "          : " + Utility::GetFilenameFromFullpath(file_name) + ": " + func_name + "(" + ToString(line) + ", " + ToString(column) + ")\n\n");
 	OutputDebugStringA(final_log.c_str());
 
 	ImGuiProfile::AddLog(final_log, Vector3(1, 1, 0));
@@ -183,7 +183,7 @@ void Debug::LogError(const std::string& log, const std::source_location& locatio
 	const UINT32& line = location.line();
 	const UINT32& column = location.column();
 
-	const auto& final_log = std::string(log + "\n" + "  ->" + Utility::GetFilenameFromFullpath(file_name) + ": " + func_name + "(" + ToString(line) + ", " + ToString(column) + ") : \n\n");
+	const auto& final_log = std::string(log + "\n" + "          : " + Utility::GetFilenameFromFullpath(file_name) + ": " + func_name + "(" + ToString(line) + ", " + ToString(column) + ")\n\n");
 	OutputDebugStringA(final_log.c_str());
 
 	ImGuiProfile::AddLog(final_log, Vector3(1, 0, 0));

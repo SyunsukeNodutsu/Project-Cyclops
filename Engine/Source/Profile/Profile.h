@@ -19,7 +19,7 @@ public:
 	{
 		m_stampName = stampName;
 		m_start = std::chrono::system_clock::now();
-		Debug::Log("計測開始(" + m_stampName + ")", location);
+		Debug::Log("Measurement start(" + m_stampName + ")", location);
 	}
 
 	//@brief 計測終了 ログにミリ秒表示
@@ -29,7 +29,7 @@ public:
 		const auto& time = end - m_start;//処理に要した時間
 
 		const auto& msec = std::chrono::duration_cast<std::chrono::milliseconds>(time).count();
-		Debug::Log("計測完了(" + m_stampName + ") 時間(ミリ秒) : " + ToString(msec), location);
+		Debug::Log("Measurement Completed(" + m_stampName + ") Time (milliseconds) : " + ToString(msec), location);
 	}
 
 private:
