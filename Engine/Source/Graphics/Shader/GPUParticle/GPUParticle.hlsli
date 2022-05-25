@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------
 
 //定数バッファ ※SRV使用
-struct cdObject
+struct Particle
 {
     float3  position;
     float   lifeSpanMax;
@@ -27,8 +27,8 @@ struct VertexOutput
 //計算シェーダーに渡される値
 struct ComputeInput
 {
-    uint3 m_groupThread : SV_GroupThreadID;
-    uint3 m_group       : SV_GroupID;
-    uint  m_groupIndex  : SV_GroupIndex;
-    uint3 m_dispatch    : SV_DispatchThreadID;
+    uint3 g_groupThread : SV_GroupThreadID;
+    uint3 g_group       : SV_GroupID;
+    uint  g_groupIndex  : SV_GroupIndex;
+    uint3 g_dispatch    : SV_DispatchThreadID;
 };

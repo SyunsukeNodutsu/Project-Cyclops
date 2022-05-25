@@ -66,6 +66,42 @@ bool Buffer::Create(UINT bindFlags, UINT bufferSize, D3D11_USAGE bufferUsage, co
 }
 
 //-----------------------------------------------------------------------------
+// 構造化バッファを作成
+//-----------------------------------------------------------------------------
+bool Buffer::CreateStructured(UINT elementSize, UINT count, bool isUAV, const D3D11_SUBRESOURCE_DATA* initData)
+{
+	if (m_graphicsDevice == nullptr) return false;
+	if (m_graphicsDevice->m_cpContext == nullptr) return false;
+
+	D3D11_BUFFER_DESC desc{};
+	desc.ByteWidth				= elementSize * count;
+	desc.MiscFlags				= D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+	desc.StructureByteStride	= elementSize;
+	desc.CPUAccessFlags			= D3D11_CPU_ACCESS_WRITE;
+
+	if (isUAV)
+	{
+		//順不同アクセスビューの場合
+		desc.BindFlags			= D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
+		m_usage					= desc.Usage = D3D11_USAGE_DEFAULT;
+	}
+	else
+	{
+		desc.BindFlags			= D3D11_BIND_SHADER_RESOURCE;
+		m_usage = desc.Usage	= D3D11_USAGE_DYNAMIC;
+	}
+
+	if (FAILED(m_graphicsDevice->m_cpDevice->CreateBuffer(&desc, initData, &m_cpBuffer)))
+	{
+		Debug::LogError("CreateBuffer失敗."); return false;
+	}
+
+	m_size = elementSize * count;
+
+	return true;
+}
+
+//-----------------------------------------------------------------------------
 // 書き込み
 //-----------------------------------------------------------------------------
 void Buffer::WriteData(const void* srcData, UINT size)
@@ -112,4 +148,32 @@ void Buffer::CopyFrom(const Buffer& srcBuffer)
 	if (srcBuffer.Get() == nullptr) return;
 
 	m_graphicsDevice->m_cpContext.Get()->CopyResource(m_cpBuffer.Get(), srcBuffer.Get());
+}
+
+//-----------------------------------------------------------------------------
+// UAVのバッファの内容を CPU から読み込み可能なバッファへコピーして返す
+//-----------------------------------------------------------------------------
+ID3D11Buffer* Buffer::CreateAndCopyToDebugBuf(ID3D11Buffer* pBuffer)
+{
+	if (m_graphicsDevice == nullptr) return nullptr;
+	if (m_graphicsDevice->m_cpDevice == nullptr) return nullptr;
+
+	if (pBuffer == nullptr) return nullptr;
+
+	ID3D11Buffer* debugbuf = nullptr;
+
+	D3D11_BUFFER_DESC desc{};
+	pBuffer->GetDesc(&desc);
+
+	//下記変更点
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+	desc.Usage = D3D11_USAGE_STAGING;
+	desc.BindFlags = 0;
+	desc.MiscFlags = 0;
+	if (SUCCEEDED(m_graphicsDevice->m_cpDevice->CreateBuffer(&desc, nullptr, &debugbuf)))
+		m_graphicsDevice->m_cpContext->CopyResource(debugbuf, pBuffer);
+	else
+		Debug::LogError("CreateBuffer失敗.");
+
+	return debugbuf;
 }

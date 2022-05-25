@@ -1,5 +1,11 @@
 ﻿#include "Timer.h"
 
+uint64_t	FpsTimer::m_deltaTicks = 0;
+uint64_t	FpsTimer::m_totalTicks = 0;
+uint32_t	FpsTimer::m_totalFrameCount = 0;
+uint32_t	FpsTimer::m_fps = 0;
+double		FpsTimer::m_scaling = 0;
+
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
@@ -7,13 +13,8 @@ FpsTimer::FpsTimer()
 	: m_frequency()
 	, m_lastTime()
 	, m_maxDelta(0)
-	, m_deltaTicks(0)
-	, m_totalTicks(0)
-	, m_totalFrameCount(0)
 	, m_frameThisCount(0)
-	, m_fps(0)
 	, m_secondCounter(0)
-	, m_scaling(1.0f)
 {
 	//周波数保存
 	QueryPerformanceFrequency(&m_frequency);

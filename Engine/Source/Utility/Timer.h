@@ -49,18 +49,14 @@ public:
 	void Tick();
 	void ResetDeltaTime();
 
-	double GetTimeScale() const { return m_scaling; }
-	double GetDeltaTime(bool modeRaw = false) const { return TicksToSeconds(m_deltaTicks) * (modeRaw ? 1 : m_scaling); }
-	double GetTotalTime() const { return TicksToSeconds(m_totalTicks); }
+	static double GetTimeScale() { return m_scaling; }
+	static double GetDeltaTime(bool modeRaw = false) { return TicksToSeconds(m_deltaTicks) * (modeRaw ? 1 : m_scaling); }
+	static double GetTotalTime() { return TicksToSeconds(m_totalTicks); }
 
-	uint32_t GetFPS() const { return m_fps; }
-	uint32_t GetTotalFrameCount() const { return m_totalFrameCount; }
+	static uint32_t GetFPS() { return m_fps; }
+	static uint32_t GetTotalFrameCount() { return m_totalFrameCount; }
 
-	void SetTimeScale(double scale) { m_scaling = scale; }
-
-	static constexpr std::uint64_t TicksPerSecond = 10'000'000;
-	static double TicksToSeconds(const std::uint64_t ticks) { return static_cast<double>(ticks) / TicksPerSecond; }
-	static std::uint64_t SecondsToTicks(const double seconds) { return static_cast<std::uint64_t>(seconds * TicksPerSecond); }
+	static void SetTimeScale(double scale) { m_scaling = scale; }
 
 private:
 
@@ -68,13 +64,20 @@ private:
 	LARGE_INTEGER	m_lastTime;			//前回計測時間
 
 	uint64_t		m_maxDelta;			//許容する最大のデルタタイム
-	uint64_t		m_deltaTicks;		//前フレームからのデルタティック
-	uint64_t		m_totalTicks;		//このタイマの総経過ティック
-	uint32_t		m_totalFrameCount;	//総フレーム数
 	uint32_t		m_frameThisCount;	//現在の1秒のフレーム数を数える
-	uint32_t		m_fps;				//前の1秒のフレームレート
 	uint64_t		m_secondCounter;	//1秒を計測
-	double			m_scaling;			//時間の経過をスケーリング
+
+	static uint64_t	m_deltaTicks;		//前フレームからのデルタティック
+	static uint64_t	m_totalTicks;		//このタイマの総経過ティック
+	static uint32_t	m_totalFrameCount;	//総フレーム数
+	static uint32_t	m_fps;				//前の1秒のフレームレート
+	static double	m_scaling;			//時間の経過をスケーリング
+
+private:
+
+	static constexpr std::uint64_t TicksPerSecond = 10'000'000;
+	static double TicksToSeconds(const std::uint64_t ticks) { return static_cast<double>(ticks) / TicksPerSecond; }
+	static std::uint64_t SecondsToTicks(const double seconds) { return static_cast<std::uint64_t>(seconds * TicksPerSecond); }
 
 };
 

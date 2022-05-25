@@ -15,8 +15,11 @@ public:
 	~Buffer() = default;
 
 	bool Create(UINT bindFlags, UINT bufferSize, D3D11_USAGE bufferUsage, const D3D11_SUBRESOURCE_DATA* initData);
+	bool CreateStructured(UINT elementSize, UINT count, bool isUAV, const D3D11_SUBRESOURCE_DATA* initData);
 	void WriteData(const void* srcData, UINT size);
 	void CopyFrom(const Buffer& srcBuffer);
+
+	static ID3D11Buffer* CreateAndCopyToDebugBuf(ID3D11Buffer* pBuffer);
 
 	ID3D11Buffer* Get() const { return m_cpBuffer.Get(); }
 	ID3D11Buffer* const* GetAddress() const { return m_cpBuffer.GetAddressOf(); }

@@ -20,17 +20,17 @@ public:
 
 	//作成(TODO: staticでもいい気が)
 
-	void CreateTranslation(float x, float y, float z) { *this = DirectX::XMMatrixTranslation(x, y, z); }
-	void CreateTranslation(const Vector3& v) { *this = DirectX::XMMatrixTranslation(v.x, v.y, v.z); }
+	static Matrix CreateTranslation(float x, float y, float z) { return DirectX::XMMatrixTranslation(x, y, z); }
+	static Matrix CreateTranslation(const Vector3& v) { return  DirectX::XMMatrixTranslation(v.x, v.y, v.z); }
 
-	void CreateRotationX(float angle) { *this = DirectX::XMMatrixRotationX(angle); }
+	static Matrix CreateRotationX(float angle) { return  DirectX::XMMatrixRotationX(angle); }
 
-	void CreateScalling(float x, float y, float z) { *this = DirectX::XMMatrixScaling(x, y, z); }
-	void CreateScalling(const Vector3& v) { *this = DirectX::XMMatrixScaling(v.x, v.y, v.z); }
+	static Matrix CreateScalling(float x, float y, float z) { return  DirectX::XMMatrixScaling(x, y, z); }
+	static Matrix CreateScalling(const Vector3& v) { return  DirectX::XMMatrixScaling(v.x, v.y, v.z); }
 
-	void CreateRotationAxis(const Vector3& axis, float angle) { *this = DirectX::XMMatrixRotationAxis(axis, angle); }
-	void CreateFromYawPitchRoll(const float yaw, const float pitch, const float roll) { *this = DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll); }
-	void CreateFromQuaternion(const DirectX::XMVECTOR& q) { *this = DirectX::XMMatrixRotationQuaternion(q); }
+	static Matrix CreateRotationAxis(const Vector3& axis, float angle) { return  DirectX::XMMatrixRotationAxis(axis, angle); }
+	static Matrix CreateFromYawPitchRoll(const float yaw, const float pitch, const float roll) { return  DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll); }
+	static Matrix CreateFromQuaternion(const DirectX::XMVECTOR& q) { return  DirectX::XMMatrixRotationQuaternion(q); }
 
 	Matrix& CreateProjectionPerspectiveFov(float fovAngleY, float aspectRatio, float nearZ, float farZ)
 	{

@@ -233,6 +233,36 @@ void GraphicsDevice::DrawVertices(D3D_PRIMITIVE_TOPOLOGY topology, int vCount, c
 }
 
 //-----------------------------------------------------------------------------
+// TODO: Bufferクラスに移動
+//-----------------------------------------------------------------------------
+const HRESULT GraphicsDevice::CreateBufferSRV(ID3D11Buffer* pBuffer, ID3D11ShaderResourceView** ppSRVOut)
+{
+	D3D11_BUFFER_DESC descBuf{};
+	pBuffer->GetDesc(&descBuf);
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC desc{};
+	desc.ViewDimension			= D3D11_SRV_DIMENSION_BUFFEREX;
+	desc.Format					= DXGI_FORMAT_UNKNOWN;
+	desc.BufferEx.FirstElement	= 0;
+	desc.BufferEx.NumElements	= descBuf.ByteWidth / descBuf.StructureByteStride;
+
+	return m_cpDevice->CreateShaderResourceView(pBuffer, &desc, ppSRVOut);
+}
+const HRESULT GraphicsDevice::CreateBufferUAV(ID3D11Buffer* pBuffer, ID3D11UnorderedAccessView** ppUAVOut)
+{
+	D3D11_BUFFER_DESC descBuf{};
+	pBuffer->GetDesc(&descBuf);
+
+	D3D11_UNORDERED_ACCESS_VIEW_DESC desc{};
+	desc.ViewDimension			= D3D11_UAV_DIMENSION_BUFFER;
+	desc.Format					= DXGI_FORMAT_UNKNOWN;
+	desc.Buffer.FirstElement	= 0;
+	desc.Buffer.NumElements		= descBuf.ByteWidth / descBuf.StructureByteStride;
+
+	return m_cpDevice->CreateUnorderedAccessView(pBuffer, &desc, ppUAVOut);
+}
+
+//-----------------------------------------------------------------------------
 // スワップチェイン作成
 //-----------------------------------------------------------------------------
 bool GraphicsDevice::CreateSwapChain()

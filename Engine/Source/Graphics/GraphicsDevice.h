@@ -50,6 +50,9 @@ public:
 
 	void DrawVertices(D3D_PRIMITIVE_TOPOLOGY topology, int vCount, const void* pVStream, UINT stride);
 
+	const HRESULT CreateBufferSRV(ID3D11Buffer* pBuffer, ID3D11ShaderResourceView** ppSRVOut);
+	const HRESULT CreateBufferUAV(ID3D11Buffer* pBuffer, ID3D11UnorderedAccessView** ppUAVOut);
+
 public://TODO: アクセス制限 例)"ACCESS_ENGINE"みたいな
 
 	GRAPHICS_DEVICE_CREATE_PARAM	m_createParam;
