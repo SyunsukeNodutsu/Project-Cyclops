@@ -4,7 +4,6 @@
 // 画像描画シェーダー
 //-----------------------------------------------------------------------------
 #pragma once
-#include "../../GraphicsDeviceChild.h"
 
 //画像描画シェーダークラス
 class SpriteShader : public GraphicsDeviceChild
