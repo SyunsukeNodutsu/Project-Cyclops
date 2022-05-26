@@ -6,7 +6,7 @@
 #pragma once
 
 //位置,回転.スケールを扱うクラス
-class Transform
+class Transform : public Component
 {
 public:
 

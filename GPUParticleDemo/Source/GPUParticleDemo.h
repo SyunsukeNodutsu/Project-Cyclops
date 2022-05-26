@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------------
-// File: GameDemo.h
+// File: GPUParticleDemo.h
 //
 // エンジンを使用したAPPの実装デモ
 //-----------------------------------------------------------------------------
@@ -10,12 +10,12 @@
 #pragma comment(lib, "Engine.lib")
 
 //エンジンを使用したAPPのデモクラス
-class GameDemo
+class GPUParticleDemo
 {
 public:
 
-	GameDemo();
-	~GameDemo() = default;
+	GPUParticleDemo();
+	~GPUParticleDemo() = default;
 
 	void Run();
 
@@ -31,9 +31,10 @@ private:
 	int						m_windowWidth;
 	int						m_windowHeight;
 
-	std::shared_ptr<Texture>m_spTexture;
 	Profile					m_profile;
 	Camera					m_camera;
+
+	ParticleSystem::EmitData m_emitData;
 
 private:
 

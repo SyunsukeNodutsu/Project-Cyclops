@@ -15,6 +15,7 @@ GameDemo::GameDemo()
 	, m_windowHeight(900)
 	, m_spTexture(nullptr)
 	, m_profile()
+	, m_camera()
 {
 }
 
@@ -88,24 +89,29 @@ void GameDemo::Initialize()
 	m_profile.End();
 	//<-------------------------サブシステムを適切な順番で生成ここまで
 
+	//初期カメラ
+	m_camera.m_name = "Camera Main";
+	m_camera.m_priority = 10.0f;
+	m_camera.SetCameraMatrix(Matrix::CreateTranslation(Vector3(0, 0, -3)));
+
 	m_profile.Start("テクスチャ読み込み");
 	m_spTexture = std::make_shared<Texture>();
 	m_spTexture->Load(L"Assets/test2.jpg");
 	m_profile.End();
 
 	ParticleSystem::EmitData data{};
-	data.m_minPosition = Vector3(0.0f, 0.0f, 0.0f);
-	data.m_maxPosition = Vector3(0.2f, 0.2f, 0.2f);
+	data.m_minPosition = Vector3::Zero;
+	data.m_maxPosition = Vector3::Zero;
 
-	const float vel = 0.02f;
+	const float vel = 2.0f;
 	data.m_minVelocity = Vector3(-vel, -vel, -vel);
 	data.m_maxVelocity = Vector3( vel,  vel,  vel);
 
-	data.m_minLifeSpan = 100.0f;
-	data.m_maxLifeSpan = 100.0f;
-	data.m_color = Vector4(1, 0, 1, 1);
+	data.m_minLifeSpan = 3.0f;
+	data.m_maxLifeSpan = 4.0f;
+	//data.m_color = Vector4(1, 0, 1, 1);
 
-	m_pGraphicsDevice->m_spParticleSystem->Emit(data, 4000, true);
+	m_pGraphicsDevice->m_spParticleSystem->Emit(data, 40000, true);
 }
 
 //-----------------------------------------------------------------------------
@@ -114,6 +120,21 @@ void GameDemo::Initialize()
 void GameDemo::Update()
 {
 	m_pFpsTimer->Tick();
+
+	m_pGraphicsDevice->m_spRendererStatus->m_cb7Time.Work().m_deltaTime = (float)FpsTimer::GetDeltaTime();
+	m_pGraphicsDevice->m_spRendererStatus->m_cb7Time.Work().m_totalTime = (float)FpsTimer::GetTotalTime();
+	m_pGraphicsDevice->m_spRendererStatus->m_cb7Time.Write();
+
+	static Vector3 pos = m_camera.GetCameraMatrix().GetTranslation();
+	static constexpr float move_pow = 10.0f;
+
+	if (Input::IsKeyPressed(KeyCode::LeftArrow)) pos.x -= move_pow * (float)FpsTimer::GetDeltaTime();
+	if (Input::IsKeyPressed(KeyCode::RightArrow)) pos.x += move_pow * (float)FpsTimer::GetDeltaTime();
+	if (Input::IsKeyPressed(KeyCode::UpArrow)) pos.z += move_pow * (float)FpsTimer::GetDeltaTime();
+	if (Input::IsKeyPressed(KeyCode::DownArrow)) pos.z -= move_pow * (float)FpsTimer::GetDeltaTime();
+
+	Matrix trans = Matrix::CreateTranslation(pos);
+	m_camera.SetCameraMatrix(trans);
 }
 
 //-----------------------------------------------------------------------------
@@ -122,7 +143,8 @@ void GameDemo::Update()
 void GameDemo::Draw()
 {
 	static float x = 0.0f, y = 0.0f;
-	float total_time = static_cast<float>(m_pFpsTimer->GetTotalTime());
+
+	m_camera.SetToShader();
 
 	m_pGraphicsDevice->Begin();
 
@@ -138,9 +160,9 @@ void GameDemo::Draw()
 	{
 		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.Begin();
 
-		x = sinf(total_time) * 200.0f;
-		y = tanf(total_time) * 100.0f;
-		//m_pGraphicsDevice->m_spShaderManager->m_spriteShader.DrawTexture(m_spTexture.get(), Vector2(x, y));
+		x = sinf((float)FpsTimer::GetTotalTime()) * 200.0f;
+		y = tanf((float)FpsTimer::GetTotalTime()) * 100.0f;
+		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.DrawTexture(m_spTexture.get(), Vector2(x, y));
 
 		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.End();
 	}

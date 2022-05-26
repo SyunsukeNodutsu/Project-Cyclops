@@ -59,7 +59,7 @@ bool GPUParticleShader::Initialize()
 	}
 
 	//頂点定義
-	static constexpr float rectSize = 1.02f;
+	static constexpr float rectSize = 0.02f;
 	Vertex vertices[]{
 		{ Vector3(-rectSize, -rectSize,  0.0f), Vector2(0, 1) },
 		{ Vector3(-rectSize,  rectSize,  0.0f), Vector2(0, 0) },

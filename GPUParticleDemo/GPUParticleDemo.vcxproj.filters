@@ -9,5 +9,13 @@
     <ClCompile Include="Source\main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GPUParticleDemo.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\GPUParticleDemo.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

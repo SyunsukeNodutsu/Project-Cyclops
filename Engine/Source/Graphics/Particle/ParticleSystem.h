@@ -55,7 +55,7 @@ class ParticleWork : public GraphicsDeviceChild
 public:
 
 	ParticleWork();
-	~ParticleWork() {}
+	~ParticleWork() { End(); }
 
 	void Update();
 	void Draw();

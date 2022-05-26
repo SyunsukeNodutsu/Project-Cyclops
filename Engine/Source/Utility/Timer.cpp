@@ -4,7 +4,7 @@ uint64_t	FpsTimer::m_deltaTicks = 0;
 uint64_t	FpsTimer::m_totalTicks = 0;
 uint32_t	FpsTimer::m_totalFrameCount = 0;
 uint32_t	FpsTimer::m_fps = 0;
-double		FpsTimer::m_scaling = 0;
+double		FpsTimer::m_scaling = 1;
 
 //-----------------------------------------------------------------------------
 // コンストラクタ

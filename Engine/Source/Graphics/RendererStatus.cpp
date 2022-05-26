@@ -45,6 +45,7 @@ bool RendererStatus::Initialize()
 	{
 		m_cb7Time.SetToDevice(7, SHADER_STAGE::VS);
 		m_cb7Time.SetToDevice(7, SHADER_STAGE::PS);
+		m_cb7Time.SetToDevice(7, SHADER_STAGE::CS);
 		m_cb7Time.Work().m_totalTime = 0.0f;
 		m_cb7Time.Work().m_deltaTime = 0.0f;
 		m_cb7Time.Write();

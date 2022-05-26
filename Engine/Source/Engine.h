@@ -71,8 +71,9 @@
 #include "Graphics/Texture.h"
 #include "Graphics/RendererStatus.h"
 
-#include "Graphics/Shader/ShaderManager.h"
+#include "Graphics/Camera/Camera.h"
 #include "Graphics/Particle/ParticleSystem.h"
+#include "Graphics/Shader/ShaderManager.h"
 
 //ビデオ
 #include "Video/VideoDevice.h"
@@ -95,6 +96,7 @@
 
 //高レベル層
 #include "HighLevel/Component/Component.h"
+#include "HighLevel/Component/FPSCamera.h"
 #include "HighLevel/Component/Transform.h"
 
 #include "HighLevel/Behaviour/Behaviour.h"

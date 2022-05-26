@@ -73,6 +73,12 @@
     <Filter Include="Source\Graphics\Shader\Unlit">
       <UniqueIdentifier>{c2d017d1-2dcc-4ad1-84e6-e28bef9bce14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Graphics\Shader\Lit">
+      <UniqueIdentifier>{5c03c7fd-9013-448c-bb57-40e1b235e90d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Camera">
+      <UniqueIdentifier>{ced4b30b-e21a-4b37-bbf3-15d4663f93a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Window\Window.cpp">
@@ -188,6 +194,15 @@
     </ClCompile>
     <ClCompile Include="Source\Graphics\Shader\Unlit\UnlitShader.cpp">
       <Filter>Source\Graphics\Shader\Unlit</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Shader\Lit\LitShader.cpp">
+      <Filter>Source\Graphics\Shader\Lit</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Camera\Camera.cpp">
+      <Filter>Source\Graphics\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\HighLevel\Component\FPSCamera.cpp">
+      <Filter>Source\HighLevel\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -341,6 +356,15 @@
     <ClInclude Include="Source\Graphics\Shader\Unlit\UnlitShader.h">
       <Filter>Source\Graphics\Shader\Unlit</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Graphics\Shader\Lit\LitShader.h">
+      <Filter>Source\Graphics\Shader\Lit</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Camera\Camera.h">
+      <Filter>Source\Graphics\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HighLevel\Component\FPSCamera.h">
+      <Filter>Source\HighLevel\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Source\Graphics\Shader\Sprite\SpriteShader_VS.hlsl">
@@ -358,6 +382,12 @@
     <FxCompile Include="Source\Graphics\Shader\GPUParticle\GPUParticle_VS.hlsl">
       <Filter>Source\Graphics\Shader\GPUParticle</Filter>
     </FxCompile>
+    <FxCompile Include="Source\Graphics\Shader\Unlit\UnlitShader_VS.hlsl">
+      <Filter>Source\Graphics\Shader\Unlit</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Graphics\Shader\Unlit\UnlitShader_PS.hlsl">
+      <Filter>Source\Graphics\Shader\Unlit</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\Shader\Sprite\SpriteShader.hlsli">
@@ -368,6 +398,9 @@
     </None>
     <None Include="Source\Graphics\Shader\GPUParticle\GPUParticle.hlsli">
       <Filter>Source\Graphics\Shader\GPUParticle</Filter>
+    </None>
+    <None Include="Source\Graphics\Shader\Unlit\UnlitShader.hlsli">
+      <Filter>Source\Graphics\Shader\Unlit</Filter>
     </None>
   </ItemGroup>
 </Project>
