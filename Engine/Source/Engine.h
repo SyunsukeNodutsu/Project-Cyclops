@@ -72,6 +72,7 @@
 #include "Graphics/RendererStatus.h"
 
 #include "Graphics/Shader/ShaderManager.h"
+#include "Graphics/Particle/ParticleSystem.h"
 
 //ビデオ
 #include "Video/VideoDevice.h"

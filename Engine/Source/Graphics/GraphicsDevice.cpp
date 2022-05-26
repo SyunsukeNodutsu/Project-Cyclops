@@ -1,5 +1,6 @@
 ﻿#include "GraphicsDevice.h"
 #include "RendererStatus.h"
+#include "Particle/ParticleSystem.h"
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -8,6 +9,7 @@ GraphicsDevice::GraphicsDevice(GRAPHICS_DEVICE_CREATE_PARAM createParam)
 	: m_createParam(createParam)
 	, m_spRendererStatus(nullptr)
 	, m_spShaderManager(nullptr)
+	, m_spParticleSystem(nullptr)
 	, m_cpDevice(nullptr)
 	, m_cpContext(nullptr)
 	, m_cpGISwapChain(nullptr)
@@ -46,7 +48,9 @@ bool GraphicsDevice::Initialize()
 	if (!m_spRendererStatus->Initialize()) { Debug::LogError("RendererStatusの初期化失敗."); return false; }
 
 	m_spShaderManager = std::make_shared<ShaderManager>();
-	if (!m_spShaderManager->Initialize()) { Debug::LogError("ShaderManagerの初期化失敗."); return false; }
+	m_spShaderManager->Initialize();
+
+	m_spParticleSystem = std::make_shared<ParticleSystem>();
 
 	//使いまわしバッファ
 	UINT bufferSize = 80;

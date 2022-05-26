@@ -70,6 +70,9 @@
     <Filter Include="Source\Graphics\Particle">
       <UniqueIdentifier>{a6832943-a61e-4926-bb51-eea4c6fc9562}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Graphics\Shader\Unlit">
+      <UniqueIdentifier>{c2d017d1-2dcc-4ad1-84e6-e28bef9bce14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Window\Window.cpp">
@@ -177,11 +180,14 @@
     <ClCompile Include="..\Library\imGui\imgui_widgets.cpp">
       <Filter>Library\imGui</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\Shader\GPUParticle\GPUParticle.cpp">
+    <ClCompile Include="Source\Graphics\Shader\GPUParticle\GPUParticleShader.cpp">
       <Filter>Source\Graphics\Shader\GPUParticle</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\Particle\ParticleSystem.cpp">
       <Filter>Source\Graphics\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Shader\Unlit\UnlitShader.cpp">
+      <Filter>Source\Graphics\Shader\Unlit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -190,9 +196,6 @@
     </ClInclude>
     <ClInclude Include="Source\Pch.h">
       <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\GraphicsDevice.h">
-      <Filter>Source\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\GraphicsDeviceChild.h">
       <Filter>Source\Graphics</Filter>
@@ -326,11 +329,17 @@
     <ClInclude Include="..\Library\imGui\imstb_truetype.h">
       <Filter>Library\imGui</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\Shader\GPUParticle\GPUParticle.h">
+    <ClInclude Include="Source\Graphics\Shader\GPUParticle\GPUParticleShader.h">
       <Filter>Source\Graphics\Shader\GPUParticle</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Particle\ParticleSystem.h">
       <Filter>Source\Graphics\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\GraphicsDevice.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Shader\Unlit\UnlitShader.h">
+      <Filter>Source\Graphics\Shader\Unlit</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

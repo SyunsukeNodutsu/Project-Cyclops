@@ -37,9 +37,10 @@
     <ClCompile Include="Source\Graphics\GraphicsDeviceChild.cpp" />
     <ClCompile Include="Source\Graphics\Particle\ParticleSystem.cpp" />
     <ClCompile Include="Source\Graphics\RendererStatus.cpp" />
-    <ClCompile Include="Source\Graphics\Shader\GPUParticle\GPUParticle.cpp" />
+    <ClCompile Include="Source\Graphics\Shader\GPUParticle\GPUParticleShader.cpp" />
     <ClCompile Include="Source\Graphics\Shader\ShaderManager.cpp" />
     <ClCompile Include="Source\Graphics\Shader\Sprite\SpriteShader.cpp" />
+    <ClCompile Include="Source\Graphics\Shader\Unlit\UnlitShader.cpp" />
     <ClCompile Include="Source\Graphics\Texture.cpp" />
     <ClCompile Include="Source\HighLevel\Component\Transform.cpp" />
     <ClCompile Include="Source\HighLevel\CyclopsRoot.cpp" />
@@ -88,9 +89,10 @@
     <ClInclude Include="Source\Graphics\GraphicsDeviceChild.h" />
     <ClInclude Include="Source\Graphics\Particle\ParticleSystem.h" />
     <ClInclude Include="Source\Graphics\RendererStatus.h" />
-    <ClInclude Include="Source\Graphics\Shader\GPUParticle\GPUParticle.h" />
+    <ClInclude Include="Source\Graphics\Shader\GPUParticle\GPUParticleShader.h" />
     <ClInclude Include="Source\Graphics\Shader\ShaderManager.h" />
     <ClInclude Include="Source\Graphics\Shader\Sprite\SpriteShader.h" />
+    <ClInclude Include="Source\Graphics\Shader\Unlit\UnlitShader.h" />
     <ClInclude Include="Source\Graphics\Texture.h" />
     <ClInclude Include="Source\HighLevel\Behaviour\Behaviour.h" />
     <ClInclude Include="Source\HighLevel\Component\Component.h" />

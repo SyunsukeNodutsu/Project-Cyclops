@@ -23,14 +23,10 @@ bool RendererStatus::Initialize()
 
 	if (m_cb5Camera.Create())
 	{
-		Matrix viewMatrix, projMatrix;
-		viewMatrix.CreateTranslation(0.0f, 0.0f, 0.0f);
-		projMatrix = DirectX::XMMatrixPerspectiveFovLH(DegToRad(60.0f), 16.0f / 9.0f, 0.01f, 2000.0f);
-
 		m_cb5Camera.SetToDevice(5, SHADER_STAGE::VS);
 		m_cb5Camera.SetToDevice(5, SHADER_STAGE::PS);
-		m_cb5Camera.Work().m_viewMatrix = viewMatrix;
-		m_cb5Camera.Work().m_projMatrix = projMatrix;
+		m_cb5Camera.Work().m_viewMatrix = Matrix::CreateTranslation(0.0f, 0.0f, -10.0f);
+		m_cb5Camera.Work().m_projMatrix = DirectX::XMMatrixPerspectiveFovLH(DegToRad(60.0f), 16.0f / 9.0f, 0.01f, 2000.0f);
 		m_cb5Camera.Work().m_cameraMatrix = Matrix();
 		m_cb5Camera.Write();
 	}

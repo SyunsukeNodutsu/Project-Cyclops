@@ -92,6 +92,20 @@ void GameDemo::Initialize()
 	m_spTexture = std::make_shared<Texture>();
 	m_spTexture->Load(L"Assets/test2.jpg");
 	m_profile.End();
+
+	ParticleSystem::EmitData data{};
+	data.m_minPosition = Vector3(0.0f, 0.0f, 0.0f);
+	data.m_maxPosition = Vector3(0.2f, 0.2f, 0.2f);
+
+	const float vel = 0.02f;
+	data.m_minVelocity = Vector3(-vel, -vel, -vel);
+	data.m_maxVelocity = Vector3( vel,  vel,  vel);
+
+	data.m_minLifeSpan = 100.0f;
+	data.m_maxLifeSpan = 100.0f;
+	data.m_color = Vector4(1, 0, 1, 1);
+
+	m_pGraphicsDevice->m_spParticleSystem->Emit(data, 4000, true);
 }
 
 //-----------------------------------------------------------------------------
@@ -112,13 +126,24 @@ void GameDemo::Draw()
 
 	m_pGraphicsDevice->Begin();
 
-	m_pGraphicsDevice->m_spShaderManager->m_spriteShader.Begin();
+	//3D
+	{
+		m_pGraphicsDevice->m_spShaderManager->m_GPUParticleShader.Begin();
 
-	x = sinf(total_time) * 200.0f;
-	y = tanf(total_time) * 100.0f;
-	m_pGraphicsDevice->m_spShaderManager->m_spriteShader.DrawTexture(m_spTexture.get(), Vector2(x, y));
+		m_pGraphicsDevice->m_spParticleSystem->Update();
+		m_pGraphicsDevice->m_spParticleSystem->Draw();
+	}
 
-	m_pGraphicsDevice->m_spShaderManager->m_spriteShader.End();
+	//2D
+	{
+		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.Begin();
+
+		x = sinf(total_time) * 200.0f;
+		y = tanf(total_time) * 100.0f;
+		//m_pGraphicsDevice->m_spShaderManager->m_spriteShader.DrawTexture(m_spTexture.get(), Vector2(x, y));
+
+		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.End();
+	}
 
 	m_pImGuiProfile->DrawProfileMonitor();
 

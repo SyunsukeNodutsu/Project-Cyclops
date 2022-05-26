@@ -1,9 +1,9 @@
-﻿#include "GPUParticle.h"
+﻿#include "GPUParticleShader.h"
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
-GPUParticle::GPUParticle()
+GPUParticleShader::GPUParticleShader()
 	: m_cpVS(nullptr)
 	, m_cpPS(nullptr)
 	, m_cpCS(nullptr)
@@ -15,7 +15,7 @@ GPUParticle::GPUParticle()
 //-----------------------------------------------------------------------------
 // 初期化
 //-----------------------------------------------------------------------------
-bool GPUParticle::Initialize()
+bool GPUParticleShader::Initialize()
 {
 	//頂点シェーダ
 	{
@@ -78,7 +78,7 @@ bool GPUParticle::Initialize()
 //-----------------------------------------------------------------------------
 // 開始
 //-----------------------------------------------------------------------------
-void GPUParticle::Begin()
+void GPUParticleShader::Begin()
 {
 	if (m_graphicsDevice == nullptr) return;
 	if(m_graphicsDevice->m_cpContext == nullptr) return;

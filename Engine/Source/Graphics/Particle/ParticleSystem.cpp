@@ -124,13 +124,13 @@ void ParticleWork::Update()
 	{
 		ID3D11ShaderResourceView* pSRVs[1] = { m_cpInputSRV.Get() };
 		m_graphicsDevice->m_cpContext->CSSetShaderResources(0, 1, pSRVs);
-		//m_graphicsDevice->m_cpContext->CSSetShader(simulationShader, 0, 0);
+		m_graphicsDevice->m_cpContext->CSSetShader(m_graphicsDevice->m_spShaderManager->m_GPUParticleShader.m_cpCS.Get(), 0, 0);
 		m_graphicsDevice->m_cpContext->CSSetUnorderedAccessViews(0, 1, m_cpResultUAV.GetAddressOf(), 0);
 		m_graphicsDevice->m_cpContext->Dispatch(256, 1, 1);//X次元256でディスパッチ
 
 		//nullリソース設定(解除)
-		ID3D11ShaderResourceView* resourceZero[] = { nullptr };
-		m_graphicsDevice->m_cpContext->CSSetShaderResources(0, 1, resourceZero);
+		ID3D11ShaderResourceView* resource_zero = nullptr;
+		m_graphicsDevice->m_cpContext->CSSetShaderResources(0, 1, &resource_zero);
 	}
 
 	//シミュレーション結果データ バインド
@@ -222,6 +222,7 @@ void ParticleWork::Emit(UINT numParticles, ParticleSystem::EmitData data, bool l
 		std::uniform_real_distribution<float> distr_col(0.0f, 1.0f);
 
 		//粒子生成
+		//TODO: アロケータ自作しないとまずい
 		m_pParticle = new Particle[m_numParticles];
 		for (int i = 0; i < m_numParticles; i++)
 		{
@@ -263,22 +264,41 @@ void ParticleWork::SetupViews()
 {
 	if (m_graphicsDevice == nullptr) return;
 
-	//シミュレーション入力データ用バッファーの作成
 	m_spInputBuffer = std::make_shared<Buffer>();
-	m_spInputBuffer->CreateStructured(sizeof(Particle), static_cast<UINT>(m_numParticles), false, nullptr);
+	m_spPositionBuffer = std::make_shared<Buffer>();
+	m_spResultBuffer = std::make_shared<Buffer>();
+
+	//シミュレーション入力データ用バッファーの作成
+	if (!m_spInputBuffer->CreateStructured(sizeof(Particle), static_cast<UINT>(m_numParticles), false, nullptr))
+	{
+		Debug::LogError("CreateStructured失敗."); return;
+	}
 
 	//計算シェーダからの結果受け取り用バッファーの作成
-	m_spResultBuffer = std::make_shared<Buffer>();
-	m_spResultBuffer->CreateStructured(sizeof(Particle), static_cast<UINT>(m_numParticles), true, nullptr);
+	if (!m_spResultBuffer->CreateStructured(sizeof(Particle), static_cast<UINT>(m_numParticles), true, nullptr))
+	{
+		Debug::LogError("CreateStructured失敗."); return;
+	}
 
 	//計算結果から座標を取得してそれを入力するバッファーの作成
-	m_spPositionBuffer = std::make_shared<Buffer>();
-	m_spPositionBuffer->CreateStructured(sizeof(Particle), static_cast<UINT>(m_numParticles), false, nullptr);
+	if (!m_spPositionBuffer->CreateStructured(sizeof(Particle), static_cast<UINT>(m_numParticles), false, nullptr))
+	{
+		Debug::LogError("CreateStructured失敗."); return;
+	}
 
 	//SRVの生成
-	m_graphicsDevice->CreateBufferSRV(m_spInputBuffer->Get(), m_cpInputSRV.GetAddressOf());
-	m_graphicsDevice->CreateBufferSRV(m_spPositionBuffer->Get(), m_cpPositionSRV.GetAddressOf());
+	if (FAILED(m_graphicsDevice->CreateBufferSRV(m_spInputBuffer->Get(), m_cpInputSRV.GetAddressOf())))
+	{
+		Debug::LogError("CreateBufferSRV失敗."); return;
+	}
+	if (FAILED(m_graphicsDevice->CreateBufferSRV(m_spPositionBuffer->Get(), m_cpPositionSRV.GetAddressOf())))
+	{
+		Debug::LogError("CreateBufferSRV失敗."); return;
+	}
 
 	//UAVの生成
-	m_graphicsDevice->CreateBufferUAV(m_spResultBuffer->Get(), m_cpResultUAV.GetAddressOf());
+	if (FAILED(m_graphicsDevice->CreateBufferUAV(m_spResultBuffer->Get(), m_cpResultUAV.GetAddressOf())))
+	{
+		Debug::LogError("CreateBufferUAV失敗."); return;
+	}
 }

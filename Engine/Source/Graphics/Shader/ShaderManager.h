@@ -4,7 +4,9 @@
 // シェーダー管理マネージャー
 //-----------------------------------------------------------------------------
 #pragma once
-#include "GPUParticle/GPUParticle.h"
+#include "GPUParticle/GPUParticleShader.h"
+#include "Lit/LitShader.h"
+#include "Unlit/UnlitShader.h"
 #include "Sprite/SpriteShader.h"
 
 //シェーダー管理クラス
@@ -15,9 +17,11 @@ public:
 	ShaderManager() = default;
 	~ShaderManager() = default;
 
-	bool Initialize();
+	void Initialize();
 
-	SpriteShader m_spriteShader;
-	GPUParticle m_GPUParticleShader;
+	SpriteShader		m_spriteShader;
+	LitShader			m_litShader;
+	UnlitShader			m_unlitShader;
+	GPUParticleShader	m_GPUParticleShader;
 
 };

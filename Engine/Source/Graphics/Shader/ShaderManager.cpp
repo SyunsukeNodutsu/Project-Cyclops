@@ -3,10 +3,10 @@
 //-----------------------------------------------------------------------------
 // 初期化
 //-----------------------------------------------------------------------------
-bool ShaderManager::Initialize()
+void ShaderManager::Initialize()
 {
-    if (!m_GPUParticleShader.Initialize()) { Debug::Log("シェーダー(GPUParticleShader)初期化失敗."); return false; }
-    if (!m_spriteShader.Initialize()) { Debug::Log("シェーダー(SpriteShader)初期化失敗."); return false; }
-
-    return true;
+    if (!m_spriteShader.Initialize())       Debug::LogError("シェーダー(SpriteShader)初期化失敗.");
+    if (!m_litShader.Initialize())          Debug::LogError("シェーダー(LitShader)初期化失敗.");
+    if (!m_unlitShader.Initialize())        Debug::LogError("シェーダー(UnlitShader)初期化失敗.");
+    if (!m_GPUParticleShader.Initialize())  Debug::LogError("シェーダー(GPUParticleShader)初期化失敗.");
 }

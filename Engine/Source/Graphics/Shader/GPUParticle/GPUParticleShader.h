@@ -1,12 +1,12 @@
 ﻿//-----------------------------------------------------------------------------
-// File: GPUParticle.h
+// File: GPUParticleShader.h
 //
-// 計算シェーダー使用 粒子シミュレーションシェーダー
+// 粒子シミュレーションシェーダー
 //-----------------------------------------------------------------------------
 #pragma once
 
 //GPU粒子シェーダークラス
-class GPUParticle : public GraphicsDeviceChild
+class GPUParticleShader : public GraphicsDeviceChild
 {
 	struct Vertex
 	{
@@ -16,14 +16,14 @@ class GPUParticle : public GraphicsDeviceChild
 
 public:
 
-	GPUParticle();
-	~GPUParticle() = default;
+	GPUParticleShader();
+	~GPUParticleShader() = default;
 
 	bool Initialize();
 
 	void Begin();
 
-private:
+//private:
 
 	ComPtr<ID3D11VertexShader>	m_cpVS;
 	ComPtr<ID3D11PixelShader>	m_cpPS;
