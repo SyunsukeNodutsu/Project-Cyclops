@@ -15,10 +15,13 @@ public:
 	//Emitの際に設定する初期情報
 	struct EmitData
 	{
-		Vector3 m_maxPosition; Vector3 m_minPosition;
-		Vector3 m_maxVelocity; Vector3 m_minVelocity;
-		float m_maxLifeSpan; float m_minLifeSpan;
-		Vector4 m_color;
+		Vector3 m_maxPosition = Vector3::Zero;
+		Vector3 m_minPosition = Vector3::Zero;
+		Vector3 m_maxVelocity = Vector3::Zero;
+		Vector3 m_minVelocity = Vector3::Zero;
+		float m_maxLifeSpan = 0.0f;
+		float m_minLifeSpan = 0.0f;
+		Vector4 m_color = Vector4::Zero;
 	};
 
 public:
@@ -31,6 +34,8 @@ public:
 
 	void Emit(EmitData data, UINT numParticles, bool loop = false);
 	void AllEnd();
+
+	static int m_numParticle;
 
 private:
 
@@ -49,7 +54,6 @@ class ParticleWork : public GraphicsDeviceChild
 		Vector3 m_velocity;
 		float	m_lifeSpan;
 		Vector4 m_color;
-		Matrix	m_worldMatrix;
 	};
 
 public:

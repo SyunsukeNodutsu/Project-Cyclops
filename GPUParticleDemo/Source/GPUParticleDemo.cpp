@@ -116,11 +116,14 @@ void GPUParticleDemo::Update()
 	//粒子テスト
 	static float time_count = 0.0f;
 	time_count += (float)FpsTimer::GetDeltaTime();
-	if (time_count >= 0.4f)
+	if (time_count >= 0.2f)
 	{
-		m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 4000, false);
+		m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 10000, false);
 		time_count = 0.0f;
 	}
+
+	m_pGraphicsDevice->m_spRendererStatus->m_cb4Behaviour.Work().m_worldMatrix = Matrix::CreateTranslation(0, 0, 0);
+	m_pGraphicsDevice->m_spRendererStatus->m_cb4Behaviour.Write();
 
 	m_pGraphicsDevice->m_spRendererStatus->m_cb7Time.Work().m_deltaTime = (float)FpsTimer::GetDeltaTime();
 	m_pGraphicsDevice->m_spRendererStatus->m_cb7Time.Work().m_totalTime = (float)FpsTimer::GetTotalTime();

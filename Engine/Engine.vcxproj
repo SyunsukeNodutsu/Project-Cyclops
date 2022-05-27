@@ -51,6 +51,7 @@
     <ClCompile Include="Source\Input\Input.cpp" />
     <ClCompile Include="Source\Math\Vector2.cpp" />
     <ClCompile Include="Source\Math\Vector3.cpp" />
+    <ClCompile Include="Source\Math\Vector4.cpp" />
     <ClCompile Include="Source\Pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pch.h</PrecompiledHeaderFile>

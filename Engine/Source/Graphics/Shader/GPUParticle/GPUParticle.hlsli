@@ -7,12 +7,11 @@
 //定数バッファ ※SRV使用
 struct Particle
 {
-    float3  position;
-    float   lifeSpanMax;
-    float3  velocity;
-    float   life;
-    float4  color;
-    row_major float4x4 worldMatrix;
+    float3  m_position;
+    float   m_lifeSpanMax;
+    float3  m_velocity;
+    float   m_life;
+    float4  m_color;
 };
 
 //頂点シェーダが返す値

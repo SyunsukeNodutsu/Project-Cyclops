@@ -204,6 +204,9 @@
     <ClCompile Include="Source\HighLevel\Component\FPSCamera.cpp">
       <Filter>Source\HighLevel\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Math\Vector4.cpp">
+      <Filter>Source\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window\Window.h">

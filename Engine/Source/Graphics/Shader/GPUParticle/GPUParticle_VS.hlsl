@@ -6,7 +6,7 @@
 #include "../ConstantBuffer.hlsli"
 #include "GPUParticle.hlsli"
 
-StructuredBuffer<Particle> particle : register(t2);//SRV
+StructuredBuffer<Particle> BufIn : register(t0);//SRV
 
 VertexOutput main(float4 position : POSITION, float2 uv : TEXCOORD0, uint InstanceID : SV_InstanceID)
 {
@@ -14,12 +14,11 @@ VertexOutput main(float4 position : POSITION, float2 uv : TEXCOORD0, uint Instan
     position.w = 1;
 
     //計算シェーダーの結果からシミュレーション
-    position.xyz += particle[InstanceID].position;
-    ret.m_color = particle[InstanceID].color;
+    position.xyz += BufIn[InstanceID].m_position;
+    ret.m_color = BufIn[InstanceID].m_color;
 
     //座標変換
-    //ret.m_position = mul(position, g_worldMatrix);
-    ret.m_position = mul(position, particle[InstanceID].worldMatrix);
+    ret.m_position = mul(position, g_worldMatrix);
     ret.m_wPosition = ret.m_position.xyz;
     ret.m_position = mul(ret.m_position, g_viewMatrix);
     ret.m_position = mul(ret.m_position, g_projMatrix);

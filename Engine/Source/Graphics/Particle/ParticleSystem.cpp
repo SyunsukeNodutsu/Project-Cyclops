@@ -1,5 +1,7 @@
 ﻿#include "ParticleSystem.h"
 
+int ParticleSystem::m_numParticle = 0;
+
 //=============================================================================
 // 
 // ParticleSystem
@@ -59,11 +61,15 @@ void ParticleSystem::Draw()
 void ParticleSystem::Emit(EmitData data, UINT numParticles, bool loop)
 {
 	const auto& particle = std::make_shared<ParticleWork>();
-	if (particle) particle->Emit(numParticles, data, loop);
+	if (particle)
+	{
+		particle->Emit(numParticles, data, loop);
 
-	//描画順の関係上 先頭に追加する必要がある
-	//TODO: 今のところソート必要なさそう
-	m_spParticleList.push_front(particle);
+		//描画順の関係上 先頭に追加する必要がある
+		m_spParticleList.push_front(particle);
+
+		m_numParticle += numParticles;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -173,15 +179,15 @@ void ParticleWork::Draw()
 
 	//リソース設定
 	//m_graphicsDevice->m_cpContext->PSSetShaderResources(0, 1, m_psTexture->SRVAddress());//テクスチャ/座標(SRV)
-	m_graphicsDevice->m_cpContext->VSSetShaderResources(2, 1, m_cpPositionSRV.GetAddressOf());//UAVからの出力結果
+	m_graphicsDevice->m_cpContext->VSSetShaderResources(0, 1, m_cpPositionSRV.GetAddressOf());//UAVからの出力結果
 
 	//インスタンシング描画
 	m_graphicsDevice->m_cpContext->DrawInstanced(4, m_numParticles, 0, 0);
 
 	//nullリソース設定(解除)
 	ID3D11ShaderResourceView* resourceZero = nullptr;
-	m_graphicsDevice->m_cpContext->PSSetShaderResources(0, 1, &resourceZero);
-	m_graphicsDevice->m_cpContext->VSSetShaderResources(2, 1, &resourceZero);
+	//m_graphicsDevice->m_cpContext->PSSetShaderResources(0, 1, &resourceZero);
+	m_graphicsDevice->m_cpContext->VSSetShaderResources(0, 1, &resourceZero);
 }
 
 //-----------------------------------------------------------------------------
@@ -232,7 +238,6 @@ void ParticleWork::Emit(UINT numParticles, ParticleSystem::EmitData data, bool l
 			m_pParticle[i].m_lifeSpan		= distr_life(engine);
 			m_pParticle[i].m_color			= Vector4(distr_col(engine), distr_col(engine), distr_col(engine), 1);
 			m_pParticle[i].m_lifeSpanMax	= m_pParticle[i].m_lifeSpan;
-			m_pParticle[i].m_worldMatrix	= Matrix::CreateTranslation(m_pParticle[i].m_position);
 		}
 
 		SetGenerated(true);
@@ -253,6 +258,9 @@ void ParticleWork::End()
 		{
 			delete[] m_pParticle;
 			m_pParticle = nullptr;
+
+			//TODO: UAVでLifeSpanが0になった数を詳細に取得し計測
+			ParticleSystem::m_numParticle -= m_numParticles;
 		}
 		break;
 	}

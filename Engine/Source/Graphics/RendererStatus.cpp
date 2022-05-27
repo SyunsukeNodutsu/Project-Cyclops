@@ -14,6 +14,7 @@ bool RendererStatus::Initialize()
 	{
 		m_cb4Behaviour.SetToDevice(4, SHADER_STAGE::VS);
 		m_cb4Behaviour.SetToDevice(4, SHADER_STAGE::PS);
+		m_cb4Behaviour.SetToDevice(4, SHADER_STAGE::CS);
 		m_cb4Behaviour.Work().m_worldMatrix = Matrix();
 		m_cb4Behaviour.Work().m_uvOffset = 0;
 		m_cb4Behaviour.Work().m_uvTiling = 0;

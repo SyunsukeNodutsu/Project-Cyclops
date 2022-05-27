@@ -136,6 +136,8 @@ void ImGuiProfile::SceneMonitor(ImGuiWindowFlags wflags)
 	ImGui::Text(std::string("CameraMatrix Trans: " + ToStringV(cbCamera.m_cameraMatrix.GetTranslation())).c_str());
 	ImGui::Text(std::string("ViewMatrix Trans  : " + ToStringV(cbCamera.m_viewMatrix.GetTranslation())).c_str());
 
+	ImGui::Text(std::string("NumParticles: " + ToString(ParticleSystem::m_numParticle)).c_str());
+
 	ImGui::End();
 }
 

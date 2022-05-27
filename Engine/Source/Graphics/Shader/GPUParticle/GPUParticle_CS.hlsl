@@ -13,27 +13,17 @@ RWStructuredBuffer<Particle> BufOut : register(u0); //出力 URV
 void main(const ComputeInput In)
 {
     int index = In.g_dispatch.x;
-    if (BufIn[index].life <= 0) return;
+    if (BufIn[index].m_life <= 0) return;
 
     //座標,移動量,生存期間の計算
-    float3 test;
-    test.x = BufOut[index].worldMatrix._41;
-    test.y = BufOut[index].worldMatrix._42;
-    test.z = BufOut[index].worldMatrix._43;
-    float3 result = test + (BufIn[index].velocity * g_deltaTime);
-
-    BufOut[index].position      = result;
-    BufOut[index].velocity      = BufIn[index].velocity;
-    BufOut[index].life          = BufIn[index].life - g_deltaTime;
-    BufOut[index].color         = BufIn[index].color;
-    BufOut[index].lifeSpanMax   = BufIn[index].lifeSpanMax;
-
-    BufOut[index].worldMatrix = BufIn[index].worldMatrix;
-    BufOut[index].worldMatrix._41 = result.x;
-    BufOut[index].worldMatrix._42 = result.y;
-    BufOut[index].worldMatrix._43 = result.z;
+    float3 result = BufIn[index].m_position + (BufIn[index].m_velocity * g_deltaTime);
+    BufOut[index].m_position      = result;
+    BufOut[index].m_velocity      = BufIn[index].m_velocity;
+    BufOut[index].m_life          = BufIn[index].m_life - g_deltaTime;
+    BufOut[index].m_color         = BufIn[index].m_color;
+    BufOut[index].m_lifeSpanMax   = BufIn[index].m_lifeSpanMax;
 
     //生存期間に応じて透明度を設定
-    BufOut[index].color.a = (BufOut[index].life / BufIn[index].lifeSpanMax);
-    BufOut[index].color.a = clamp(BufOut[index].color.a, 0, 1);
+    BufOut[index].m_color.a = (BufOut[index].m_life / BufIn[index].m_lifeSpanMax);
+    BufOut[index].m_color.a = clamp(BufOut[index].m_color.a, 0, 1);
 }
