@@ -103,7 +103,7 @@ void GPUParticleDemo::Initialize()
 
 	m_emitData.m_minLifeSpan = 1.0f;
 	m_emitData.m_maxLifeSpan = 3.0f;
-	m_emitData.m_color = Vector4(0, 0, 0, 0);
+	m_emitData.m_color = Vector4(0, 1, 0, 1);
 }
 
 //-----------------------------------------------------------------------------

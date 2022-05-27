@@ -43,7 +43,7 @@ void ParticleSystem::Draw()
 	if (m_graphicsDevice->m_spRendererStatus == nullptr) return;
 
 	m_graphicsDevice->m_spRendererStatus->SetRasterize(RS_CullMode::CullNone, RS_FillMode::Solid);
-	m_graphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Add);
+	//m_graphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Add);
 
 	m_graphicsDevice->m_spShaderManager->m_GPUParticleShader.Begin();
 
@@ -52,7 +52,7 @@ void ParticleSystem::Draw()
 		particle->Draw();
 
 	m_graphicsDevice->m_spRendererStatus->SetRasterize(RS_CullMode::Back, RS_FillMode::Solid);
-	m_graphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Alpha);
+	//m_graphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Alpha);
 }
 
 //-----------------------------------------------------------------------------
@@ -102,6 +102,7 @@ ParticleWork::ParticleWork()
 	, m_loop(false)
 	, m_generated(false)
 	, m_generatedMutex()
+	, m_spTexture(nullptr)
 	, m_spInputBuffer(nullptr)
 	, m_spResultBuffer(nullptr)
 	, m_spPositionBuffer(nullptr)
@@ -130,7 +131,6 @@ void ParticleWork::Update()
 	{
 		ID3D11ShaderResourceView* pSRVs[1] = { m_cpInputSRV.Get() };
 		m_graphicsDevice->m_cpContext->CSSetShaderResources(0, 1, pSRVs);
-		m_graphicsDevice->m_cpContext->CSSetShader(m_graphicsDevice->m_spShaderManager->m_GPUParticleShader.m_cpCS.Get(), 0, 0);
 		m_graphicsDevice->m_cpContext->CSSetUnorderedAccessViews(0, 1, m_cpResultUAV.GetAddressOf(), 0);
 		m_graphicsDevice->m_cpContext->Dispatch(256, 1, 1);//X次元256でディスパッチ
 
@@ -178,16 +178,16 @@ void ParticleWork::Draw()
 	if (m_pParticle == nullptr) return;
 
 	//リソース設定
-	//m_graphicsDevice->m_cpContext->PSSetShaderResources(0, 1, m_psTexture->SRVAddress());//テクスチャ/座標(SRV)
+	m_graphicsDevice->m_cpContext->PSSetShaderResources(0, 1, m_spTexture->SRVAddress());//テクスチャ/座標(SRV)
 	m_graphicsDevice->m_cpContext->VSSetShaderResources(0, 1, m_cpPositionSRV.GetAddressOf());//UAVからの出力結果
 
 	//インスタンシング描画
 	m_graphicsDevice->m_cpContext->DrawInstanced(4, m_numParticles, 0, 0);
 
 	//nullリソース設定(解除)
-	ID3D11ShaderResourceView* resourceZero = nullptr;
-	//m_graphicsDevice->m_cpContext->PSSetShaderResources(0, 1, &resourceZero);
-	m_graphicsDevice->m_cpContext->VSSetShaderResources(0, 1, &resourceZero);
+	ID3D11ShaderResourceView* resource_zero = nullptr;
+	m_graphicsDevice->m_cpContext->PSSetShaderResources(0, 1, &resource_zero);
+	m_graphicsDevice->m_cpContext->VSSetShaderResources(0, 1, &resource_zero);
 }
 
 //-----------------------------------------------------------------------------
@@ -201,6 +201,8 @@ void ParticleWork::Emit(UINT numParticles, ParticleSystem::EmitData data, bool l
 	m_lifeSpan		= data.m_maxLifeSpan;
 
 	//TODO: テクスチャ
+	m_spTexture = std::make_shared<Texture>();
+	m_spTexture->Load(L"");
 
 	SetupViews();
 
@@ -225,7 +227,6 @@ void ParticleWork::Emit(UINT numParticles, ParticleSystem::EmitData data, bool l
 		std::uniform_real_distribution<float> distr_vel_z(data.m_minVelocity.z, data.m_maxVelocity.z);
 
 		std::uniform_real_distribution<float> distr_life(data.m_minLifeSpan, data.m_maxLifeSpan);
-		std::uniform_real_distribution<float> distr_col(0.0f, 1.0f);
 
 		//粒子生成
 		//TODO: アロケータ自作しないとまずい
@@ -235,8 +236,7 @@ void ParticleWork::Emit(UINT numParticles, ParticleSystem::EmitData data, bool l
 			m_pParticle[i].m_position		= Vector3(distr_pos_x(engine), distr_pos_y(engine), distr_pos_z(engine));
 			m_pParticle[i].m_velocity		= Vector3(distr_vel_x(engine), distr_vel_y(engine), distr_vel_z(engine));
 			m_pParticle[i].m_lifeSpan		= distr_life(engine);
-			//m_pParticle[i].m_color			= data.m_color;
-			m_pParticle[i].m_color			= Vector4(distr_col(engine), distr_col(engine), distr_col(engine), 1);
+			m_pParticle[i].m_color			= data.m_color;
 			m_pParticle[i].m_lifeSpanMax	= m_pParticle[i].m_lifeSpan;
 		}
 

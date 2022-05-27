@@ -98,20 +98,6 @@ void GameDemo::Initialize()
 	m_spTexture = std::make_shared<Texture>();
 	m_spTexture->Load(L"Assets/test2.jpg");
 	m_profile.End();
-
-	ParticleSystem::EmitData data{};
-	data.m_minPosition = Vector3::Zero;
-	data.m_maxPosition = Vector3::Zero;
-
-	const float vel = 2.0f;
-	data.m_minVelocity = Vector3(-vel, -vel, -vel);
-	data.m_maxVelocity = Vector3( vel,  vel,  vel);
-
-	data.m_minLifeSpan = 3.0f;
-	data.m_maxLifeSpan = 4.0f;
-	//data.m_color = Vector4(1, 0, 1, 1);
-
-	m_pGraphicsDevice->m_spParticleSystem->Emit(data, 40000, true);
 }
 
 //-----------------------------------------------------------------------------
@@ -160,8 +146,8 @@ void GameDemo::Draw()
 	{
 		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.Begin();
 
-		x = sinf((float)FpsTimer::GetTotalTime()) * 200.0f;
-		y = tanf((float)FpsTimer::GetTotalTime()) * 100.0f;
+		//x = sinf((float)FpsTimer::GetTotalTime()) * 200.0f;
+		//y = tanf((float)FpsTimer::GetTotalTime()) * 100.0f;
 		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.DrawTexture(m_spTexture.get(), Vector2(x, y));
 
 		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.End();

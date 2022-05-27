@@ -6,9 +6,9 @@
 GPUParticleShader::GPUParticleShader()
 	: m_cpVS(nullptr)
 	, m_cpPS(nullptr)
+	, m_cpGS(nullptr)
 	, m_cpCS(nullptr)
 	, m_cpInputLayout(nullptr)
-	, m_spVertexBuffer(nullptr)
 {
 }
 
@@ -48,6 +48,16 @@ bool GPUParticleShader::Initialize()
 		}
 	}
 
+	//ジオメトリシェーダー
+	{
+		#include "GPUParticle_GS.shaderinc"
+
+		if (FAILED(m_graphicsDevice->m_cpDevice.Get()->CreateGeometryShader(compiledBuffer, sizeof(compiledBuffer), nullptr, m_cpGS.GetAddressOf())))
+		{
+			Debug::LogError("ジオメトリシェーダー作成失敗."); return false;
+		}
+	}
+
 	//計算シェーダ
 	{
 		#include "GPUParticle_CS.shaderinc"
@@ -57,20 +67,6 @@ bool GPUParticleShader::Initialize()
 			Debug::LogError("ピクセルシェーダー作成失敗."); return false;
 		}
 	}
-
-	//頂点定義
-	static constexpr float rectSize = 0.02f;
-	Vertex vertices[]{
-		{ Vector3(-rectSize, -rectSize,  0.0f), Vector2(0, 1) },
-		{ Vector3(-rectSize,  rectSize,  0.0f), Vector2(0, 0) },
-		{ Vector3( rectSize, -rectSize,  0.0f), Vector2(1, 1) },
-		{ Vector3( rectSize,  rectSize,  0.0f), Vector2(1, 0) },
-	};
-
-	//頂点バッファーの作成
-	m_spVertexBuffer = std::make_shared<Buffer>();
-	m_spVertexBuffer->Create(D3D11_BIND_VERTEX_BUFFER, sizeof(Vertex) * 4, D3D11_USAGE_DYNAMIC, nullptr);
-	m_spVertexBuffer->WriteData(&vertices[0], sizeof(Vertex) * 4);
 
 	return true;
 }
@@ -83,14 +79,12 @@ void GPUParticleShader::Begin()
 	if (m_graphicsDevice == nullptr) return;
 	if(m_graphicsDevice->m_cpContext == nullptr) return;
 
-	constexpr static UINT strides = sizeof(Vertex);
-	constexpr static UINT offsets = 0;
-	m_graphicsDevice->m_cpContext->IASetVertexBuffers(0, 1, m_spVertexBuffer->GetAddress(), &strides, &offsets);
-
 	m_graphicsDevice->m_cpContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	m_graphicsDevice->m_cpContext->IASetInputLayout(m_cpInputLayout.Get());
 
 	m_graphicsDevice->m_cpContext->VSSetShader(m_cpVS.Get(), 0, 0);
 	m_graphicsDevice->m_cpContext->PSSetShader(m_cpPS.Get(), 0, 0);
+	m_graphicsDevice->m_cpContext->GSSetShader(m_cpGS.Get(), 0, 0);
+	m_graphicsDevice->m_cpContext->CSSetShader(m_cpCS.Get(), 0, 0);
 }

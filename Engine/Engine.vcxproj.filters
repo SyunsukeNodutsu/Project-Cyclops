@@ -210,6 +210,9 @@
     <ClCompile Include="Source\Math\Vector4.cpp">
       <Filter>Source\Math</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\EditorCamera.cpp">
+      <Filter>Source\Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window\Window.h">
@@ -371,6 +374,9 @@
     <ClInclude Include="Source\HighLevel\Component\FPSCamera.h">
       <Filter>Source\HighLevel\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Editor\EditorCamera.h">
+      <Filter>Source\Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Source\Graphics\Shader\Sprite\SpriteShader_VS.hlsl">
@@ -393,6 +399,9 @@
     </FxCompile>
     <FxCompile Include="Source\Graphics\Shader\Unlit\UnlitShader_PS.hlsl">
       <Filter>Source\Graphics\Shader\Unlit</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Graphics\Shader\GPUParticle\GPUParticle_GS.hlsl">
+      <Filter>Source\Graphics\Shader\GPUParticle</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

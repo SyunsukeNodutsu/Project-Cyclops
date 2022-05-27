@@ -54,7 +54,7 @@ bool SpriteShader::Initialize()
 	{
 		m_cb0Sprite.SetToDevice(2, SHADER_STAGE::VS);
 		m_cb0Sprite.SetToDevice(2, SHADER_STAGE::PS);
-		m_cb0Sprite.Work().m_color = Vector4(0, 0, 0, 0);
+		m_cb0Sprite.Work().m_color = Vector4::One;
 		m_cb0Sprite.Write();
 	}
 	else { Debug::LogError("定数バッファ(Sprite)作成失敗."); return false; }

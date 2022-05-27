@@ -79,6 +79,8 @@ private:
 	bool								m_generated;		//生成完了
 	std::mutex							m_generatedMutex;
 
+	std::shared_ptr<Texture>			m_spTexture;		//テクスチャ
+
 	std::shared_ptr<Buffer>				m_spInputBuffer;	//シミュレーション準備データ(入力SRV)
 	std::shared_ptr<Buffer>				m_spResultBuffer;	//シミュレーション結果データ(出力UAV)
 	std::shared_ptr<Buffer>				m_spPositionBuffer;
