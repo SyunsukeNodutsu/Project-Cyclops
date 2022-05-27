@@ -132,6 +132,10 @@ void ImGuiProfile::SceneMonitor(ImGuiWindowFlags wflags)
 	ImGui::Text(std::string("TimeScale: " + std::to_string(m_pFpsTimer->GetTimeScale())).c_str());
 	ImGui::Text(std::string("\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e").c_str());
 
+	static float timeScale = m_pFpsTimer->GetTimeScale();
+	if (ImGui::SliderFloat("TimeScale", &timeScale, 0, 5, "%.2f"))
+		m_pFpsTimer->SetTimeScale(timeScale);
+
 	const auto& cbCamera = m_pGraphicsDevice->m_spRendererStatus->m_cb5Camera.Get();
 	ImGui::Text(std::string("CameraMatrix Trans: " + ToStringV(cbCamera.m_cameraMatrix.GetTranslation())).c_str());
 	ImGui::Text(std::string("ViewMatrix Trans  : " + ToStringV(cbCamera.m_viewMatrix.GetTranslation())).c_str());

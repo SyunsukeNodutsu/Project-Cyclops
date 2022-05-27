@@ -102,8 +102,8 @@ void GPUParticleDemo::Initialize()
 	m_emitData.m_maxVelocity = Vector3(vel, vel, vel);
 
 	m_emitData.m_minLifeSpan = 1.0f;
-	m_emitData.m_maxLifeSpan = 1.0f;
-	//m_emitData.m_color = Vector4(1, 0, 1, 1);
+	m_emitData.m_maxLifeSpan = 3.0f;
+	m_emitData.m_color = Vector4(0, 0, 0, 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -122,6 +122,7 @@ void GPUParticleDemo::Update()
 		time_count = 0.0f;
 	}
 
+	//定数バッファ関連
 	m_pGraphicsDevice->m_spRendererStatus->m_cb4Behaviour.Work().m_worldMatrix = Matrix::CreateTranslation(0, 0, 0);
 	m_pGraphicsDevice->m_spRendererStatus->m_cb4Behaviour.Write();
 
@@ -129,16 +130,28 @@ void GPUParticleDemo::Update()
 	m_pGraphicsDevice->m_spRendererStatus->m_cb7Time.Work().m_totalTime = (float)FpsTimer::GetTotalTime();
 	m_pGraphicsDevice->m_spRendererStatus->m_cb7Time.Write();
 
+	//カメラ操作
 	static Vector3 pos = m_camera.GetCameraMatrix().GetTranslation();
 	static constexpr float move_pow = 10.0f;
+	static constexpr float rot_pow = 30.0f;
 
-	if (Input::IsKeyPressed(KeyCode::LeftArrow)) pos.x -= move_pow * (float)FpsTimer::GetDeltaTime();
-	if (Input::IsKeyPressed(KeyCode::RightArrow)) pos.x += move_pow * (float)FpsTimer::GetDeltaTime();
-	if (Input::IsKeyPressed(KeyCode::UpArrow)) pos.z += move_pow * (float)FpsTimer::GetDeltaTime();
-	if (Input::IsKeyPressed(KeyCode::DownArrow)) pos.z -= move_pow * (float)FpsTimer::GetDeltaTime();
+	//座標
+	if (Input::IsKeyPressed(KeyCode::LeftArrow))	pos.x -= move_pow * (float)FpsTimer::GetDeltaTime(true);
+	if (Input::IsKeyPressed(KeyCode::RightArrow))	pos.x += move_pow * (float)FpsTimer::GetDeltaTime(true);
+	if (Input::IsKeyPressed(KeyCode::UpArrow))		pos.z += move_pow * (float)FpsTimer::GetDeltaTime(true);
+	if (Input::IsKeyPressed(KeyCode::DownArrow))	pos.z -= move_pow * (float)FpsTimer::GetDeltaTime(true);
 
-	Matrix trans = Matrix::CreateTranslation(pos);
-	m_camera.SetCameraMatrix(trans);
+	//回転
+	static Vector3 vrot = Vector3::Zero;
+	if (Input::IsKeyPressed(KeyCode::W)) vrot.x -= rot_pow * (float)FpsTimer::GetDeltaTime(true);
+	if (Input::IsKeyPressed(KeyCode::S)) vrot.x += rot_pow * (float)FpsTimer::GetDeltaTime(true);
+	if (Input::IsKeyPressed(KeyCode::A)) vrot.y += rot_pow * (float)FpsTimer::GetDeltaTime(true);
+	if (Input::IsKeyPressed(KeyCode::D)) vrot.y -= rot_pow * (float)FpsTimer::GetDeltaTime(true);
+
+	//trans x rot
+	Matrix trans	= Matrix::CreateTranslation(pos);
+	Matrix rotation = Matrix::CreateFromYawPitchRoll(DegToRad(vrot.y), DegToRad(vrot.x), DegToRad(vrot.z));
+	m_camera.SetCameraMatrix(trans * rotation);
 }
 
 //-----------------------------------------------------------------------------

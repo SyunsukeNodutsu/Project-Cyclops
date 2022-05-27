@@ -209,24 +209,23 @@ void ParticleWork::Emit(UINT numParticles, ParticleSystem::EmitData data, bool l
 	//非同期で粒子を生成
 	std::thread([=] {
 		//擬似乱数生成器の初期化
-		static std::random_device seed_gen;
-		static std::mt19937 engine(seed_gen());
+		std::random_device seed_gen;
+		std::mt19937 engine(seed_gen());
 
 		//一様実数分布
 		//TOOD: コストがバカ高そう...発生に関しても計算シェーダーでよさそう
 		//TOOD: 乱数生成装置をクラス化
 		//TOOD: 最小値が最大値を上回ってないかの確認(expression invalid min max arguments for uniform_real)
-		static std::uniform_real_distribution<float> distr_pos_x(data.m_minPosition.x, data.m_maxPosition.x);
-		static std::uniform_real_distribution<float> distr_pos_y(data.m_minPosition.y, data.m_maxPosition.y);
-		static std::uniform_real_distribution<float> distr_pos_z(data.m_minPosition.z, data.m_maxPosition.z);
+		std::uniform_real_distribution<float> distr_pos_x(data.m_minPosition.x, data.m_maxPosition.x);
+		std::uniform_real_distribution<float> distr_pos_y(data.m_minPosition.y, data.m_maxPosition.y);
+		std::uniform_real_distribution<float> distr_pos_z(data.m_minPosition.z, data.m_maxPosition.z);
 
-		static std::uniform_real_distribution<float> distr_vel_x(data.m_minVelocity.x, data.m_maxVelocity.x);
-		static std::uniform_real_distribution<float> distr_vel_y(data.m_minVelocity.y, data.m_maxVelocity.y);
-		static std::uniform_real_distribution<float> distr_vel_z(data.m_minVelocity.z, data.m_maxVelocity.z);
+		std::uniform_real_distribution<float> distr_vel_x(data.m_minVelocity.x, data.m_maxVelocity.x);
+		std::uniform_real_distribution<float> distr_vel_y(data.m_minVelocity.y, data.m_maxVelocity.y);
+		std::uniform_real_distribution<float> distr_vel_z(data.m_minVelocity.z, data.m_maxVelocity.z);
 
-		static std::uniform_real_distribution<float> distr_life(data.m_minLifeSpan, data.m_maxLifeSpan);
-
-		static std::uniform_real_distribution<float> distr_col(0.0f, 1.0f);
+		std::uniform_real_distribution<float> distr_life(data.m_minLifeSpan, data.m_maxLifeSpan);
+		std::uniform_real_distribution<float> distr_col(0.0f, 1.0f);
 
 		//粒子生成
 		//TODO: アロケータ自作しないとまずい
@@ -236,6 +235,7 @@ void ParticleWork::Emit(UINT numParticles, ParticleSystem::EmitData data, bool l
 			m_pParticle[i].m_position		= Vector3(distr_pos_x(engine), distr_pos_y(engine), distr_pos_z(engine));
 			m_pParticle[i].m_velocity		= Vector3(distr_vel_x(engine), distr_vel_y(engine), distr_vel_z(engine));
 			m_pParticle[i].m_lifeSpan		= distr_life(engine);
+			//m_pParticle[i].m_color			= data.m_color;
 			m_pParticle[i].m_color			= Vector4(distr_col(engine), distr_col(engine), distr_col(engine), 1);
 			m_pParticle[i].m_lifeSpanMax	= m_pParticle[i].m_lifeSpan;
 		}

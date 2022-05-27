@@ -79,6 +79,9 @@
     <Filter Include="Source\Graphics\Camera">
       <UniqueIdentifier>{ced4b30b-e21a-4b37-bbf3-15d4663f93a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Editor">
+      <UniqueIdentifier>{ca505823-3003-4de1-9388-48b16db6d18c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Window\Window.cpp">
