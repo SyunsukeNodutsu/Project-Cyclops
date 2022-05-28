@@ -5,7 +5,8 @@
 
 # DEMO
 
-![giphy](https://user-images.githubusercontent.com/66367386/170819431-bc74a551-e7d5-420d-9891-66de32df0a62.gif)
+![giphy](https://user-images.githubusercontent.com/66367386/170819431-bc74a551-e7d5-420d-9891-66de32df0a62.gif)  
+計算シェーダーでGPUParticle ジオメトリシェーダーで頂点をビルボード生成
 
 
 # Features
