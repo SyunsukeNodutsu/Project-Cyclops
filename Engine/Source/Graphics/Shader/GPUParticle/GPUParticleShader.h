@@ -23,6 +23,7 @@ public:
 	bool Initialize();
 
 	void Begin();
+	void End();
 
 private:
 

@@ -95,6 +95,7 @@ void GPUParticleDemo::Initialize()
 	m_editorCamera.m_priority = 10.0f;
 	m_editorCamera.SetCameraMatrix(Matrix::CreateTranslation(Vector3(0, 0, -3)));
 
+	//エミッターデータ
 	m_emitData.m_minPosition = Vector3::Zero;
 	m_emitData.m_maxPosition = Vector3::Zero;
 
@@ -147,6 +148,8 @@ void GPUParticleDemo::Draw()
 
 		m_pGraphicsDevice->m_spParticleSystem->Update();
 		m_pGraphicsDevice->m_spParticleSystem->Draw();
+
+		m_pGraphicsDevice->m_spShaderManager->m_GPUParticleShader.End();
 	}
 
 	m_pImGuiProfile->DrawProfileMonitor();

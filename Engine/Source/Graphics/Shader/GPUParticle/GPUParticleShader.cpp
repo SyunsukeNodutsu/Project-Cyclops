@@ -79,12 +79,26 @@ void GPUParticleShader::Begin()
 	if (m_graphicsDevice == nullptr) return;
 	if(m_graphicsDevice->m_cpContext == nullptr) return;
 
-	m_graphicsDevice->m_cpContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	//ジオメトリステージで他シェーダのBufferを参照しない
+	ID3D11Buffer* nullBuffs[5] = { nullptr, nullptr, nullptr, nullptr, nullptr, };
+	uint32_t nullstrides[1] = { 0 };
+	m_graphicsDevice->m_cpContext->IASetIndexBuffer(nullptr, DXGI_FORMAT::DXGI_FORMAT_UNKNOWN, 0);
+	m_graphicsDevice->m_cpContext->IASetVertexBuffers(0, 1, nullBuffs, nullstrides, nullstrides);
 
+	m_graphicsDevice->m_cpContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	m_graphicsDevice->m_cpContext->IASetInputLayout(m_cpInputLayout.Get());
 
 	m_graphicsDevice->m_cpContext->VSSetShader(m_cpVS.Get(), 0, 0);
 	m_graphicsDevice->m_cpContext->PSSetShader(m_cpPS.Get(), 0, 0);
 	m_graphicsDevice->m_cpContext->GSSetShader(m_cpGS.Get(), 0, 0);
 	m_graphicsDevice->m_cpContext->CSSetShader(m_cpCS.Get(), 0, 0);
+}
+
+//-----------------------------------------------------------------------------
+// 終了
+//-----------------------------------------------------------------------------
+void GPUParticleShader::End()
+{
+	m_graphicsDevice->m_cpContext->GSSetShader(nullptr, 0, 0);
+	m_graphicsDevice->m_cpContext->CSSetShader(nullptr, 0, 0);
 }

@@ -11,7 +11,7 @@ SamplerState g_samplerState : register(s0);
 
 float4 main(VertexOutput In) : SV_TARGET
 {
-     float4 color = g_inputTexture.Sample(g_samplerState, In.m_uv);
+    float4 color = g_inputTexture.Sample(g_samplerState, In.m_uv);
     if (color.a <= 0.0f) discard;
 
     //ƒ‚ƒmƒNƒ

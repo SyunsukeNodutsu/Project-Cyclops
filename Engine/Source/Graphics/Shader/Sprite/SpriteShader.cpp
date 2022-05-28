@@ -127,8 +127,8 @@ void SpriteShader::DrawTexture(const Texture* pTexture, Vector2 pos, Vector2 piv
 	if (!m_begin) { Debug::LogError("Begin()が呼ばれていません."); return; }
 
 	//解像度に応じて拡縮
-	const float rateX = m_graphicsDevice->m_viewport.Width / 1280;
-	const float rateY = m_graphicsDevice->m_viewport.Height / 720;
+	const float rateX = m_graphicsDevice->m_viewport.Width / 1600;
+	const float rateY = m_graphicsDevice->m_viewport.Height / 900;
 	Matrix world; world.CreateScalling(rateX, rateY, 0);
 
 	m_graphicsDevice->m_spRendererStatus->m_cb4Behaviour.Work().m_worldMatrix = world;

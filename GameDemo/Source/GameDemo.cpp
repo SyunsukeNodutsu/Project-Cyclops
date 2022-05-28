@@ -98,6 +98,24 @@ void GameDemo::Initialize()
 	m_spTexture = std::make_shared<Texture>();
 	m_spTexture->Load(L"Assets/test2.jpg");
 	m_profile.End();
+
+	//エミッターデータ
+	ParticleSystem::EmitData m_emitData;
+	m_emitData.m_minPosition = Vector3::Zero;
+	m_emitData.m_maxPosition = Vector3::Zero;
+
+	const float vel = 2.0f;
+	m_emitData.m_minVelocity = Vector3(-vel, -vel, -vel);
+	m_emitData.m_maxVelocity = Vector3(vel, vel, vel);
+
+	m_emitData.m_minLifeSpan = 1.0f;
+	m_emitData.m_maxLifeSpan = 6.0f;
+	m_emitData.m_color = Vector4(1, 0.5f, 0, 1);
+
+	const auto& texture = std::make_shared<Texture>();
+	texture->Load(L"Assets/test.png");
+
+	m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 100000, texture, true);
 }
 
 //-----------------------------------------------------------------------------
@@ -140,6 +158,8 @@ void GameDemo::Draw()
 
 		m_pGraphicsDevice->m_spParticleSystem->Update();
 		m_pGraphicsDevice->m_spParticleSystem->Draw();
+
+		m_pGraphicsDevice->m_spShaderManager->m_GPUParticleShader.End();
 	}
 
 	//2D
