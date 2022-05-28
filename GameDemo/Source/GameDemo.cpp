@@ -9,7 +9,7 @@ void GameDemo::OnStart()
 
 	m_profile.Start("テクスチャ読み込み");
 	m_spTexture = std::make_shared<Texture>();
-	m_spTexture->Load(L"Assets/test2.jpg");
+	m_spTexture->Load(L"../Assets/wani.jpg");
 	m_profile.End();
 
 	//エミッターデータ
@@ -26,9 +26,9 @@ void GameDemo::OnStart()
 	m_emitData.m_color = Vector4(1, 0.5f, 0, 1);
 
 	const auto& texture = std::make_shared<Texture>();
-	texture->Load(L"Assets/test.png");
+	texture->Load(L"../Assets/test.png");
 
-	m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 100000, texture, true);
+	//m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 100000, texture, true);
 }
 
 void GameDemo::OnEnd()
