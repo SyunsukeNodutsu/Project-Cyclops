@@ -105,12 +105,12 @@ void GPUParticleDemo::Initialize()
 
 	m_emitData.m_minLifeSpan = 1.0f;
 	m_emitData.m_maxLifeSpan = 6.0f;
-	m_emitData.m_color = Vector4(1, 0.5f, 0, 1);
+	m_emitData.m_color = Vector4(1, 0, 0.4f, 1);
 
 	m_spTexture = std::make_shared<Texture>();
 	m_spTexture->Load(L"Assets/test.png");
 
-	m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 100000, m_spTexture, true);
+	m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 10000, m_spTexture, true);
 }
 
 //-----------------------------------------------------------------------------

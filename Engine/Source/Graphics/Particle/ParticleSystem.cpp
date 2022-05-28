@@ -43,14 +43,14 @@ void ParticleSystem::Draw()
 	if (m_graphicsDevice->m_spRendererStatus == nullptr) return;
 
 	m_graphicsDevice->m_spRendererStatus->SetRasterize(RS_CullMode::CullNone, RS_FillMode::Solid);
-	//m_graphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Add);
+	m_graphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Add);
 	
 	//エミッター分描画
 	for (auto&& particle : m_spParticleList)
 		particle->Draw();
 
 	m_graphicsDevice->m_spRendererStatus->SetRasterize(RS_CullMode::Back, RS_FillMode::Solid);
-	//m_graphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Alpha);
+	m_graphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Alpha);
 }
 
 //-----------------------------------------------------------------------------
@@ -159,8 +159,23 @@ void ParticleWork::Update()
 	m_lifeSpan -= static_cast<float>(FpsTimer::GetDeltaTime());
 	if (m_lifeSpan <= 0)
 	{
-		if (m_loop) Emit(m_numParticles, m_data, m_spTexture, m_loop);
-		else End();
+		if (m_loop)
+		{
+			for (;;)
+			{
+				if (!IsGenerated()) continue;
+				if (m_pParticle != nullptr) { delete[] m_pParticle; m_pParticle = nullptr; }
+				break;
+			}
+
+			m_lifeSpan = m_data.m_maxLifeSpan;
+
+			EmitAsync();
+		}
+		else
+		{
+			End();
+		}
 	}
 }
 
@@ -203,46 +218,7 @@ void ParticleWork::Emit(UINT numParticles, ParticleSystem::EmitData data, std::s
 	m_spTexture = pTexture;
 
 	SetupViews();
-
-	SetGenerated(false);
-
-	//非同期で粒子を生成
-	std::thread([=] {
-		//擬似乱数生成器の初期化
-		std::random_device seed_gen;
-		std::mt19937 engine(seed_gen());
-
-		//一様実数分布
-		//TOOD: コストがバカ高そう...発生に関しても計算シェーダーでよさそう
-		//TOOD: 乱数生成装置をクラス化
-		//TOOD: 最小値が最大値を上回ってないかの確認(expression invalid min max arguments for uniform_real)
-		std::uniform_real_distribution<float> distr_pos_x(data.m_minPosition.x, data.m_maxPosition.x);
-		std::uniform_real_distribution<float> distr_pos_y(data.m_minPosition.y, data.m_maxPosition.y);
-		std::uniform_real_distribution<float> distr_pos_z(data.m_minPosition.z, data.m_maxPosition.z);
-
-		std::uniform_real_distribution<float> distr_vel_x(data.m_minVelocity.x, data.m_maxVelocity.x);
-		std::uniform_real_distribution<float> distr_vel_y(data.m_minVelocity.y, data.m_maxVelocity.y);
-		std::uniform_real_distribution<float> distr_vel_z(data.m_minVelocity.z, data.m_maxVelocity.z);
-
-		std::uniform_real_distribution<float> distr_life(data.m_minLifeSpan, data.m_maxLifeSpan);
-		std::uniform_real_distribution<float> distr_col(0.0f, 1.0f);
-
-		//粒子生成
-		//TODO: アロケータ自作しないとまずい
-		m_pParticle = new Particle[m_numParticles];
-		for (int i = 0; i < m_numParticles; i++)
-		{
-			m_pParticle[i].m_position		= Vector3(distr_pos_x(engine), distr_pos_y(engine), distr_pos_z(engine));
-			m_pParticle[i].m_velocity		= Vector3(distr_vel_x(engine), distr_vel_y(engine), distr_vel_z(engine));
-			m_pParticle[i].m_lifeSpan		= distr_life(engine);
-			//m_pParticle[i].m_color			= data.m_color;
-			m_pParticle[i].m_color			= Vector4(distr_col(engine), distr_col(engine), distr_col(engine), 1.0f);
-			m_pParticle[i].m_lifeSpanMax	= m_pParticle[i].m_lifeSpan;
-		}
-
-		SetGenerated(true);
-
-		}).detach();
+	EmitAsync();
 }
 
 //-----------------------------------------------------------------------------
@@ -267,15 +243,61 @@ void ParticleWork::End()
 }
 
 //-----------------------------------------------------------------------------
+// 非同期生成
+//-----------------------------------------------------------------------------
+void ParticleWork::EmitAsync()
+{
+	//TOOD: コストがバカ高そう(発生に関しても計算シェーダー or アロケータ自作)
+	//TOOD: 乱数生成装置をクラス化
+	//TOOD: 最小値が最大値を上回ってないかの確認(expression invalid min max arguments for uniform_real)
+
+	SetGenerated(false);
+
+	std::thread([=] {
+
+		//擬似乱数生成器の初期化
+		std::random_device seed_gen;
+		std::mt19937 engine(seed_gen());
+
+		//一様実数分布
+		std::uniform_real_distribution<float> distr_pos_x(m_data.m_minPosition.x, m_data.m_maxPosition.x);
+		std::uniform_real_distribution<float> distr_pos_y(m_data.m_minPosition.y, m_data.m_maxPosition.y);
+		std::uniform_real_distribution<float> distr_pos_z(m_data.m_minPosition.z, m_data.m_maxPosition.z);
+
+		std::uniform_real_distribution<float> distr_vel_x(m_data.m_minVelocity.x, m_data.m_maxVelocity.x);
+		std::uniform_real_distribution<float> distr_vel_y(m_data.m_minVelocity.y, m_data.m_maxVelocity.y);
+		std::uniform_real_distribution<float> distr_vel_z(m_data.m_minVelocity.z, m_data.m_maxVelocity.z);
+
+		std::uniform_real_distribution<float> distr_life(m_data.m_minLifeSpan, m_data.m_maxLifeSpan);
+		std::uniform_real_distribution<float> distr_col(0.0f, 1.0f);
+
+		//粒子生成
+		m_pParticle = new Particle[m_numParticles];
+		for (int i = 0; i < m_numParticles; i++)
+		{
+			m_pParticle[i].m_position = Vector3(distr_pos_x(engine), distr_pos_y(engine), distr_pos_z(engine));
+			m_pParticle[i].m_velocity = Vector3(distr_vel_x(engine), distr_vel_y(engine), distr_vel_z(engine));
+			m_pParticle[i].m_lifeSpan = distr_life(engine);
+			//m_pParticle[i].m_color = m_data.m_color;
+			m_pParticle[i].m_color = Vector4(distr_col(engine), distr_col(engine), distr_col(engine), 1.0f);
+			m_pParticle[i].m_lifeSpanMax = m_pParticle[i].m_lifeSpan;
+		}
+
+		SetGenerated(true);
+
+		}).detach();
+}
+
+//-----------------------------------------------------------------------------
 // 各ビューの初期設定
 //-----------------------------------------------------------------------------
 void ParticleWork::SetupViews()
 {
 	if (m_graphicsDevice == nullptr) return;
 
-	m_spInputBuffer = std::make_shared<Buffer>();
-	m_spPositionBuffer = std::make_shared<Buffer>();
-	m_spResultBuffer = std::make_shared<Buffer>();
+	m_spInputBuffer		= std::make_shared<Buffer>();
+	m_spPositionBuffer	= std::make_shared<Buffer>();
+	m_spResultBuffer	= std::make_shared<Buffer>();
 
 	//シミュレーション入力データ用バッファーの作成
 	if (!m_spInputBuffer->CreateStructured(sizeof(Particle), static_cast<UINT>(m_numParticles), false, nullptr))

@@ -91,6 +91,7 @@ private:
 
 private:
 
+	void EmitAsync();
 	void SetupViews();//ビューはthreadsafeではないのでデバイス作成元スレッドで行う
 	void SetGenerated(bool done) { std::lock_guard<std::mutex> lock(m_generatedMutex); m_generated = done; }
 	bool IsGenerated() { std::lock_guard<std::mutex> lock(m_generatedMutex); return m_generated; }
