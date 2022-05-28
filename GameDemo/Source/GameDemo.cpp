@@ -155,10 +155,8 @@ void GameDemo::Draw()
 	//3D
 	{
 		m_pGraphicsDevice->m_spShaderManager->m_GPUParticleShader.Begin();
-
 		m_pGraphicsDevice->m_spParticleSystem->Update();
 		m_pGraphicsDevice->m_spParticleSystem->Draw();
-
 		m_pGraphicsDevice->m_spShaderManager->m_GPUParticleShader.End();
 	}
 
@@ -191,13 +189,15 @@ void GameDemo::LateUpdate()
 //-----------------------------------------------------------------------------
 void GameDemo::Finalize()
 {
+	m_pGraphicsDevice->m_spParticleSystem->AllEnd();
+
 	m_pImGuiProfile->Finalize();
 	m_pAudioDevice->Finalize();
 	m_pGraphicsDevice->Finalize();
 	m_pWindow->Finalize();
 
+	SafeDelete(m_pImGuiProfile);//注意: ImGuiProfileクラスは各サブシステムの参照を所持
 	SafeDelete(m_pFpsTimer);
-	SafeDelete(m_pImGuiProfile);
 	SafeDelete(m_pAudioDevice);
 	SafeDelete(m_pGraphicsDevice);
 	SafeDelete(m_pWindow);

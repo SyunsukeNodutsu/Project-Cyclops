@@ -170,15 +170,17 @@ void GPUParticleDemo::LateUpdate()
 //-----------------------------------------------------------------------------
 void GPUParticleDemo::Finalize()
 {
+	m_pGraphicsDevice->m_spParticleSystem->AllEnd();
+
 	m_pImGuiProfile->Finalize();
 	m_pAudioDevice->Finalize();
 	m_pGraphicsDevice->Finalize();
 	m_pWindow->Finalize();
 
-	SafeDelete(m_pFpsTimer);
 	SafeDelete(m_pImGuiProfile);
-	SafeDelete(m_pGraphicsDevice);
+	SafeDelete(m_pFpsTimer);
 	SafeDelete(m_pAudioDevice);
+	SafeDelete(m_pGraphicsDevice);
 	SafeDelete(m_pWindow);
 
 	Debug::Log("終了.");

@@ -85,7 +85,7 @@ void GPUParticleShader::Begin()
 	m_graphicsDevice->m_cpContext->IASetIndexBuffer(nullptr, DXGI_FORMAT::DXGI_FORMAT_UNKNOWN, 0);
 	m_graphicsDevice->m_cpContext->IASetVertexBuffers(0, 1, nullBuffs, nullstrides, nullstrides);
 
-	m_graphicsDevice->m_cpContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	m_graphicsDevice->m_cpContext->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);
 	m_graphicsDevice->m_cpContext->IASetInputLayout(m_cpInputLayout.Get());
 
 	m_graphicsDevice->m_cpContext->VSSetShader(m_cpVS.Get(), 0, 0);

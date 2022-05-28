@@ -44,9 +44,7 @@ void ParticleSystem::Draw()
 
 	m_graphicsDevice->m_spRendererStatus->SetRasterize(RS_CullMode::CullNone, RS_FillMode::Solid);
 	//m_graphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Add);
-
-	m_graphicsDevice->m_spShaderManager->m_GPUParticleShader.Begin();
-
+	
 	//エミッター分描画
 	for (auto&& particle : m_spParticleList)
 		particle->Draw();
