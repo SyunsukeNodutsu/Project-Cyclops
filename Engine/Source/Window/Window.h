@@ -25,6 +25,7 @@ public:
 	bool Initialize();
 	void Finalize();
 	bool ProcessMessage();
+	void SetClientSize(int width, int height);
 	bool MoveDesktopCenterWindow(HWND hwnd);
 
 	HWND GetHwnd() const { return m_hWnd; }

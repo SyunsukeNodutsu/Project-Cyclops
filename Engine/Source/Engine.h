@@ -94,6 +94,9 @@
 #include "Input/Input.h"
 #include "Input/GamePad.h"
 
+//編集用モジュール
+#include "Editor/EditorCamera.h"
+
 //高レベル層
 #include "HighLevel/Component/Component.h"
 #include "HighLevel/Component/FPSCamera.h"

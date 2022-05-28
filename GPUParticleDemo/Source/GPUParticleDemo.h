@@ -32,9 +32,10 @@ private:
 	int						m_windowHeight;
 
 	Profile					m_profile;
-	Camera					m_camera;
+	EditorCamera			m_editorCamera;
 
 	ParticleSystem::EmitData m_emitData;
+	std::shared_ptr<Texture> m_spTexture;
 
 private:
 

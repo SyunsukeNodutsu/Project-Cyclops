@@ -58,12 +58,12 @@ void ParticleSystem::Draw()
 //-----------------------------------------------------------------------------
 // 発生
 //-----------------------------------------------------------------------------
-void ParticleSystem::Emit(EmitData data, UINT numParticles, bool loop)
+void ParticleSystem::Emit(EmitData data, UINT numParticles, std::shared_ptr<Texture> pTexture, bool loop)
 {
 	const auto& particle = std::make_shared<ParticleWork>();
 	if (particle)
 	{
-		particle->Emit(numParticles, data, loop);
+		particle->Emit(numParticles, data, pTexture, loop);
 
 		//描画順の関係上 先頭に追加する必要がある
 		m_spParticleList.push_front(particle);
@@ -161,7 +161,7 @@ void ParticleWork::Update()
 	m_lifeSpan -= static_cast<float>(FpsTimer::GetDeltaTime());
 	if (m_lifeSpan <= 0)
 	{
-		if (m_loop) Emit(m_numParticles, m_data, m_loop);
+		if (m_loop) Emit(m_numParticles, m_data, m_spTexture, m_loop);
 		else End();
 	}
 }
@@ -193,16 +193,16 @@ void ParticleWork::Draw()
 //-----------------------------------------------------------------------------
 // 発生
 //-----------------------------------------------------------------------------
-void ParticleWork::Emit(UINT numParticles, ParticleSystem::EmitData data, bool loop)
+void ParticleWork::Emit(UINT numParticles, ParticleSystem::EmitData data, std::shared_ptr<Texture> pTexture, bool loop)
 {
+	if (pTexture == nullptr) return;
+
 	m_numParticles	= numParticles;
 	m_data			= data;
 	m_loop			= loop;
 	m_lifeSpan		= data.m_maxLifeSpan;
 
-	//TODO: テクスチャ
-	m_spTexture = std::make_shared<Texture>();
-	m_spTexture->Load(L"");
+	m_spTexture = pTexture;
 
 	SetupViews();
 
@@ -227,6 +227,7 @@ void ParticleWork::Emit(UINT numParticles, ParticleSystem::EmitData data, bool l
 		std::uniform_real_distribution<float> distr_vel_z(data.m_minVelocity.z, data.m_maxVelocity.z);
 
 		std::uniform_real_distribution<float> distr_life(data.m_minLifeSpan, data.m_maxLifeSpan);
+		std::uniform_real_distribution<float> distr_col(0.0f, 1.0f);
 
 		//粒子生成
 		//TODO: アロケータ自作しないとまずい
@@ -236,7 +237,8 @@ void ParticleWork::Emit(UINT numParticles, ParticleSystem::EmitData data, bool l
 			m_pParticle[i].m_position		= Vector3(distr_pos_x(engine), distr_pos_y(engine), distr_pos_z(engine));
 			m_pParticle[i].m_velocity		= Vector3(distr_vel_x(engine), distr_vel_y(engine), distr_vel_z(engine));
 			m_pParticle[i].m_lifeSpan		= distr_life(engine);
-			m_pParticle[i].m_color			= data.m_color;
+			//m_pParticle[i].m_color			= data.m_color;
+			m_pParticle[i].m_color			= Vector4(distr_col(engine), distr_col(engine), distr_col(engine), 1.0f);
 			m_pParticle[i].m_lifeSpanMax	= m_pParticle[i].m_lifeSpan;
 		}
 

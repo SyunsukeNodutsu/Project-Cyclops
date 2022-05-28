@@ -16,6 +16,7 @@ void main(point VertexOutput In[1], inout TriangleStream<VertexOutput> outputStr
 	float posX = size;
 	float posY = posX * aspectRatio;
 
+	//4’¸“_‚ğ ƒJƒƒ‰‚ÉŒü‚­‚æ‚¤‚É¶¬
 	VertexOutput ret = (VertexOutput)0;
 
     ret.m_position	= In[0].m_position + float4(-posX, posY, 0, 0);

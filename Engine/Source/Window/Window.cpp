@@ -26,6 +26,7 @@ bool Window::Initialize()
 	if (CreateWindowInstance() == false)
 		return false;
 
+	SetClientSize(m_clientWidth, m_clientHeight);
 	MoveDesktopCenterWindow(m_hWnd);
 
 	ShowWindow(m_hWnd, SW_SHOW);
@@ -75,6 +76,23 @@ bool Window::ProcessMessage()
 		DispatchMessage(&msg);
 	}
 	return true;
+}
+
+//-----------------------------------------------------------------------------
+// 
+//-----------------------------------------------------------------------------
+void Window::SetClientSize(int width, int height)
+{
+	RECT rcWindow, rcClient;
+
+	GetWindowRect(m_hWnd, &rcWindow);
+	GetClientRect(m_hWnd, &rcClient);
+
+	int nWidth = width + (rcWindow.right - rcWindow.left) - (rcClient.right - rcClient.left);
+	int nHeight = height + (rcWindow.bottom - rcWindow.top) - (rcClient.bottom - rcClient.top);
+
+	//ウィンドウの余白を考え クライアントのサイズを指定サイズに設定
+	MoveWindow(m_hWnd, rcWindow.left, rcWindow.top, nWidth, nHeight, TRUE);
 }
 
 //-----------------------------------------------------------------------------

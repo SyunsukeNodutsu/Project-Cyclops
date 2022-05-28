@@ -32,7 +32,7 @@ public:
 	void Update();
 	void Draw();
 
-	void Emit(EmitData data, UINT numParticles, bool loop = false);
+	void Emit(EmitData data, UINT numParticles, std::shared_ptr<Texture> pTexture, bool loop = false);
 	void AllEnd();
 
 	static int m_numParticle;
@@ -64,7 +64,7 @@ public:
 	void Update();
 	void Draw();
 
-	void Emit(UINT numParticles, ParticleSystem::EmitData data, bool loop = false);
+	void Emit(UINT numParticles, ParticleSystem::EmitData data, std::shared_ptr<Texture> pTexture, bool loop = false);
 	void End();
 
 	bool IsEnd() { return (m_pParticle == nullptr && IsGenerated()); }

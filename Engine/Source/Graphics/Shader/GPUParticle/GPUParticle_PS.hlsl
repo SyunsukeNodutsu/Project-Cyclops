@@ -13,9 +13,8 @@ float4 main(VertexOutput In) : SV_TARGET
 {
     if (In.m_color.a <= 0) discard;
 
-    //TODO: テクスチャ
-    //float4 texcolor = g_texture.Sample(g_samplerState, In.m_uv);
-    //if (texcolor.a <= 0) discard;
+    float4 texcolor = g_texture.Sample(g_samplerState, In.m_uv);
+    if (texcolor.a <= 0) discard;
 
     return In.m_color;
 }
