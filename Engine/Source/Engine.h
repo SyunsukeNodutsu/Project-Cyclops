@@ -103,3 +103,5 @@
 #include "HighLevel/Component/Transform.h"
 
 #include "HighLevel/Behaviour/Behaviour.h"
+
+#include "HighLevel/CyclopsRoot.h"

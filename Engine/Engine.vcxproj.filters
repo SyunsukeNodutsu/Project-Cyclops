@@ -52,9 +52,6 @@
     <Filter Include="Source\Graphics\Shader\Sprite">
       <UniqueIdentifier>{8c8345dd-73d1-42e5-b41f-e27c1dd80673}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Graphics\Vender">
-      <UniqueIdentifier>{d16260f1-49c5-457e-8b25-bccbcd8b5915}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Library">
       <UniqueIdentifier>{a9117c26-298c-4f72-9d3f-76420733a8c4}</UniqueIdentifier>
     </Filter>

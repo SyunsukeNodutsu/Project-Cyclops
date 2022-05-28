@@ -10,39 +10,22 @@
 #pragma comment(lib, "Engine.lib")
 
 //エンジンを使用したAPPのデモクラス
-class GPUParticleDemo
+class GPUParticleDemo : public ApplicationBase
 {
 public:
 
-	GPUParticleDemo();
-	~GPUParticleDemo() = default;
+	void OnStart() override;
+	void OnEnd() override;
 
-	void Run();
+	void OnUpdate() override;
+	void OnDraw3D() override;
+	void OnDraw2D() override;
+	void OnLateUpdate() override;
 
 private:
 
-	static Window*			m_pWindow;
-	static FpsTimer*		m_pFpsTimer;
-
-	static GraphicsDevice*	m_pGraphicsDevice;
-	static AudioDevice*		m_pAudioDevice;
-	static ImGuiProfile*	m_pImGuiProfile;
-
-	int						m_windowWidth;
-	int						m_windowHeight;
-
-	Profile					m_profile;
-	EditorCamera			m_editorCamera;
-
+	EditorCamera m_editorCamera;
 	ParticleSystem::EmitData m_emitData;
 	std::shared_ptr<Texture> m_spTexture;
-
-private:
-
-	void Initialize();
-	void Update();
-	void Draw();
-	void LateUpdate();
-	void Finalize();
 
 };

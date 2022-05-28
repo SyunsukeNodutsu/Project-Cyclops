@@ -10,37 +10,22 @@
 #pragma comment(lib, "Engine.lib")
 
 //エンジンを使用したAPPのデモクラス
-class GameDemo
+class GameDemo : public ApplicationBase
 {
 public:
 
-	GameDemo();
-	~GameDemo() = default;
+	void OnStart() override;
+	void OnEnd() override;
 
-	void Run();
-
-private:
-
-	static Window*			m_pWindow;
-	static FpsTimer*		m_pFpsTimer;
-
-	static GraphicsDevice*	m_pGraphicsDevice;
-	static AudioDevice*		m_pAudioDevice;
-	static ImGuiProfile*	m_pImGuiProfile;
-
-	int						m_windowWidth;
-	int						m_windowHeight;
-
-	std::shared_ptr<Texture>m_spTexture;
-	Profile					m_profile;
-	Camera					m_camera;
+	void OnUpdate() override;
+	void OnDraw3D() override;
+	void OnDraw2D() override;
+	void OnLateUpdate() override;
 
 private:
 
-	void Initialize();
-	void Update();
-	void Draw();
-	void LateUpdate();
-	void Finalize();
+	Profile m_profile;
+	Camera m_camera;
+	std::shared_ptr<Texture> m_spTexture = nullptr;
 
 };

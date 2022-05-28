@@ -14,17 +14,26 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	//Windows10 CreatorsUpdateで入ったモニタ単位でDPIが違う環境への対応
 	SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
 
-	//COM初期化
-	CoInitialize(NULL);
+	//COMの初期化
+	if (FAILED(CoInitializeEx(0, COINIT_MULTITHREADED)))
+	{
+		MessageBoxA(nullptr, "COM initialization failed.", "Failed", MB_OK);
+		return -1;
+	}
 
 	MFStartup(MF_VERSION, MFSTARTUP_NOSOCKET);
 
-	//APP実行
-	GameDemo* app = new GameDemo();
-	if (app)
+	//エンジン起動
+	ApplicationBase* gameDemo = new GameDemo();
+	if (gameDemo)
 	{
-		app->Run();
-		delete app;
+		CyclopsRoot* app = new CyclopsRoot(gameDemo);
+		if (app)
+		{
+			app->Run();
+			SafeDelete(app);
+		}
+		SafeDelete(gameDemo);
 	}
 
 	MFShutdown();
