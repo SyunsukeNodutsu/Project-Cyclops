@@ -41,6 +41,10 @@ private:
 //TODO: 時間のスケーリングはここで管理するべきではないかも
 class FpsTimer
 {
+	template<class T> static constexpr T GetDeltaTime(bool modeRaw = false);
+	template<class T> static constexpr T GetTotalTime();
+	template<class T> static constexpr T GetTimeScale();
+
 public:
 
 	FpsTimer();
@@ -49,9 +53,18 @@ public:
 	void Tick();
 	void ResetDeltaTime();
 
-	static double GetTimeScale() { return m_scaling; }
-	static double GetDeltaTime(bool modeRaw = false) { return TicksToSeconds(m_deltaTicks) * (modeRaw ? 1 : m_scaling); }
-	static double GetTotalTime() { return TicksToSeconds(m_totalTicks); }
+	//@brief 1フレーム前からの経過時間を返す
+	//@param modeRaw true...TimeScaleの影響を受けない
+	template<> static constexpr double GetDeltaTime(bool modeRaw) { return TicksToSeconds(m_deltaTicks) * (modeRaw ? 1 : m_scaling); }
+	template<> static constexpr float  GetDeltaTime(bool modeRaw) { return static_cast<float>(TicksToSeconds(m_deltaTicks) * (modeRaw ? 1 : m_scaling)); }
+
+	//@brief システム起動からの経過時間を返す
+	template<> static constexpr double GetTotalTime() { return TicksToSeconds(m_totalTicks); }
+	template<> static constexpr float  GetTotalTime() { return static_cast<float>(TicksToSeconds(m_totalTicks)); }
+
+	//@brief 時間のスケーリングを返す
+	template<> static constexpr double GetTimeScale() { return m_scaling; }
+	template<> static constexpr float  GetTimeScale() { return static_cast<float>(m_scaling); }
 
 	static uint32_t GetFPS() { return m_fps; }
 	static uint32_t GetTotalFrameCount() { return m_totalFrameCount; }
@@ -76,8 +89,7 @@ private:
 private:
 
 	static constexpr std::uint64_t TicksPerSecond = 10'000'000;
-	static double TicksToSeconds(const std::uint64_t ticks) { return static_cast<double>(ticks) / TicksPerSecond; }
+	static constexpr double TicksToSeconds(const std::uint64_t ticks) { return static_cast<double>(ticks) / TicksPerSecond; }
 	static std::uint64_t SecondsToTicks(const double seconds) { return static_cast<std::uint64_t>(seconds * TicksPerSecond); }
 
 };
-

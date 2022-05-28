@@ -36,7 +36,7 @@ bool AudioDevice::Initialize()
         Debug::Log("IXAudio2作成失敗."); return false;
     }
 
-#if _DEBUG && 0
+#if _DEBUG
     XAUDIO2_DEBUG_CONFIGURATION debug{ 0 };
     debug.TraceMask = XAUDIO2_LOG_ERRORS | XAUDIO2_LOG_WARNINGS;
     debug.BreakMask = XAUDIO2_LOG_ERRORS;

@@ -43,14 +43,14 @@ void ParticleSystem::Draw()
 	if (m_graphicsDevice->m_spRendererStatus == nullptr) return;
 
 	m_graphicsDevice->m_spRendererStatus->SetRasterize(RS_CullMode::CullNone, RS_FillMode::Solid);
-	m_graphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Add);
+	//m_graphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Add);
 	
 	//エミッター分描画
 	for (auto&& particle : m_spParticleList)
 		particle->Draw();
 
 	m_graphicsDevice->m_spRendererStatus->SetRasterize(RS_CullMode::Back, RS_FillMode::Solid);
-	m_graphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Alpha);
+	//m_graphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Alpha);
 }
 
 //-----------------------------------------------------------------------------
@@ -156,7 +156,7 @@ void ParticleWork::Update()
 	m_spPositionBuffer->WriteData(m_pParticle, sizeof(Particle) * m_numParticles);
 
 	//生存期間の確認
-	m_lifeSpan -= static_cast<float>(FpsTimer::GetDeltaTime());
+	m_lifeSpan -= FpsTimer::GetDeltaTime<float>();
 	if (m_lifeSpan <= 0)
 	{
 		if (m_loop)

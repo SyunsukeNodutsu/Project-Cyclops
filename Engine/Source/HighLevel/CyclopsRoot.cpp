@@ -120,8 +120,8 @@ void CyclopsRoot::Update()
 {
 	m_pFpsTimer->Tick();
 
-	m_pGraphicsDevice->m_spRendererStatus->m_cb7Time.Work().m_deltaTime = (float)FpsTimer::GetDeltaTime();
-	m_pGraphicsDevice->m_spRendererStatus->m_cb7Time.Work().m_totalTime = (float)FpsTimer::GetTotalTime();
+	m_pGraphicsDevice->m_spRendererStatus->m_cb7Time.Work().m_deltaTime = FpsTimer::GetDeltaTime<float>();
+	m_pGraphicsDevice->m_spRendererStatus->m_cb7Time.Work().m_totalTime = FpsTimer::GetTotalTime<float>();
 	m_pGraphicsDevice->m_spRendererStatus->m_cb7Time.Write();
 
 	m_pApplicationBase->OnUpdate();
@@ -144,7 +144,7 @@ void CyclopsRoot::Draw()
 		m_pGraphicsDevice->m_spParticleSystem->Draw();
 		m_pGraphicsDevice->m_spShaderManager->m_GPUParticleShader.End();
 	}
-
+	//2D
 	{
 		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.Begin();
 

@@ -1,5 +1,8 @@
 ﻿#include "GPUParticleDemo.h"
 
+//-----------------------------------------------------------------------------
+// サブシステム初期化直後
+//-----------------------------------------------------------------------------
 void GPUParticleDemo::OnStart()
 {
 	//初期カメラ
@@ -11,7 +14,7 @@ void GPUParticleDemo::OnStart()
 	m_emitData.m_minPosition = Vector3::Zero;
 	m_emitData.m_maxPosition = Vector3::Zero;
 
-	const float vel = 2.0f;
+	const float vel = 8.0f;
 	m_emitData.m_minVelocity = Vector3(-vel, -vel, -vel);
 	m_emitData.m_maxVelocity = Vector3(vel, vel, vel);
 
@@ -25,25 +28,48 @@ void GPUParticleDemo::OnStart()
 	m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 10000, m_spTexture, true);
 }
 
+//-----------------------------------------------------------------------------
+// サブシステム終了直前
+//-----------------------------------------------------------------------------
 void GPUParticleDemo::OnEnd()
 {
 	Debug::Log("終了.");
 }
 
+//-----------------------------------------------------------------------------
+// 更新
+//-----------------------------------------------------------------------------
 void GPUParticleDemo::OnUpdate()
 {
 	m_editorCamera.Update();
+
+	static float count = 0;
+	count += (float)FpsTimer::GetDeltaTime();
+	if (count >= 1.0f)
+	{
+		m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 10000, m_spTexture, true);
+		count = 0.0f;
+	}
 }
 
+//-----------------------------------------------------------------------------
+// 3D描画
+//-----------------------------------------------------------------------------
 void GPUParticleDemo::OnDraw3D()
 {
 	m_editorCamera.SetToShader();
 }
 
+//-----------------------------------------------------------------------------
+// 2D描画
+//-----------------------------------------------------------------------------
 void GPUParticleDemo::OnDraw2D()
 {
 }
 
+//-----------------------------------------------------------------------------
+// 描画後更新
+//-----------------------------------------------------------------------------
 void GPUParticleDemo::OnLateUpdate()
 {
 }

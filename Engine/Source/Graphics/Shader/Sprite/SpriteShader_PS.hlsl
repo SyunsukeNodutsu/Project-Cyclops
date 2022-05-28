@@ -20,12 +20,12 @@ float4 main(VertexOutput In) : SV_TARGET
     color.xyz = lerp(color.xyz, mono_col, abs(cos(g_totalTime)));
 
     //横方向ワイプ
-    float t = (int)fmod(In.m_position.x, 72.0f);
-    clip(t - lerp(0.0f, 72.0f, abs(cos(g_totalTime))));
+    //float t = (int)fmod(In.m_position.x, 72.0f);
+    //clip(t - lerp(0.0f, 72.0f, abs(cos(g_totalTime))));
 
     //縦方向ワイプ
-    t = (int)fmod(In.m_position.y, 72.0f);
-    clip(t - lerp(0.0f, 72.0f, abs(cos(g_totalTime))));
+    //t = (int)fmod(In.m_position.y, 72.0f);
+    //clip(t - lerp(0.0f, 72.0f, abs(cos(g_totalTime))));
 
     return color * g_color;
 }

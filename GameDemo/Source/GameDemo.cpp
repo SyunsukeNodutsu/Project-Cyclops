@@ -1,5 +1,8 @@
 ﻿#include "GameDemo.h"
 
+//-----------------------------------------------------------------------------
+// サブシステム初期化直後
+//-----------------------------------------------------------------------------
 void GameDemo::OnStart()
 {
 	//初期カメラ
@@ -28,38 +31,54 @@ void GameDemo::OnStart()
 	const auto& texture = std::make_shared<Texture>();
 	texture->Load(L"../Assets/test.png");
 
-	//m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 100000, texture, true);
+	m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 100000, texture, true);
 }
 
+//-----------------------------------------------------------------------------
+// サブシステム終了直前
+//-----------------------------------------------------------------------------
 void GameDemo::OnEnd()
 {
 	Debug::Log("終了.");
 }
 
+//-----------------------------------------------------------------------------
+// 更新
+//-----------------------------------------------------------------------------
 void GameDemo::OnUpdate()
 {
 	static Vector3 pos = m_camera.GetCameraMatrix().GetTranslation();
 	static constexpr float move_pow = 10.0f;
 
-	if (Input::IsKeyPressed(KeyCode::LeftArrow))	pos.x -= move_pow * (float)FpsTimer::GetDeltaTime();
-	if (Input::IsKeyPressed(KeyCode::RightArrow))	pos.x += move_pow * (float)FpsTimer::GetDeltaTime();
-	if (Input::IsKeyPressed(KeyCode::UpArrow))		pos.z += move_pow * (float)FpsTimer::GetDeltaTime();
-	if (Input::IsKeyPressed(KeyCode::DownArrow))	pos.z -= move_pow * (float)FpsTimer::GetDeltaTime();
+	if (Input::IsKeyPressed(KeyCode::LeftArrow))	pos.x -= move_pow * FpsTimer::GetDeltaTime<float>(true);
+	if (Input::IsKeyPressed(KeyCode::RightArrow))	pos.x += move_pow * FpsTimer::GetDeltaTime<float>(true);
+	if (Input::IsKeyPressed(KeyCode::UpArrow))		pos.z += move_pow * FpsTimer::GetDeltaTime<float>(true);
+	if (Input::IsKeyPressed(KeyCode::DownArrow))	pos.z -= move_pow * FpsTimer::GetDeltaTime<float>(true);
 
 	Matrix trans = Matrix::CreateTranslation(pos);
 	m_camera.SetCameraMatrix(trans);
 }
 
+//-----------------------------------------------------------------------------
+// 3D描画
+//-----------------------------------------------------------------------------
 void GameDemo::OnDraw3D()
 {
+	//TOOD: エンジン側で
 	m_camera.SetToShader();
 }
 
+//-----------------------------------------------------------------------------
+// 2D描画
+//-----------------------------------------------------------------------------
 void GameDemo::OnDraw2D()
 {
-	m_pGraphicsDevice->m_spShaderManager->m_spriteShader.DrawTexture(m_spTexture.get(), Vector2(0, 0));
+	//m_pGraphicsDevice->m_spShaderManager->m_spriteShader.DrawTexture(m_spTexture.get(), Vector2::Zero);
 }
 
+//-----------------------------------------------------------------------------
+// 描画後更新
+//-----------------------------------------------------------------------------
 void GameDemo::OnLateUpdate()
 {
 
