@@ -57,6 +57,6 @@ private:
 	ComPtr<ID3D11PixelShader>	m_blurPS;
 	ComPtr<ID3D11PixelShader>	m_HBrightPS;
 
-	ConstantBuffer<cbBlur>		m_cb0Blur;
+	ConstantBuffer<cbBlur>		m_cb8Blur;
 
 };

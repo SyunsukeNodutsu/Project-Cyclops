@@ -18,6 +18,10 @@ CyclopsRoot::CyclopsRoot(ApplicationBase* app)
 	: m_pApplicationBase(app)
 	, m_windowWidth(1600)
 	, m_windowHeight(900)
+	, m_spScreenRT(nullptr)
+	, m_spScreenZ(nullptr)
+	, m_spHeightBrightTex(nullptr)
+	, m_blurTex()
 {
 }
 
@@ -90,6 +94,20 @@ void CyclopsRoot::Initialize()
 	m_pImGuiProfile->SetCameraManager(m_pCameraManager);
 	//<-------------------------サブシステムを適切な順番で生成ここまで
 
+	//ポストプロセス用にテクスチャ作成
+	{
+		m_spScreenRT = std::make_shared<Texture>();
+		m_spScreenRT->CreateRenderTarget(m_windowWidth, m_windowHeight, DXGI_FORMAT_R16G16B16A16_FLOAT);
+
+		m_spScreenZ = std::make_shared<Texture>();
+		m_spScreenZ->CreateDepthStencil(m_windowWidth, m_windowHeight);
+
+		m_spHeightBrightTex = std::make_shared<Texture>();
+		m_spHeightBrightTex->CreateRenderTarget(m_windowWidth, m_windowHeight, DXGI_FORMAT_R16G16B16A16_FLOAT);
+
+		m_blurTex.Create(m_windowWidth, m_windowHeight, false);
+	}
+
 	//アプリケーション開始
 	ApplicationBase::SetGraphicsDevice(m_pGraphicsDevice);
 	ApplicationBase::SetAudioDevice(m_pAudioDevice);
@@ -145,8 +163,15 @@ void CyclopsRoot::Draw()
 
 	m_pGraphicsDevice->Begin();
 
-	//3D
 	{
+		float clear_color[] = { 0,0,1,1 };
+
+		RestoreRenderTarget rrt = {};
+		m_pGraphicsDevice->m_cpContext->OMSetRenderTargets(1, m_spScreenRT->RTVAddress(), m_spScreenZ->DSV());
+		m_pGraphicsDevice->m_cpContext->ClearRenderTargetView(m_spScreenRT->RTV(), clear_color);
+		m_pGraphicsDevice->m_cpContext->ClearDepthStencilView(m_spScreenZ->DSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
+
+		//3D
 		m_pApplicationBase->OnDraw3D();
 
 		//GPUパーティクル
@@ -154,14 +179,33 @@ void CyclopsRoot::Draw()
 		m_pGraphicsDevice->m_spParticleSystem->Update();
 		m_pGraphicsDevice->m_spParticleSystem->Draw();
 		m_pGraphicsDevice->m_spShaderManager->m_GPUParticleShader.End();
-	}
-	//2D
-	{
+
+		//2D
 		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.Begin();
 
 		m_pApplicationBase->OnDraw2D();
 
 		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.End();
+	}
+
+	//ブラー描画
+	m_pGraphicsDevice->m_spShaderManager->m_postProcessShader.BlurDraw(m_spScreenRT.get(), Vector2(0, 0));
+
+	//ブルーム
+	{
+		//しきい値以上のピクセルを抽出
+		m_pGraphicsDevice->m_spShaderManager->m_postProcessShader.BrightFiltering(m_spHeightBrightTex.get(), m_spScreenRT.get());
+
+		//一定以上の明るさを持ったテクスチャを各サイズぼかし画像作成
+		m_pGraphicsDevice->m_spShaderManager->m_postProcessShader.GenerateBlur(m_blurTex, m_spHeightBrightTex.get());
+
+		m_pGraphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Add);
+
+		//各サイズの画像を加算合成
+		for (int bCnt = 0; bCnt < 5; bCnt++)
+			m_pGraphicsDevice->m_spShaderManager->m_postProcessShader.DrawColor(m_blurTex.m_rt[bCnt][0].get());
+
+		m_pGraphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Alpha);
 	}
 
 	m_pImGuiProfile->DrawProfileMonitor();

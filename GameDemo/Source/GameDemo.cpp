@@ -32,7 +32,7 @@ void GameDemo::OnStart()
 
 	m_emitData.m_minLifeSpan = 1.0f;
 	m_emitData.m_maxLifeSpan = 6.0f;
-	m_emitData.m_color = Vector4(1, 0.5f, 0, 1);
+	m_emitData.m_color = Vector4(0, 1, 0, 1);
 
 	const auto& texture = std::make_shared<Texture>();
 	texture->Load(L"../Assets/test.png");

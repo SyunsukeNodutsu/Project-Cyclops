@@ -46,6 +46,13 @@ private:
 	int						m_windowWidth;
 	int						m_windowHeight;
 
+	std::shared_ptr<Texture> m_spScreenRT;
+	std::shared_ptr<Texture> m_spScreenZ;
+	std::shared_ptr<Texture> m_spHeightBrightTex;
+	BlurTexture				m_blurTex;
+
+	//必須システム
+
 	static Window*			m_pWindow;
 	static FpsTimer*		m_pFpsTimer;
 

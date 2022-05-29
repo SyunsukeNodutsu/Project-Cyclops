@@ -73,6 +73,26 @@ private:
 
 };
 
+//RAII準拠 レンダーターゲット操作クラス
+class RestoreRenderTarget : public GraphicsDeviceChild
+{
+public:
+
+	RestoreRenderTarget() {
+		m_graphicsDevice->m_cpContext->OMGetRenderTargets(1, &m_pSaveRT, &m_pSaveZ);
+	}
+
+	~RestoreRenderTarget() {
+		m_graphicsDevice->m_cpContext->OMSetRenderTargets(1, &m_pSaveRT, m_pSaveZ);
+		if (m_pSaveRT) m_pSaveRT->Release();
+		if (m_pSaveZ)  m_pSaveZ->Release();
+	}
+
+private:
+	ID3D11RenderTargetView* m_pSaveRT = nullptr;
+	ID3D11DepthStencilView* m_pSaveZ = nullptr;
+};
+
 #pragma region enums
 //サンプラーステート
 enum SS_FilterMode
