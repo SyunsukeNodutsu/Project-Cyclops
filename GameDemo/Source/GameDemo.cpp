@@ -11,7 +11,7 @@ void GameDemo::OnStart()
 	{
 		m_spFpsCamera->m_name = "Camera Main";
 		m_spFpsCamera->m_priority = 10.0f;
-		m_spFpsCamera->SetCameraMatrix(Matrix::CreateTranslation(Vector3(0, 0, -10)));
+		m_spFpsCamera->SetCameraMatrix(Matrix::CreateTranslation(Vector3(0, 0, -1)));
 		m_spFpsCamera->SetLocalPos(Vector3(0, 0, 0));
 		m_pCameraManager->AddCameraList(m_spFpsCamera);
 	}
@@ -22,22 +22,22 @@ void GameDemo::OnStart()
 	m_profile.End();
 
 	//エミッターデータ
-	ParticleSystem::EmitData m_emitData;
-	m_emitData.m_minPosition = Vector3::Zero;
-	m_emitData.m_maxPosition = Vector3::Zero;
+	const float pos = 10.0f;
+	m_emitData.m_minPosition = Vector3(-pos, -pos, -pos);
+	m_emitData.m_maxPosition = Vector3(pos, pos, pos);
 
-	const float vel = 2.0f;
+	const float vel = 0.4f;
 	m_emitData.m_minVelocity = Vector3(-vel, -vel, -vel);
 	m_emitData.m_maxVelocity = Vector3(vel, vel, vel);
 
-	m_emitData.m_minLifeSpan = 1.0f;
-	m_emitData.m_maxLifeSpan = 6.0f;
+	m_emitData.m_minLifeSpan = 10.0f;
+	m_emitData.m_maxLifeSpan = 20.0f;
 	m_emitData.m_color = Vector4(0, 1, 0, 1);
 
-	const auto& texture = std::make_shared<Texture>();
-	texture->Load(L"../Assets/test.png");
+	m_spParticleTexture = std::make_shared<Texture>();
+	m_spParticleTexture->Load(L"../Assets/Circle.png");
 
-	m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 100000, texture, true);
+	m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 100000, m_spParticleTexture, true);
 }
 
 //-----------------------------------------------------------------------------

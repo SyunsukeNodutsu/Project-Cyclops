@@ -30,7 +30,7 @@ public:
 	~ParticleSystem() = default;
 
 	void Update();
-	void Draw();
+	void Draw(const bool add);
 
 	void Emit(EmitData data, UINT numParticles, std::shared_ptr<Texture> pTexture, bool loop = false);
 	void AllEnd();

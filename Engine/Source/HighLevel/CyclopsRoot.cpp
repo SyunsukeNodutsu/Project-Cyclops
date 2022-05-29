@@ -164,7 +164,7 @@ void CyclopsRoot::Draw()
 	m_pGraphicsDevice->Begin();
 
 	{
-		float clear_color[] = { 0,0,1,1 };
+		float clear_color[] = { 0, 0, 0, 1 };
 
 		RestoreRenderTarget rrt = {};
 		m_pGraphicsDevice->m_cpContext->OMSetRenderTargets(1, m_spScreenRT->RTVAddress(), m_spScreenZ->DSV());
@@ -177,7 +177,7 @@ void CyclopsRoot::Draw()
 		//GPUパーティクル
 		m_pGraphicsDevice->m_spShaderManager->m_GPUParticleShader.Begin();
 		m_pGraphicsDevice->m_spParticleSystem->Update();
-		m_pGraphicsDevice->m_spParticleSystem->Draw();
+		m_pGraphicsDevice->m_spParticleSystem->Draw(true);
 		m_pGraphicsDevice->m_spShaderManager->m_GPUParticleShader.End();
 
 		//2D
@@ -196,7 +196,6 @@ void CyclopsRoot::Draw()
 		//しきい値以上のピクセルを抽出
 		m_pGraphicsDevice->m_spShaderManager->m_postProcessShader.BrightFiltering(m_spHeightBrightTex.get(), m_spScreenRT.get());
 
-		//一定以上の明るさを持ったテクスチャを各サイズぼかし画像作成
 		m_pGraphicsDevice->m_spShaderManager->m_postProcessShader.GenerateBlur(m_blurTex, m_spHeightBrightTex.get());
 
 		m_pGraphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Add);

@@ -13,8 +13,10 @@ CameraManager::CameraManager()
 	if (m_spEditCamera)
 	{
 		m_spEditCamera->m_name = "EditorCamera";
-		m_spEditCamera->m_priority = 0.0f;
-		m_spEditCamera->m_enable = false;
+		m_spEditCamera->m_priority = 100.0f;
+		m_spEditCamera->m_enable = true;
+		m_spEditCamera->SetCameraMatrix(Matrix::CreateTranslation(0, 0, -4));
+
 		AddCameraList(m_spEditCamera);
 	}
 }

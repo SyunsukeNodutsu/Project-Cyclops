@@ -37,20 +37,21 @@ void ParticleSystem::Update()
 //-----------------------------------------------------------------------------
 // 描画
 //-----------------------------------------------------------------------------
-void ParticleSystem::Draw()
+void ParticleSystem::Draw(const bool add)
 {
 	if (m_graphicsDevice == nullptr) return;
 	if (m_graphicsDevice->m_spRendererStatus == nullptr) return;
 
 	m_graphicsDevice->m_spRendererStatus->SetRasterize(RS_CullMode::CullNone, RS_FillMode::Solid);
-	//m_graphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Add);
+	if (add) m_graphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Add);
+	else m_graphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Alpha);
 	
 	//エミッター分描画
 	for (auto&& particle : m_spParticleList)
 		particle->Draw();
 
 	m_graphicsDevice->m_spRendererStatus->SetRasterize(RS_CullMode::Back, RS_FillMode::Solid);
-	//m_graphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Alpha);
+	m_graphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Alpha);
 }
 
 //-----------------------------------------------------------------------------

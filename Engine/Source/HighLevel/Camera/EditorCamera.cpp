@@ -9,11 +9,6 @@ EditorCamera::EditorCamera()
 	, m_mousePosOld(0, 0)
 	, m_mousePosNow(0, 0)
 {
-	m_priority = FLT_MIN;
-
-	//m_transform = std::make_shared<Transform>();
-	//m_transform->SetAngle(20, 45, 0);
-	//m_rotation = rot;
 }
 
 //-----------------------------------------------------------------------------
