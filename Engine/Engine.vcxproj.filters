@@ -436,6 +436,12 @@
     <FxCompile Include="Source\Graphics\Shader\PostProcess\PostProcessShader_VS.hlsl">
       <Filter>Source\Graphics\Shader\PostProcess</Filter>
     </FxCompile>
+    <FxCompile Include="Source\Graphics\Shader\Lit\LitShader_PS.hlsl">
+      <Filter>Source\Graphics\Shader\Lit</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Graphics\Shader\Lit\LitShader_VS.hlsl">
+      <Filter>Source\Graphics\Shader\Lit</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\Shader\Sprite\SpriteShader.hlsli">
@@ -452,6 +458,9 @@
     </None>
     <None Include="Source\Graphics\Shader\PostProcess\PostProcessShader.hlsli">
       <Filter>Source\Graphics\Shader\PostProcess</Filter>
+    </None>
+    <None Include="Source\Graphics\Shader\Lit\LitShader.hlsli">
+      <Filter>Source\Graphics\Shader\Lit</Filter>
     </None>
   </ItemGroup>
 </Project>
