@@ -40,6 +40,8 @@ void FPSCamera::Update()
 //-----------------------------------------------------------------------------
 void FPSCamera::SetCameraMatrix(const Matrix& cameraMatrix)
 {
+	//TODO: m_enableの確認入れてもいいかも
+
 	Matrix trans = trans.CreateTranslation(m_localPos);
 	Matrix rotation = GetRotationMatrix();
 

@@ -16,7 +16,7 @@ void GameDemo::OnStart()
 		m_pCameraManager->AddCameraList(m_spFpsCamera);
 	}
 
-	m_profile.Start("テクスチャ読み込み");
+	m_profile.Start("Load texture.");
 	m_spTexture = std::make_shared<Texture>();
 	m_spTexture->Load(L"../Assets/wani.jpg");
 	m_profile.End();

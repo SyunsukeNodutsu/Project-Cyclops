@@ -82,6 +82,9 @@
     <Filter Include="Source\HighLevel\Manager">
       <UniqueIdentifier>{392a0d13-d873-4d31-b489-52da60c41a7a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Graphics\Shader\PostProcess">
+      <UniqueIdentifier>{ca156c7e-232b-4c4e-bd58-c52c4e821494}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Window\Window.cpp">
@@ -218,6 +221,9 @@
     </ClCompile>
     <ClCompile Include="Source\HighLevel\Camera\EditorCamera.cpp">
       <Filter>Source\HighLevel\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Shader\PostProcess\PostProcessShader.cpp">
+      <Filter>Source\Graphics\Shader\PostProcess</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -389,6 +395,9 @@
     <ClInclude Include="Source\HighLevel\Camera\EditorCamera.h">
       <Filter>Source\HighLevel\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Graphics\Shader\PostProcess\PostProcessShader.h">
+      <Filter>Source\Graphics\Shader\PostProcess</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Source\Graphics\Shader\Sprite\SpriteShader_VS.hlsl">
@@ -415,6 +424,18 @@
     <FxCompile Include="Source\Graphics\Shader\GPUParticle\GPUParticle_GS.hlsl">
       <Filter>Source\Graphics\Shader\GPUParticle</Filter>
     </FxCompile>
+    <FxCompile Include="Source\Graphics\Shader\PostProcess\PostProcessShader_Blur_PS.hlsl">
+      <Filter>Source\Graphics\Shader\PostProcess</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Graphics\Shader\PostProcess\PostProcessShader_Color_PS.hlsl">
+      <Filter>Source\Graphics\Shader\PostProcess</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Graphics\Shader\PostProcess\PostProcessShader_HBright_PS.hlsl">
+      <Filter>Source\Graphics\Shader\PostProcess</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Graphics\Shader\PostProcess\PostProcessShader_VS.hlsl">
+      <Filter>Source\Graphics\Shader\PostProcess</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\Shader\Sprite\SpriteShader.hlsli">
@@ -428,6 +449,9 @@
     </None>
     <None Include="Source\Graphics\Shader\Unlit\UnlitShader.hlsli">
       <Filter>Source\Graphics\Shader\Unlit</Filter>
+    </None>
+    <None Include="Source\Graphics\Shader\PostProcess\PostProcessShader.hlsli">
+      <Filter>Source\Graphics\Shader\PostProcess</Filter>
     </None>
   </ItemGroup>
 </Project>
