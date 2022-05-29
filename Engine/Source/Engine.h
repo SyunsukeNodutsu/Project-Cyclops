@@ -95,13 +95,17 @@
 #include "Input/GamePad.h"
 
 //編集用モジュール
-#include "Editor/EditorCamera.h"
 
 //高レベル層
+#include "HighLevel/Camera/EditorCamera.h"
+#include "HighLevel/Camera/FPSCamera.h"
+#include "HighLevel/Camera/TPSCamera.h"
+
 #include "HighLevel/Component/Component.h"
-#include "HighLevel/Component/FPSCamera.h"
 #include "HighLevel/Component/Transform.h"
 
 #include "HighLevel/Behaviour/Behaviour.h"
+
+#include "HighLevel/Manager/CameraManager.h"
 
 #include "HighLevel/CyclopsRoot.h"

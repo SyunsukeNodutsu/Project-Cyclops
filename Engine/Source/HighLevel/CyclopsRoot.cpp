@@ -2,12 +2,14 @@
 
 GraphicsDevice*		ApplicationBase::m_pGraphicsDevice	= nullptr;
 AudioDevice*		ApplicationBase::m_pAudioDevice		= nullptr;
+CameraManager*		ApplicationBase::m_pCameraManager	= nullptr;
 
 Window*				CyclopsRoot::m_pWindow			= nullptr;
 FpsTimer*			CyclopsRoot::m_pFpsTimer		= nullptr;
 GraphicsDevice*		CyclopsRoot::m_pGraphicsDevice	= nullptr;
 AudioDevice*		CyclopsRoot::m_pAudioDevice		= nullptr;
 ImGuiProfile*		CyclopsRoot::m_pImGuiProfile	= nullptr;
+CameraManager*		CyclopsRoot::m_pCameraManager	= nullptr;
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -71,6 +73,7 @@ void CyclopsRoot::Initialize()
 	m_pGraphicsDevice = new GraphicsDevice(device_param);
 	m_pAudioDevice = new AudioDevice();
 	m_pImGuiProfile = new ImGuiProfile();
+	m_pCameraManager = new CameraManager();
 
 	GraphicsDeviceChild::SetDevice(m_pGraphicsDevice);
 	AudioDeviceChild::SetDevice(m_pAudioDevice);
@@ -78,16 +81,19 @@ void CyclopsRoot::Initialize()
 	m_pGraphicsDevice->Initialize();
 	m_pAudioDevice->Initialize();
 	m_pImGuiProfile->Initialize();
+	//m_pCameraManager->Initialize();
 
 	m_pImGuiProfile->SetWindow(m_pWindow);
 	m_pImGuiProfile->SetFpsTimer(m_pFpsTimer);
 	m_pImGuiProfile->SetGraphicsDevice(m_pGraphicsDevice);
 	m_pImGuiProfile->SetAudioDevice(m_pAudioDevice);
+	m_pImGuiProfile->SetCameraManager(m_pCameraManager);
 	//<-------------------------サブシステムを適切な順番で生成ここまで
 
 	//アプリケーション開始
 	ApplicationBase::SetGraphicsDevice(m_pGraphicsDevice);
 	ApplicationBase::SetAudioDevice(m_pAudioDevice);
+	ApplicationBase::SetCameraManager(m_pCameraManager);
 	m_pApplicationBase->OnStart();
 }
 
@@ -106,6 +112,7 @@ void CyclopsRoot::Finalize()
 	m_pGraphicsDevice->Finalize();
 	m_pWindow->Finalize();
 
+	SafeDelete(m_pCameraManager);
 	SafeDelete(m_pImGuiProfile);
 	SafeDelete(m_pFpsTimer);
 	SafeDelete(m_pAudioDevice);
@@ -124,6 +131,8 @@ void CyclopsRoot::Update()
 	m_pGraphicsDevice->m_spRendererStatus->m_cb7Time.Work().m_totalTime = FpsTimer::GetTotalTime<float>();
 	m_pGraphicsDevice->m_spRendererStatus->m_cb7Time.Write();
 
+	m_pCameraManager->Update();
+
 	m_pApplicationBase->OnUpdate();
 }
 
@@ -132,6 +141,8 @@ void CyclopsRoot::Update()
 //-----------------------------------------------------------------------------
 void CyclopsRoot::Draw()
 {
+	m_pCameraManager->SetToShader();
+
 	m_pGraphicsDevice->Begin();
 
 	//3D

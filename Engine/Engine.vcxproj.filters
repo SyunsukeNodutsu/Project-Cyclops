@@ -76,8 +76,11 @@
     <Filter Include="Source\Graphics\Camera">
       <UniqueIdentifier>{ced4b30b-e21a-4b37-bbf3-15d4663f93a2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Editor">
-      <UniqueIdentifier>{ca505823-3003-4de1-9388-48b16db6d18c}</UniqueIdentifier>
+    <Filter Include="Source\HighLevel\Camera">
+      <UniqueIdentifier>{bb42b3c0-7bc5-4872-818b-20264e41ad34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\HighLevel\Manager">
+      <UniqueIdentifier>{392a0d13-d873-4d31-b489-52da60c41a7a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -201,14 +204,20 @@
     <ClCompile Include="Source\Graphics\Camera\Camera.cpp">
       <Filter>Source\Graphics\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Source\HighLevel\Component\FPSCamera.cpp">
-      <Filter>Source\HighLevel\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Math\Vector4.cpp">
       <Filter>Source\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\EditorCamera.cpp">
-      <Filter>Source\Editor</Filter>
+    <ClCompile Include="Source\HighLevel\Camera\TPSCamera.cpp">
+      <Filter>Source\HighLevel\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\HighLevel\Camera\FPSCamera.cpp">
+      <Filter>Source\HighLevel\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\HighLevel\Manager\CameraManager.cpp">
+      <Filter>Source\HighLevel\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\HighLevel\Camera\EditorCamera.cpp">
+      <Filter>Source\HighLevel\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -368,11 +377,17 @@
     <ClInclude Include="Source\Graphics\Camera\Camera.h">
       <Filter>Source\Graphics\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Source\HighLevel\Component\FPSCamera.h">
-      <Filter>Source\HighLevel\Component</Filter>
+    <ClInclude Include="Source\HighLevel\Camera\TPSCamera.h">
+      <Filter>Source\HighLevel\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\EditorCamera.h">
-      <Filter>Source\Editor</Filter>
+    <ClInclude Include="Source\HighLevel\Camera\FPSCamera.h">
+      <Filter>Source\HighLevel\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HighLevel\Manager\CameraManager.h">
+      <Filter>Source\HighLevel\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HighLevel\Camera\EditorCamera.h">
+      <Filter>Source\HighLevel\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

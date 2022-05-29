@@ -44,7 +44,7 @@ void GPUParticleDemo::OnUpdate()
 	m_editorCamera.Update();
 
 	static float count = 0;
-	count += (float)FpsTimer::GetDeltaTime();
+	count += FpsTimer::GetDeltaTime<float>();
 	if (count >= 1.0f)
 	{
 		m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 10000, m_spTexture, true);

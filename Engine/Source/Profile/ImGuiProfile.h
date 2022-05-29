@@ -7,6 +7,7 @@
 
 class Window; class FpsTimer;
 class GraphicsDevice; class AudioDevice;
+class CameraManager;
 
 //ImGuiによる処理計測クラス
 class ImGuiProfile : public ISubsystem
@@ -27,6 +28,7 @@ public:
 	void SetFpsTimer(FpsTimer* pDevice) { m_pFpsTimer = pDevice; }
 	void SetGraphicsDevice(GraphicsDevice* pDevice) { m_pGraphicsDevice = pDevice; }
 	void SetAudioDevice(AudioDevice* pDevice) { m_pAudioDevice = pDevice; }
+	void SetCameraManager(CameraManager* pManager) { m_pCameraManager = pManager; }
 
 private:
 
@@ -47,6 +49,7 @@ private:
 	FpsTimer*		m_pFpsTimer;
 	GraphicsDevice* m_pGraphicsDevice;
 	AudioDevice*	m_pAudioDevice;
+	CameraManager*	m_pCameraManager;
 
 private:
 

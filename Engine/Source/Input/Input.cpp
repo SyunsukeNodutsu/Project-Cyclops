@@ -50,8 +50,12 @@ void Input::Refresh()
 //-----------------------------------------------------------------------------
 void Input::SetMousePos(const Vector2Int& pos)
 {
-	//TODO: ClipCursor設定いるかも
-	while (SetCursorPos(pos.x, pos.y) != 0) {}
+	if (GetFocus() != m_hwnd) return;
+
+	POINT at{ pos.x, pos.y };
+	ClientToScreen(m_hwnd, &at);
+
+	SetCursorPos(at.x, at.y);
 }
 
 //-----------------------------------------------------------------------------

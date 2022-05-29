@@ -24,6 +24,8 @@ public:
 	static Matrix CreateTranslation(const Vector3& v) { return  DirectX::XMMatrixTranslation(v.x, v.y, v.z); }
 
 	static Matrix CreateRotationX(float angle) { return  DirectX::XMMatrixRotationX(angle); }
+	static Matrix CreateRotationY(float angle) { return  DirectX::XMMatrixRotationY(angle); }
+	static Matrix CreateRotationZ(float angle) { return  DirectX::XMMatrixRotationZ(angle); }
 
 	static Matrix CreateScalling(float x, float y, float z) { return  DirectX::XMMatrixScaling(x, y, z); }
 	static Matrix CreateScalling(const Vector3& v) { return  DirectX::XMMatrixScaling(v.x, v.y, v.z); }

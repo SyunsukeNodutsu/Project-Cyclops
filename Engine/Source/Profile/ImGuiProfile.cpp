@@ -1,5 +1,4 @@
-﻿#include "Pch.h"
-#include "ImGuiProfile.h"
+﻿#include "ImGuiProfile.h"
 
 std::list<ImGuiProfile::LogData> ImGuiProfile::m_logDatas;
 bool ImGuiProfile::m_addLog = false;
@@ -14,6 +13,7 @@ ImGuiProfile::ImGuiProfile()
 	, m_pFpsTimer(nullptr)
 	, m_pGraphicsDevice(nullptr)
 	, m_pAudioDevice(nullptr)
+	, m_pCameraManager(nullptr)
 {
 }
 
@@ -100,18 +100,6 @@ void ImGuiProfile::AddLog(std::string_view log, const Vector3& color, const std:
 	data.log += "[" + hour + ":" + min + ":" + sec + "]: ";
 	data.log += log.substr();
 
-	//もともと改行コードが入っているか確認
-	/*const std::string find_word("\n"); int count = 0;
-	std::string::size_type pos = log.find(find_word);
-	if (pos != std::string::npos)
-	{
-		while (pos != std::string::npos)
-			count++; pos = log.find(find_word, pos + find_word.length());
-
-		//if (count == 1) data.log += "\n";
-	}
-	else if (count == 0) data.log += "\n";*/
-
 	data.color = color;
 
 	m_logDatas.push_back(data);
@@ -141,6 +129,21 @@ void ImGuiProfile::SceneMonitor(ImGuiWindowFlags wflags)
 	ImGui::Text(std::string("ViewMatrix Trans  : " + ToStringV(cbCamera.m_viewMatrix.GetTranslation())).c_str());
 
 	ImGui::Text(std::string("NumParticles: " + ToString(ParticleSystem::m_numParticle)).c_str());
+	
+	ImGui::Text(std::string("MousePos: " + ToString(Input::GetMousePos().x) + ", " + ToString(Input::GetMousePos().y)).c_str());
+
+	//カメラの情報
+	static std::weak_ptr<Camera> wpCamera;
+	for (const auto& camera : m_pCameraManager->GetCameraList())
+	{
+		ImGui::PushID(camera.get());
+
+		bool selected = (camera == wpCamera.lock());
+		if (ImGui::Selectable(camera->m_name.c_str(), selected))
+			wpCamera = camera;
+
+		ImGui::PopID();
+	}
 
 	ImGui::End();
 }

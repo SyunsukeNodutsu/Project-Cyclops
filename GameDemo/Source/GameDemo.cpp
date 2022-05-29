@@ -6,9 +6,15 @@
 void GameDemo::OnStart()
 {
 	//初期カメラ
-	m_camera.m_name = "Camera Main";
-	m_camera.m_priority = 10.0f;
-	m_camera.SetCameraMatrix(Matrix::CreateTranslation(Vector3(0, 0, -3)));
+	m_spFpsCamera = std::make_shared<FPSCamera>();
+	if (m_spFpsCamera)
+	{
+		m_spFpsCamera->m_name = "Camera Main";
+		m_spFpsCamera->m_priority = 10.0f;
+		m_spFpsCamera->SetCameraMatrix(Matrix::CreateTranslation(Vector3(0, 0, -10)));
+		m_spFpsCamera->SetLocalPos(Vector3(0, 0, 0));
+		m_pCameraManager->AddCameraList(m_spFpsCamera);
+	}
 
 	m_profile.Start("テクスチャ読み込み");
 	m_spTexture = std::make_shared<Texture>();
@@ -47,16 +53,8 @@ void GameDemo::OnEnd()
 //-----------------------------------------------------------------------------
 void GameDemo::OnUpdate()
 {
-	static Vector3 pos = m_camera.GetCameraMatrix().GetTranslation();
-	static constexpr float move_pow = 10.0f;
-
-	if (Input::IsKeyPressed(KeyCode::LeftArrow))	pos.x -= move_pow * FpsTimer::GetDeltaTime<float>(true);
-	if (Input::IsKeyPressed(KeyCode::RightArrow))	pos.x += move_pow * FpsTimer::GetDeltaTime<float>(true);
-	if (Input::IsKeyPressed(KeyCode::UpArrow))		pos.z += move_pow * FpsTimer::GetDeltaTime<float>(true);
-	if (Input::IsKeyPressed(KeyCode::DownArrow))	pos.z -= move_pow * FpsTimer::GetDeltaTime<float>(true);
-
-	Matrix trans = Matrix::CreateTranslation(pos);
-	m_camera.SetCameraMatrix(trans);
+	m_spFpsCamera->Update();
+	m_spFpsCamera->SetCameraMatrix(Matrix::CreateTranslation(0, 0, -10));
 }
 
 //-----------------------------------------------------------------------------
@@ -64,8 +62,7 @@ void GameDemo::OnUpdate()
 //-----------------------------------------------------------------------------
 void GameDemo::OnDraw3D()
 {
-	//TOOD: エンジン側で
-	m_camera.SetToShader();
+
 }
 
 //-----------------------------------------------------------------------------

@@ -25,7 +25,7 @@ public:
 private:
 
 	Profile m_profile;
-	Camera m_camera;
+	std::shared_ptr<FPSCamera> m_spFpsCamera;
 	std::shared_ptr<Texture> m_spTexture = nullptr;
 
 };

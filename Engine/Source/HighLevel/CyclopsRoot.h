@@ -23,8 +23,10 @@ public:
 	//TODO: 隠ぺい
 	static void SetGraphicsDevice(GraphicsDevice* pDevice) { m_pGraphicsDevice = pDevice; }
 	static void SetAudioDevice(AudioDevice* pDevice) { m_pAudioDevice = pDevice; }
+	static void SetCameraManager(CameraManager* pManager) { m_pCameraManager = pManager; }
 	static GraphicsDevice* m_pGraphicsDevice;
 	static AudioDevice* m_pAudioDevice;
+	static CameraManager* m_pCameraManager;
 
 };
 
@@ -50,6 +52,8 @@ private:
 	static GraphicsDevice*	m_pGraphicsDevice;
 	static AudioDevice*		m_pAudioDevice;
 	static ImGuiProfile*	m_pImGuiProfile;
+
+	static CameraManager*	m_pCameraManager;
 
 private:
 

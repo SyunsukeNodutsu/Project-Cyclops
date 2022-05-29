@@ -11,7 +11,7 @@ class Camera : public GraphicsDeviceChild
 public:
 
 	Camera();
-	~Camera() = default;
+	virtual ~Camera() = default;
 
 	void SetToShader();
 	void WorldToScreen(const Vector3& pos, const Matrix matrix, Vector2& screen);
@@ -41,6 +41,7 @@ public:
 
 	std::string m_name;//カメラの名前
 	float m_priority;//優先度
+	float m_enable;//有効かどうか
 
 private:
 

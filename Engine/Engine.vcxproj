@@ -32,7 +32,6 @@
     <ClCompile Include="Source\Audio\Sound3D.cpp" />
     <ClCompile Include="Source\Audio\Vender\WaveBankReader.cpp" />
     <ClCompile Include="Source\Audio\Vender\WAVFileReader.cpp" />
-    <ClCompile Include="Source\Editor\EditorCamera.cpp" />
     <ClCompile Include="Source\Graphics\Buffer.cpp" />
     <ClCompile Include="Source\Graphics\Camera\Camera.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsDevice.cpp" />
@@ -45,9 +44,12 @@
     <ClCompile Include="Source\Graphics\Shader\Sprite\SpriteShader.cpp" />
     <ClCompile Include="Source\Graphics\Shader\Unlit\UnlitShader.cpp" />
     <ClCompile Include="Source\Graphics\Texture.cpp" />
-    <ClCompile Include="Source\HighLevel\Component\FPSCamera.cpp" />
+    <ClCompile Include="Source\HighLevel\Camera\EditorCamera.cpp" />
+    <ClCompile Include="Source\HighLevel\Camera\FPSCamera.cpp" />
+    <ClCompile Include="Source\HighLevel\Camera\TPSCamera.cpp" />
     <ClCompile Include="Source\HighLevel\Component\Transform.cpp" />
     <ClCompile Include="Source\HighLevel\CyclopsRoot.cpp" />
+    <ClCompile Include="Source\HighLevel\Manager\CameraManager.cpp" />
     <ClCompile Include="Source\Input\GamePad.cpp" />
     <ClCompile Include="Source\Input\Input.cpp" />
     <ClCompile Include="Source\Math\Vector2.cpp" />
@@ -88,7 +90,6 @@
     <ClInclude Include="Source\Audio\Sound3D.h" />
     <ClInclude Include="Source\Audio\Vender\WaveBankReader.h" />
     <ClInclude Include="Source\Audio\Vender\WAVFileReader.h" />
-    <ClInclude Include="Source\Editor\EditorCamera.h" />
     <ClInclude Include="Source\Engine.h" />
     <ClInclude Include="Source\Graphics\Buffer.h" />
     <ClInclude Include="Source\Graphics\Camera\Camera.h" />
@@ -103,10 +104,13 @@
     <ClInclude Include="Source\Graphics\Shader\Unlit\UnlitShader.h" />
     <ClInclude Include="Source\Graphics\Texture.h" />
     <ClInclude Include="Source\HighLevel\Behaviour\Behaviour.h" />
+    <ClInclude Include="Source\HighLevel\Camera\EditorCamera.h" />
+    <ClInclude Include="Source\HighLevel\Camera\FPSCamera.h" />
+    <ClInclude Include="Source\HighLevel\Camera\TPSCamera.h" />
     <ClInclude Include="Source\HighLevel\Component\Component.h" />
-    <ClInclude Include="Source\HighLevel\Component\FPSCamera.h" />
     <ClInclude Include="Source\HighLevel\Component\Transform.h" />
     <ClInclude Include="Source\HighLevel\CyclopsRoot.h" />
+    <ClInclude Include="Source\HighLevel\Manager\CameraManager.h" />
     <ClInclude Include="Source\Input\GamePad.h" />
     <ClInclude Include="Source\Input\Input.h" />
     <ClInclude Include="Source\Math\Color.h" />

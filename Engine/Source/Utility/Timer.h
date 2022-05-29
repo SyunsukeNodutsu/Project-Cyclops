@@ -41,6 +41,8 @@ private:
 //TODO: 時間のスケーリングはここで管理するべきではないかも
 class FpsTimer
 {
+public:
+
 	template<class T> static constexpr T GetDeltaTime(bool modeRaw = false);
 	template<class T> static constexpr T GetTotalTime();
 	template<class T> static constexpr T GetTimeScale();
@@ -66,9 +68,13 @@ public:
 	template<> static constexpr double GetTimeScale() { return m_scaling; }
 	template<> static constexpr float  GetTimeScale() { return static_cast<float>(m_scaling); }
 
+	//@brief FPSを返す
 	static uint32_t GetFPS() { return m_fps; }
+
+	//@brief システム起動からの総フレーム数を返す
 	static uint32_t GetTotalFrameCount() { return m_totalFrameCount; }
 
+	//@brief 時間のスケーリングを設定する
 	static void SetTimeScale(double scale) { m_scaling = scale; }
 
 private:
