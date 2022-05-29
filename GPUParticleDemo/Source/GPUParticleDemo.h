@@ -24,8 +24,7 @@ public:
 
 private:
 
-	EditorCamera m_editorCamera;
 	ParticleSystem::EmitData m_emitData;
-	std::shared_ptr<Texture> m_spTexture;
+	std::shared_ptr<Texture> m_spParticleTexture = nullptr;
 
 };

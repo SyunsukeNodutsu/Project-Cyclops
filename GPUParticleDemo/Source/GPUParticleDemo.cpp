@@ -5,27 +5,23 @@
 //-----------------------------------------------------------------------------
 void GPUParticleDemo::OnStart()
 {
-	//初期カメラ
-	m_editorCamera.m_name = "Camera Main";
-	m_editorCamera.m_priority = 10.0f;
-	m_editorCamera.SetCameraMatrix(Matrix::CreateTranslation(Vector3(0, 0, -3)));
-
 	//エミッターデータ
-	m_emitData.m_minPosition = Vector3::Zero;
-	m_emitData.m_maxPosition = Vector3::Zero;
+	const float pos = 10.0f;
+	m_emitData.m_minPosition = Vector3(-pos, -pos, -pos);
+	m_emitData.m_maxPosition = Vector3(pos, pos, pos);
 
-	const float vel = 8.0f;
+	const float vel = 0.4f;
 	m_emitData.m_minVelocity = Vector3(-vel, -vel, -vel);
 	m_emitData.m_maxVelocity = Vector3(vel, vel, vel);
 
-	m_emitData.m_minLifeSpan = 1.0f;
-	m_emitData.m_maxLifeSpan = 6.0f;
-	m_emitData.m_color = Vector4(1, 0, 0.4f, 1);
+	m_emitData.m_minLifeSpan = 10.0f;
+	m_emitData.m_maxLifeSpan = 20.0f;
+	m_emitData.m_color = Vector4(0, 1, 0, 1);
 
-	m_spTexture = std::make_shared<Texture>();
-	m_spTexture->Load(L"../Assets/Circle.png");
+	m_spParticleTexture = std::make_shared<Texture>();
+	m_spParticleTexture->Load(L"../Assets/Circle.png");
 
-	m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 10000, m_spTexture, true);
+	m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 100000, m_spParticleTexture, true);
 }
 
 //-----------------------------------------------------------------------------
@@ -41,15 +37,6 @@ void GPUParticleDemo::OnEnd()
 //-----------------------------------------------------------------------------
 void GPUParticleDemo::OnUpdate()
 {
-	m_editorCamera.Update();
-
-	static float count = 0;
-	count += FpsTimer::GetDeltaTime<float>();
-	if (count >= 1.0f)
-	{
-		m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 10000, m_spTexture, true);
-		count = 0.0f;
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -57,7 +44,6 @@ void GPUParticleDemo::OnUpdate()
 //-----------------------------------------------------------------------------
 void GPUParticleDemo::OnDraw3D()
 {
-	m_editorCamera.SetToShader();
 }
 
 //-----------------------------------------------------------------------------

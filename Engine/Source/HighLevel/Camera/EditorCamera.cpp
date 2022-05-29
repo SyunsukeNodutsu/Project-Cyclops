@@ -4,7 +4,7 @@
 // コンストラクタ
 //-----------------------------------------------------------------------------
 EditorCamera::EditorCamera()
-	: m_position(Vector3::Zero)
+	: m_position(Vector3(0, 0, -4))
 	, m_rotation(Vector3::Zero)
 	, m_mousePosOld(0, 0)
 	, m_mousePosNow(0, 0)

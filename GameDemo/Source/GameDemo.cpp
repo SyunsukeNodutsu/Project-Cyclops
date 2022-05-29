@@ -18,26 +18,8 @@ void GameDemo::OnStart()
 
 	m_profile.Start("Load texture.");
 	m_spTexture = std::make_shared<Texture>();
-	m_spTexture->Load(L"../Assets/wani.jpg");
+	m_spTexture->Load(L"../Assets/100Alligator.jpg");
 	m_profile.End();
-
-	//エミッターデータ
-	const float pos = 10.0f;
-	m_emitData.m_minPosition = Vector3(-pos, -pos, -pos);
-	m_emitData.m_maxPosition = Vector3(pos, pos, pos);
-
-	const float vel = 0.4f;
-	m_emitData.m_minVelocity = Vector3(-vel, -vel, -vel);
-	m_emitData.m_maxVelocity = Vector3(vel, vel, vel);
-
-	m_emitData.m_minLifeSpan = 10.0f;
-	m_emitData.m_maxLifeSpan = 20.0f;
-	m_emitData.m_color = Vector4(0, 1, 0, 1);
-
-	m_spParticleTexture = std::make_shared<Texture>();
-	m_spParticleTexture->Load(L"../Assets/Circle.png");
-
-	m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 100000, m_spParticleTexture, true);
 }
 
 //-----------------------------------------------------------------------------
@@ -62,7 +44,6 @@ void GameDemo::OnUpdate()
 //-----------------------------------------------------------------------------
 void GameDemo::OnDraw3D()
 {
-
 }
 
 //-----------------------------------------------------------------------------
@@ -70,7 +51,7 @@ void GameDemo::OnDraw3D()
 //-----------------------------------------------------------------------------
 void GameDemo::OnDraw2D()
 {
-	//m_pGraphicsDevice->m_spShaderManager->m_spriteShader.DrawTexture(m_spTexture.get(), Vector2::Zero);
+	m_pGraphicsDevice->m_spShaderManager->m_spriteShader.DrawTexture(m_spTexture.get(), Vector2::Zero);
 }
 
 //-----------------------------------------------------------------------------
@@ -78,5 +59,4 @@ void GameDemo::OnDraw2D()
 //-----------------------------------------------------------------------------
 void GameDemo::OnLateUpdate()
 {
-
 }

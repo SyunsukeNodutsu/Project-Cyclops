@@ -7,7 +7,7 @@ CameraManager::CameraManager()
 	: m_spCameraList()
 	, m_spUseCamera(nullptr)
 	, m_spEditCamera(nullptr)
-	, m_editMode(false)
+	, m_editMode(true)
 {
 	m_spEditCamera = std::make_shared<EditorCamera>();
 	if (m_spEditCamera)
