@@ -54,6 +54,7 @@ private:
 private:
 
 	void SceneMonitor(ImGuiWindowFlags wflags);
+	void CameraMonitor(ImGuiWindowFlags wflags);
 	void AudioMonitor(ImGuiWindowFlags wflags);
 	void LogMonitor(ImGuiWindowFlags wflags);
 	void PlotVolumeMeter(const float refreshRate = 30.0f);

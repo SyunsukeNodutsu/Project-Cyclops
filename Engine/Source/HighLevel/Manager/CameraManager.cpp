@@ -15,6 +15,7 @@ CameraManager::CameraManager()
 	, m_changeTime(1.0f)
 	, m_progress(0.0f)
 	, m_nowDolly(false)
+	, m_dollyRow(false)
 {
 }
 
@@ -149,11 +150,11 @@ void CameraManager::UpdateDollyCamera()
 	const Vector3& nowPos = startPos + (dir * m_progress);
 
 	//回転補間
-	DirectX::XMVECTOR qStart = DirectX::XMQuaternionRotationMatrix(startMatrix);
-	DirectX::XMVECTOR qEnd = DirectX::XMQuaternionRotationMatrix(endMatrix);
+	const DirectX::XMVECTOR& qStart = DirectX::XMQuaternionRotationMatrix(startMatrix);
+	const DirectX::XMVECTOR& qEnd = DirectX::XMQuaternionRotationMatrix(endMatrix);
 
-	DirectX::XMVECTOR qSlerp = DirectX::XMQuaternionSlerp(qStart, qEnd, m_progress);
-	Matrix rotMatrix = DirectX::XMMatrixRotationQuaternion(qSlerp);
+	const DirectX::XMVECTOR& qSlerp = DirectX::XMQuaternionSlerp(qStart, qEnd, m_progress);
+	const Matrix& rotMatrix = DirectX::XMMatrixRotationQuaternion(qSlerp);
 
 	Matrix cameraMatrix = rotMatrix;
 	cameraMatrix.SetTranslation(nowPos);
@@ -162,7 +163,20 @@ void CameraManager::UpdateDollyCamera()
 	m_spDollyCamera->SetCameraMatrix(cameraMatrix);
 
 	//進行度更新
-	m_progress = Easing::QuartOut(m_dollyTimer.GetElapsedSeconds<float>(), m_changeTime, 0.0f, 1.0f);
+	float t = m_dollyTimer.GetElapsedSeconds<float>() * (m_dollyRow ? 1.0f : FpsTimer::GetTimeScale<float>());
+
+	switch (m_changeMode)
+	{
+	case ChangeMode::Immediate:		m_progress = 1.0f; break;
+	case ChangeMode::Liner:			m_progress = Easing::Linear(t, m_changeTime, 0.0f, 1.0f);		break;
+	case ChangeMode::QuadIn:		m_progress = Easing::QuadIn(t, m_changeTime, 0.0f, 1.0f);		break;
+	case ChangeMode::QuadOut:		m_progress = Easing::QuadOut(t, m_changeTime, 0.0f, 1.0f);		break;
+	case ChangeMode::QuadInOut:		m_progress = Easing::QuadInOut(t, m_changeTime, 0.0f, 1.0f);	break;
+	case ChangeMode::CubicIn:		m_progress = Easing::CubicIn(t, m_changeTime, 0.0f, 1.0f);		break;
+	case ChangeMode::CubicOut:		m_progress = Easing::CubicOut(t, m_changeTime, 0.0f, 1.0f);		break;
+	case ChangeMode::CubicInOut:	m_progress = Easing::CubicInOut(t, m_changeTime, 0.0f, 1.0f);	break;
+	}
+
 	if (m_progress >= 1.0f)
 	{
 		//切り替え終了

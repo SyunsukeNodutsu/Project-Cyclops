@@ -10,7 +10,12 @@ enum class ChangeMode
 {
 	Immediate,	//遷移アニメーションなし
 	Liner,		//線形
-	//TODO: 追加
+	QuadIn,
+	QuadOut,
+	QuadInOut,
+	CubicIn,
+	CubicOut,
+	CubicInOut,
 };
 
 //カメラのマネージャークラス
@@ -34,6 +39,10 @@ public:
 
 	const bool IsNowDolly() const { return m_nowDolly; }
 
+	void SetChangeMode(ChangeMode mode) { m_changeMode = mode; }
+	void SetChangeTime(float time) { m_changeTime = time; }
+	void SetDollyRow(bool row) { m_dollyRow = row; }
+
 private:
 
 	std::list<std::shared_ptr<Camera>>	m_spCameraList;	//カメラの一覧
@@ -48,6 +57,7 @@ private:
 	float								m_changeTime;	//カメラが切り替わるまでにかかる時間
 	float								m_progress;		//切り替わりの進行具合
 	bool								m_nowDolly;		//カメラが切り替わり中かどうか
+	bool								m_dollyRow;		//切り替わりが時間のスケーリングの影響を受けるかどうか
 
 private:
 

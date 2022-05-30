@@ -74,6 +74,7 @@ void ImGuiProfile::DrawProfileMonitor()
 		ImGui::ShowDemoWindow();
 
 	AudioMonitor(wflags);
+	CameraMonitor(wflags);
 	SceneMonitor(wflags);
 	LogMonitor(wflags);
 
@@ -112,7 +113,7 @@ void ImGuiProfile::AddLog(std::string_view log, const Vector3& color, const std:
 //-----------------------------------------------------------------------------
 void ImGuiProfile::SceneMonitor(ImGuiWindowFlags wflags)
 {
-	if (!ImGui::Begin("Test Monitor", nullptr, wflags)) { ImGui::End(); return; }
+	if (!ImGui::Begin("Scene Monitor", nullptr, wflags)) { ImGui::End(); return; }
 
 	ImGui::Text(std::string("Fps: " + std::to_string(m_pFpsTimer->GetFPS())).c_str());
 	ImGui::Text(std::string("DeltaTime: " + std::to_string(m_pFpsTimer->GetDeltaTime<float>())).c_str());
@@ -131,6 +132,16 @@ void ImGuiProfile::SceneMonitor(ImGuiWindowFlags wflags)
 	ImGui::Text(std::string("NumParticles: " + ToString(ParticleSystem::m_numParticle)).c_str());
 	
 	ImGui::Text(std::string("MousePos: " + ToString(Input::GetMousePos().x) + ", " + ToString(Input::GetMousePos().y)).c_str());
+
+	ImGui::End();
+}
+
+//-----------------------------------------------------------------------------
+// カメラ
+//-----------------------------------------------------------------------------
+void ImGuiProfile::CameraMonitor(ImGuiWindowFlags wflags)
+{
+	if (!ImGui::Begin("Camera Monitor", nullptr, wflags)) { ImGui::End(); return; }
 
 	//カメラの情報
 	ImGui::Text(std::string("Use Camera: " + m_pCameraManager->GetUseCamera()->m_name).c_str());
