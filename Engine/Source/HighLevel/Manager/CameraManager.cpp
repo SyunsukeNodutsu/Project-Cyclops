@@ -29,7 +29,7 @@ void CameraManager::Initialize()
 	if (m_spEditCamera)
 	{
 		m_spEditCamera->m_name = "EditorCamera";
-		m_spEditCamera->m_priority = 100.0f;
+		m_spEditCamera->m_priority = FLT_MAX;
 		m_spEditCamera->SetCameraMatrix(Matrix::CreateTranslation(0, 0, -4));
 
 		AddCameraList(m_spEditCamera);
@@ -56,15 +56,10 @@ void CameraManager::Update()
 		m_editMode = !m_editMode;
 	}
 
-	if (!m_nowDolly)
-	{
-		CheckPriority();
-		m_spUseCamera->Update();
-	}
-	else
-	{
-		UpdateDollyCamera();
-	}
+	CheckPriority();
+
+	if (m_nowDolly) UpdateDollyCamera();
+	else m_spUseCamera->Update();
 }
 
 //-----------------------------------------------------------------------------
@@ -107,6 +102,7 @@ const std::shared_ptr<Camera> CameraManager::SearchCamera(const std::string& nam
 //-----------------------------------------------------------------------------
 void CameraManager::CheckPriority()
 {
+	if (m_nowDolly) return;//TODO: フェード同様 ドリー中も上書き可能に(今のままでもできるかも)
 	if (m_spCameraList.size() < 1) return;
 
 	for (float priorityTmp = FLT_MIN; auto& camera : m_spCameraList)

@@ -109,6 +109,7 @@
     <ClInclude Include="Source\HighLevel\Behaviour\Behaviour.h" />
     <ClInclude Include="Source\HighLevel\Camera\EditorCamera.h" />
     <ClInclude Include="Source\HighLevel\Camera\FPSCamera.h" />
+    <ClInclude Include="Source\HighLevel\Camera\PanCamera.h" />
     <ClInclude Include="Source\HighLevel\Camera\TPSCamera.h" />
     <ClInclude Include="Source\HighLevel\Component\Component.h" />
     <ClInclude Include="Source\HighLevel\Component\Transform.h" />

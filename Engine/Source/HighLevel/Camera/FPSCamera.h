@@ -11,6 +11,7 @@ class FPSCamera : public Camera
 public:
 
 	FPSCamera();
+	~FPSCamera() = default;
 
 	void SetCameraMatrix(const Matrix& cameraMat) override;
 	void Update() override;
@@ -34,13 +35,10 @@ protected:
 
 private:
 
-	//各軸の回転情報
-	Vector3 m_degAngle;
-
-	//X軸の回転を制限する
-	float m_minAngleX; //上向きの制限
-	float m_maxAngleX; //下向きの制限
-
-	Vector2 m_sensitivity;//感度
+	Vector2		m_sensitivity;	//感度
+	Vector3		m_degAngle;		//各軸の回転情報
+	float		m_minAngleX;	//上向きの制限
+	float		m_maxAngleX;	//下向きの制限
+	bool		m_startFrame;	//使用開始の際にマウス座標の取得を1フレーム飛ばす
 
 };

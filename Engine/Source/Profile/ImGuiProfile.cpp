@@ -157,6 +157,18 @@ void ImGuiProfile::CameraMonitor(ImGuiWindowFlags wflags)
 		ImGui::PopID();
 	}
 
+	ImGui::Separator();
+	ImGui::Text("ChangeMode Select.");
+
+	if (ImGui::Button("Immediate ")) m_pCameraManager->SetChangeMode(ChangeMode::Immediate);
+	if (ImGui::Button("Liner     ")) m_pCameraManager->SetChangeMode(ChangeMode::Liner);
+	if (ImGui::Button("QuadIn    ")) m_pCameraManager->SetChangeMode(ChangeMode::QuadIn);
+	if (ImGui::Button("QuadOut   ")) m_pCameraManager->SetChangeMode(ChangeMode::QuadOut);
+	if (ImGui::Button("QuadInOut ")) m_pCameraManager->SetChangeMode(ChangeMode::QuadInOut);
+	if (ImGui::Button("CubicIn   ")) m_pCameraManager->SetChangeMode(ChangeMode::CubicIn);
+	if (ImGui::Button("CubicOut  ")) m_pCameraManager->SetChangeMode(ChangeMode::CubicOut);
+	if (ImGui::Button("CubicInOut")) m_pCameraManager->SetChangeMode(ChangeMode::CubicInOut);
+
 	ImGui::End();
 }
 

@@ -4,10 +4,11 @@
 // コンストラクタ
 //-----------------------------------------------------------------------------
 FPSCamera::FPSCamera()
-	: m_degAngle(Vector3::Zero)
+	: m_sensitivity(Vector2(10.0f, 8.0f))
+	, m_degAngle(Vector3::Zero)
 	, m_minAngleX(-360)
 	, m_maxAngleX(360)
-	, m_sensitivity(Vector2(10.0f, 8.0f))
+	, m_startFrame(false)
 {
 }
 
@@ -18,7 +19,7 @@ void FPSCamera::Update()
 {
 	static const Vector2Int set_center = Vector2Int(800, 450);
 
-	const Vector2Int& nowPos = Input::GetMousePos();
+	const Vector2Int& nowPos = m_startFrame ? set_center : Input::GetMousePos();
 
 	Vector2Int mouseMove = Vector2Int(0, 0);
 	mouseMove.x = nowPos.x - set_center.x;
@@ -31,6 +32,8 @@ void FPSCamera::Update()
 
 	//角度制御
 	m_degAngle.x = std::clamp(m_degAngle.x, m_minAngleX, m_maxAngleX);
+
+	if (m_startFrame) m_startFrame = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -39,6 +42,9 @@ void FPSCamera::Update()
 void FPSCamera::OnUseStart()
 {
 	Input::SetMouseHide(true);
+	m_startFrame = true;
+
+	Debug::Log("OnUseStart()");
 }
 
 //-----------------------------------------------------------------------------
