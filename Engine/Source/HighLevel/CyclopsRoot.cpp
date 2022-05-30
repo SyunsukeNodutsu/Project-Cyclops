@@ -85,7 +85,7 @@ void CyclopsRoot::Initialize()
 	m_pGraphicsDevice->Initialize();
 	m_pAudioDevice->Initialize();
 	m_pImGuiProfile->Initialize();
-	//m_pCameraManager->Initialize();
+	m_pCameraManager->Initialize();
 
 	m_pImGuiProfile->SetWindow(m_pWindow);
 	m_pImGuiProfile->SetFpsTimer(m_pFpsTimer);

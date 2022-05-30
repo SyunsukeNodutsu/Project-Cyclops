@@ -18,6 +18,10 @@ public:
 
 	virtual void SetCameraMatrix(const Matrix& camera);
 
+	virtual void Update() {}
+	virtual void OnUseStart() {}
+	virtual void OnUseEnd() {}
+
 	void SetFovAngleY(float radians) { m_fovAngleY = radians; m_dirtyProj = true; }
 	void SetAspect(float aspectRatio) { m_aspectRatio = aspectRatio; m_dirtyProj = true; }
 	void SetNearZ(float nearZ) { m_nearZ = nearZ; m_dirtyProj = true; }
@@ -46,9 +50,8 @@ public:
 
 public:
 
-	std::string m_name;//カメラの名前
-	float m_priority;//優先度
-	float m_enable;//有効かどうか
+	std::string m_name;			//カメラの名前
+	float		m_priority;		//優先度
 
 private:
 

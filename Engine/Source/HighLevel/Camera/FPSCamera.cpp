@@ -16,8 +16,6 @@ FPSCamera::FPSCamera()
 //-----------------------------------------------------------------------------
 void FPSCamera::Update()
 {
-	if (!m_enable) return;
-
 	static const Vector2Int set_center = Vector2Int(800, 450);
 
 	const Vector2Int& nowPos = Input::GetMousePos();

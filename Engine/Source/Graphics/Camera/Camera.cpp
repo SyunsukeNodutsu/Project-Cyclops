@@ -6,7 +6,6 @@
 Camera::Camera()
 	: m_name("Camera Main")
 	, m_priority(FLT_MIN)
-	, m_enable(true)
 	, m_cameraMatrix()
 	, m_viewMatrix()
 	, m_projMatrix()

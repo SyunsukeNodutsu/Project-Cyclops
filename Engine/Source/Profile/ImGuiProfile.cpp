@@ -133,6 +133,7 @@ void ImGuiProfile::SceneMonitor(ImGuiWindowFlags wflags)
 	ImGui::Text(std::string("MousePos: " + ToString(Input::GetMousePos().x) + ", " + ToString(Input::GetMousePos().y)).c_str());
 
 	//カメラの情報
+	ImGui::Text(std::string("Use Camera: " + m_pCameraManager->GetUseCamera()->m_name).c_str());
 	static std::weak_ptr<Camera> wpCamera;
 	for (const auto& camera : m_pCameraManager->GetCameraList())
 	{

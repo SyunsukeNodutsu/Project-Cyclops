@@ -6,19 +6,41 @@
 CameraManager::CameraManager()
 	: m_spCameraList()
 	, m_spUseCamera(nullptr)
+	, m_spPrevCamera(nullptr)
 	, m_spEditCamera(nullptr)
 	, m_editMode(true)
+	, m_changeMode(ChangeMode::Immediate)
+	, m_spDollyCamera(nullptr)
+	, m_changeTime(1.0f)
+	, m_progress(0.0f)
+	, m_nowDolly(false)
 {
+}
+
+//-----------------------------------------------------------------------------
+// 初期化
+//-----------------------------------------------------------------------------
+void CameraManager::Initialize()
+{
+	//編集カメラ初期化
 	m_spEditCamera = std::make_shared<EditorCamera>();
 	if (m_spEditCamera)
 	{
 		m_spEditCamera->m_name = "EditorCamera";
 		m_spEditCamera->m_priority = 100.0f;
-		m_spEditCamera->m_enable = true;
 		m_spEditCamera->SetCameraMatrix(Matrix::CreateTranslation(0, 0, -4));
 
 		AddCameraList(m_spEditCamera);
 	}
+
+	//ドリーカメラ初期化
+	m_spDollyCamera = std::make_shared<Camera>();
+	if (m_spDollyCamera)
+	{
+		m_spDollyCamera->m_name = "DollyCamera";
+	}
+
+	m_spPrevCamera = m_spEditCamera;
 }
 
 //-----------------------------------------------------------------------------
@@ -32,9 +54,15 @@ void CameraManager::Update()
 		m_editMode = !m_editMode;
 	}
 
-	if (m_editMode) m_spEditCamera->Update();
-
-	CheckPriority();
+	if (!m_nowDolly)
+	{
+		CheckPriority();
+		m_spUseCamera->Update();
+	}
+	else
+	{
+		UpdateDollyCamera();
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -43,7 +71,9 @@ void CameraManager::Update()
 void CameraManager::SetToShader()
 {
 	if (m_spUseCamera == nullptr) return;
-	m_spUseCamera->SetToShader();
+
+	if (m_nowDolly) m_spDollyCamera->SetToShader();
+	else m_spUseCamera->SetToShader();
 }
 
 //-----------------------------------------------------------------------------
@@ -66,7 +96,7 @@ const std::shared_ptr<Camera> CameraManager::SearchCamera(const std::string& nam
 		if (camera->m_name.compare(name) == 0)
 			return camera;
 	}
-	Debug::LogError("Camera not found.");
+	Debug::LogError("Camera Not found.");
 	return nullptr;
 }
 
@@ -75,11 +105,10 @@ const std::shared_ptr<Camera> CameraManager::SearchCamera(const std::string& nam
 //-----------------------------------------------------------------------------
 void CameraManager::CheckPriority()
 {
-	float priorityTmp = FLT_MIN;
-	for (auto& camera : m_spCameraList)
-	{
-		camera->m_enable = false;
+	if (m_spCameraList.size() < 1) return;
 
+	for (float priorityTmp = FLT_MIN; auto& camera : m_spCameraList)
+	{
 		//優先度が高い方(以上)を設定
 		if (camera->m_priority >= priorityTmp)
 		{
@@ -88,6 +117,56 @@ void CameraManager::CheckPriority()
 		}
 	}
 
-	if (m_spUseCamera)
-		m_spUseCamera->m_enable = true;
+	if (m_spUseCamera == nullptr) { Debug::LogError("Camera Not found."); return; }
+
+	if (m_spPrevCamera && (m_spUseCamera != m_spPrevCamera))
+	{
+		m_spPrevCamera->OnUseEnd();
+		m_nowDolly = true;//ドリー開始
+	}
+}
+
+//-----------------------------------------------------------------------------
+// カメラの切り替え更新
+//-----------------------------------------------------------------------------
+void CameraManager::UpdateDollyCamera()
+{
+	if (!m_nowDolly) return;
+
+	const Matrix& startMatrix = m_spPrevCamera->GetCameraMatrix();
+	const Matrix& endMatrix = m_spUseCamera->GetCameraMatrix();
+
+	const Vector3& startPos = startMatrix.GetTranslation();
+	const Vector3& endPos = endMatrix.GetTranslation();
+
+	//座標補間
+	const Vector3& dir = endPos - startPos;
+	const Vector3& nowPos = startPos + (dir * m_progress);
+
+	//回転補間
+	DirectX::XMVECTOR qStart = DirectX::XMQuaternionRotationMatrix(startMatrix);
+	DirectX::XMVECTOR qEnd = DirectX::XMQuaternionRotationMatrix(endMatrix);
+
+	DirectX::XMVECTOR qSlerp = DirectX::XMQuaternionSlerp(qStart, qEnd, m_progress);
+	Matrix rotMatrix = DirectX::XMMatrixRotationQuaternion(qSlerp);
+
+	Matrix cameraMatrix = rotMatrix;
+	cameraMatrix.SetTranslation(nowPos);
+
+	//ドリーカメラのカメラ行列確定
+	m_spDollyCamera->SetCameraMatrix(cameraMatrix);
+
+	//進行度更新 TODO: イージング
+	m_progress += FpsTimer::GetDeltaTime<float>();
+	if (m_progress >= m_changeTime)
+	{
+		//切り替え終了
+		m_spUseCamera->OnUseStart();
+
+		m_progress = 0.0f;
+		m_nowDolly = false;
+
+		Debug::Log("Change done: " + m_spUseCamera->m_name + ", prev: " + m_spPrevCamera->m_name);
+		m_spPrevCamera = m_spUseCamera;
+	}
 }

@@ -6,14 +6,13 @@
 void GameDemo::OnStart()
 {
 	//初期カメラ
-	m_spCamera = std::make_shared<TPSCamera>();
+	m_spCamera = std::make_shared<FPSCamera>();
 	if (m_spCamera)
 	{
 		m_spCamera->m_name = "Camera Main";
 		m_spCamera->m_priority = 10.0f;
 		m_spCamera->SetCameraMatrix(Matrix::CreateTranslation(Vector3(0, 0, -1)));
 		m_spCamera->SetLocalPos(Vector3(0, 0, 0));
-		m_spCamera->SetViewPoint(Vector3(0, 0, 0));
 		m_pCameraManager->AddCameraList(m_spCamera);
 	}
 
@@ -53,7 +52,6 @@ void GameDemo::OnEnd()
 //-----------------------------------------------------------------------------
 void GameDemo::OnUpdate()
 {
-	m_spCamera->Update();
 	m_spCamera->SetCameraMatrix(Matrix::CreateTranslation(0, 0, -10));
 }
 

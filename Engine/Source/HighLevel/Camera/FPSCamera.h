@@ -12,9 +12,8 @@ public:
 
 	FPSCamera();
 
-	void Update();
-
 	void SetCameraMatrix(const Matrix& cameraMat) override;
+	void Update() override;
 
 	void SetLocalPos(Vector3 pos) { m_localPos = pos; }
 	void SetClampAngleX(float minAng, float maxAng) { m_minAngleX = minAng; m_maxAngleX = maxAng; }
