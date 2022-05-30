@@ -20,7 +20,7 @@ void EditorCamera::Update()
 
 	//回転
 	{
-		float raito = 40.0f;
+		float raito = 10.0f;
 		if (Input::IsMousePressed(MouseButton::Right))
 		{
 			int deltaX = m_mousePosNow.x - m_mousePosOld.x;
@@ -33,13 +33,20 @@ void EditorCamera::Update()
 
 	//移動
 	{
-		float raito = 2.0f;
-		Vector3 axisZ = GetCameraMatrix().GetAxisZ(); axisZ.Normalize();
-		Vector3 axisX = GetCameraMatrix().GetAxisX(); axisX.Normalize();
+		float raito = 1.0f;
+		if (Input::IsMousePressed(MouseButton::Middle))
+		{
+			int deltaX = m_mousePosNow.x - m_mousePosOld.x;
+			int deltaY = m_mousePosNow.y - m_mousePosOld.y;
 
+			m_position -= Left() * (deltaX * raito * FpsTimer::GetDeltaTime<float>(true));
+			m_position += Up() * (deltaY * raito * FpsTimer::GetDeltaTime<float>(true));
+		}
+
+		raito = 20.0f;
 		int wheel = Input::GetMouseWheelDelta();
 		if (wheel != 0)
-			m_position += axisZ * (wheel * raito * FpsTimer::GetDeltaTime<float>(true));
+			m_position += Forward() * (wheel * raito * FpsTimer::GetDeltaTime<float>(true));
 	}
 
 	Matrix rotation = Matrix::CreateFromYawPitchRoll(DegToRad(m_rotation.y), DegToRad(m_rotation.x), DegToRad(m_rotation.z));

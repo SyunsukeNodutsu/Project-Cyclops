@@ -43,6 +43,7 @@ class FpsTimer
 {
 public:
 
+	//非型テンプレートパラメータとしてクラス型を許可
 	template<class T> static constexpr T GetDeltaTime(bool modeRaw = false);
 	template<class T> static constexpr T GetTotalTime();
 	template<class T> static constexpr T GetTimeScale();

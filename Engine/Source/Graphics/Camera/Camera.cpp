@@ -11,7 +11,12 @@ Camera::Camera()
 	, m_viewMatrix()
 	, m_projMatrix()
 	, m_viewProjMatrix()
-	, m_position()
+	, m_up(Vector3::Zero)
+	, m_down(Vector3::Zero)
+	, m_forward(Vector3::Zero)
+	, m_backward(Vector3::Zero)
+	, m_left(Vector3::Zero)
+	, m_right(Vector3::Zero)
 	, m_fovAngleY(DegToRad(60.0f))
 	, m_aspectRatio(16.0f / 9.0f)
 	, m_nearZ(0.01f)
@@ -36,8 +41,6 @@ void Camera::SetToShader()
 
 	if (m_dirtyCamera)
 	{
-		m_position = m_cameraMatrix.GetTranslation();
-
 		m_viewProjMatrix = m_viewMatrix * m_projMatrix;
 
 		m_graphicsDevice->m_spRendererStatus->m_cb5Camera.Work().m_cameraMatrix = m_cameraMatrix;
@@ -91,6 +94,16 @@ void Camera::SetCameraMatrix(const Matrix& camera)
 	m_viewMatrix = m_cameraMatrix;
 	m_viewMatrix.Inverse();
 	m_dirtyCamera = true;
+
+	//方向
+	m_up = m_cameraMatrix.GetAxisY().Normalize();
+	m_down = m_up * -1;
+
+	m_forward = m_cameraMatrix.GetAxisZ().Normalize();
+	m_backward = m_forward * -1;
+
+	m_left = m_cameraMatrix.GetAxisX().Normalize();
+	m_right = m_left * -1;
 
 	//試錐台作成
 	/*Quaternion quaternion = XMQuaternionRotationMatrix(m_cameraMatrix);

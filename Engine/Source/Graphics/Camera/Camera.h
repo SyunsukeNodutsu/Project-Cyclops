@@ -30,6 +30,13 @@ public:
 	inline const Matrix& GetProjMatrix() const { return m_projMatrix; }
 	inline const Matrix& GetViewProjMatrix() const { return m_viewProjMatrix; }
 
+	inline const Vector3& Up() const { return m_up; }
+	inline const Vector3& Down() const { return m_down; }
+	inline const Vector3& Forward() const { return m_forward; }
+	inline const Vector3& Backward() const { return m_backward; }
+	inline const Vector3& Left() const { return m_left; }
+	inline const Vector3& Right() const { return m_right; }
+
 	float GetFovAngleY() const { return m_fovAngleY; }
 	float GetAspect() const { return m_aspectRatio; }
 	float GetNearZ() const { return m_nearZ; }
@@ -51,7 +58,10 @@ private:
 	Matrix	m_projMatrix;		//射影行列
 	Matrix	m_viewProjMatrix;	//ビュープロジェクション行列
 
-	Vector3 m_position;			//カメラ座標
+	//方向
+	Vector3 m_up, m_down;
+	Vector3 m_forward, m_backward;
+	Vector3 m_left, m_right;
 
 	//射影関連
 	float	m_fovAngleY;		//画角(ラジアン)
