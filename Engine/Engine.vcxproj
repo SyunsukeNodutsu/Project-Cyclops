@@ -47,6 +47,7 @@
     <ClCompile Include="Source\Graphics\Texture.cpp" />
     <ClCompile Include="Source\HighLevel\Camera\EditorCamera.cpp" />
     <ClCompile Include="Source\HighLevel\Camera\FPSCamera.cpp" />
+    <ClCompile Include="Source\HighLevel\Camera\PanCamera.cpp" />
     <ClCompile Include="Source\HighLevel\Camera\TPSCamera.cpp" />
     <ClCompile Include="Source\HighLevel\Component\Transform.cpp" />
     <ClCompile Include="Source\HighLevel\CyclopsRoot.cpp" />

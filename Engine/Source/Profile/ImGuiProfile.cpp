@@ -160,6 +160,10 @@ void ImGuiProfile::CameraMonitor(ImGuiWindowFlags wflags)
 	ImGui::Separator();
 	ImGui::Text("ChangeMode Select.");
 
+	static float time = 1.0f;
+	if (ImGui::SliderFloat("ChangeTime", &time, 0, 5, "%.2f"))
+		m_pCameraManager->SetChangeTime(time);
+
 	if (ImGui::Button("Immediate ")) m_pCameraManager->SetChangeMode(ChangeMode::Immediate);
 	if (ImGui::Button("Liner     ")) m_pCameraManager->SetChangeMode(ChangeMode::Liner);
 	if (ImGui::Button("QuadIn    ")) m_pCameraManager->SetChangeMode(ChangeMode::QuadIn);

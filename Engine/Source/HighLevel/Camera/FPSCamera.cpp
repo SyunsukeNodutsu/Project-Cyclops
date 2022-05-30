@@ -33,7 +33,13 @@ void FPSCamera::Update()
 	//角度制御
 	m_degAngle.x = std::clamp(m_degAngle.x, m_minAngleX, m_maxAngleX);
 
-	if (m_startFrame) m_startFrame = false;
+	if (m_startFrame)
+	{
+		//即座に視点が移動しないように
+		static int count = 0;
+		count++;
+		if (count > 1) { count = 0; m_startFrame = false; }
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -60,8 +66,6 @@ void FPSCamera::OnUseEnd()
 //-----------------------------------------------------------------------------
 void FPSCamera::SetCameraMatrix(const Matrix& cameraMatrix)
 {
-	//TODO: m_enableの確認入れてもいいかも
-
 	Matrix trans = trans.CreateTranslation(m_localPos);
 	Matrix rotation = GetRotationMatrix();
 

@@ -228,6 +228,9 @@
     <ClCompile Include="Source\Math\Easing.cpp">
       <Filter>Source\Math</Filter>
     </ClCompile>
+    <ClCompile Include="Source\HighLevel\Camera\PanCamera.cpp">
+      <Filter>Source\HighLevel\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window\Window.h">

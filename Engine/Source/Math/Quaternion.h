@@ -15,6 +15,8 @@ public:
 
 	operator DirectX::XMVECTOR() const { return DirectX::XMLoadFloat4(this); }
 
-	Quaternion& CreateFromMatrix(const DirectX::XMMATRIX& m) { *this = DirectX::XMQuaternionRotationMatrix(m); return *this; }
+	static Quaternion CreateFromMatrix(const DirectX::XMMATRIX& m) { return DirectX::XMQuaternionRotationMatrix(m); }
+
+	static Quaternion Slerp(const Quaternion& s, const Quaternion& e, float t) { return DirectX::XMQuaternionSlerp(s, e, t); }
 
 };

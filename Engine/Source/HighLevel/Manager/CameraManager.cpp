@@ -146,11 +146,11 @@ void CameraManager::UpdateDollyCamera()
 	const Vector3& nowPos = startPos + (dir * m_progress);
 
 	//回転補間
-	const DirectX::XMVECTOR& qStart = DirectX::XMQuaternionRotationMatrix(startMatrix);
-	const DirectX::XMVECTOR& qEnd = DirectX::XMQuaternionRotationMatrix(endMatrix);
+	const Quaternion& qStart = Quaternion::CreateFromMatrix(startMatrix);
+	const Quaternion& qEnd = Quaternion::CreateFromMatrix(endMatrix);
 
-	const DirectX::XMVECTOR& qSlerp = DirectX::XMQuaternionSlerp(qStart, qEnd, m_progress);
-	const Matrix& rotMatrix = DirectX::XMMatrixRotationQuaternion(qSlerp);
+	const Quaternion& qSlerp = Quaternion::Slerp(qStart, qEnd, m_progress);
+	const Matrix& rotMatrix = Matrix::CreateFromQuaternion(qSlerp);
 
 	Matrix cameraMatrix = rotMatrix;
 	cameraMatrix.SetTranslation(nowPos);
@@ -161,6 +161,7 @@ void CameraManager::UpdateDollyCamera()
 	//進行度更新
 	float t = m_dollyTimer.GetElapsedSeconds<float>() * (m_dollyRow ? 1.0f : FpsTimer::GetTimeScale<float>());
 
+	//TODO: 必要なイージングのみでいい
 	switch (m_changeMode)
 	{
 	case ChangeMode::Immediate:		m_progress = 1.0f; break;
@@ -181,7 +182,6 @@ void CameraManager::UpdateDollyCamera()
 		m_progress = 0.0f;
 		m_nowDolly = false;
 
-		Debug::Log("Change done: " + m_spUseCamera->m_name + ", prev: " + m_spPrevCamera->m_name);
 		m_spPrevCamera = m_spUseCamera;
 	}
 }
