@@ -237,7 +237,7 @@ void AudioDevice::UpdateFade()
     if (!m_fade) return;
 
     //タイマから経過時間を取得し設定する音量を計算
-    const float& progress_time = static_cast<float>(m_timer.GetElapsedSeconds());
+    const float& progress_time = m_timer.GetElapsedSeconds<float>();
 
     SetMasterVolume(m_startVolume + (m_fadeVolume * progress_time));
 

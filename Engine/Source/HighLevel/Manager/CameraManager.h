@@ -43,6 +43,7 @@ private:
 	bool								m_editMode;		//編集中かどうか(EditCameraを使用しているかどうか)
 
 	ChangeMode							m_changeMode;	//切り替わりモード
+	CommonTimer							m_dollyTimer;	//切り替えの時間計測タイマ
 	std::shared_ptr<Camera>				m_spDollyCamera;//切り替わりの際に使用するカメラ
 	float								m_changeTime;	//カメラが切り替わるまでにかかる時間
 	float								m_progress;		//切り替わりの進行具合

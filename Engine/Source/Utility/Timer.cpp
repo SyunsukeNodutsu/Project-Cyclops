@@ -1,5 +1,7 @@
 ﻿#include "Timer.h"
 
+std::chrono::high_resolution_clock::time_point CommonTimer::m_timeStamp;
+
 uint64_t	FpsTimer::m_deltaTicks = 0;
 uint64_t	FpsTimer::m_totalTicks = 0;
 uint32_t	FpsTimer::m_totalFrameCount = 0;

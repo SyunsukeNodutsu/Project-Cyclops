@@ -10,6 +10,7 @@ CameraManager::CameraManager()
 	, m_spEditCamera(nullptr)
 	, m_editMode(true)
 	, m_changeMode(ChangeMode::Immediate)
+	, m_dollyTimer()
 	, m_spDollyCamera(nullptr)
 	, m_changeTime(1.0f)
 	, m_progress(0.0f)
@@ -122,7 +123,11 @@ void CameraManager::CheckPriority()
 	if (m_spPrevCamera && (m_spUseCamera != m_spPrevCamera))
 	{
 		m_spPrevCamera->OnUseEnd();
-		m_nowDolly = true;//ドリー開始
+
+		//ドリー開始
+		m_spDollyCamera->SetCameraMatrix(m_spPrevCamera->GetCameraMatrix());
+		m_dollyTimer.Record();
+		m_nowDolly = true;
 	}
 }
 
@@ -156,9 +161,9 @@ void CameraManager::UpdateDollyCamera()
 	//ドリーカメラのカメラ行列確定
 	m_spDollyCamera->SetCameraMatrix(cameraMatrix);
 
-	//進行度更新 TODO: イージング
-	m_progress += FpsTimer::GetDeltaTime<float>();
-	if (m_progress >= m_changeTime)
+	//進行度更新
+	m_progress = Easing::QuartOut(m_dollyTimer.GetElapsedSeconds<float>(), m_changeTime, 0.0f, 1.0f);
+	if (m_progress >= 1.0f)
 	{
 		//切り替え終了
 		m_spUseCamera->OnUseStart();

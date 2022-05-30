@@ -225,6 +225,9 @@
     <ClCompile Include="Source\Graphics\Shader\PostProcess\PostProcessShader.cpp">
       <Filter>Source\Graphics\Shader\PostProcess</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Math\Easing.cpp">
+      <Filter>Source\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window\Window.h">
@@ -397,6 +400,9 @@
     </ClInclude>
     <ClInclude Include="Source\Graphics\Shader\PostProcess\PostProcessShader.h">
       <Filter>Source\Graphics\Shader\PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\Easing.h">
+      <Filter>Source\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

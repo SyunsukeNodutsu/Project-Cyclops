@@ -7,8 +7,15 @@
 #pragma once
 
 //汎用時間計測タイマー
-struct CommonTimer
+class CommonTimer
 {
+public:
+
+	template<class T> static const T GetElapsedSeconds();
+	template<class T> static const T GetElapsedMilliseconds();
+
+public:
+
 	//@brief コンストラクタ レコードの開始
 	CommonTimer() { Record(); }
 
@@ -19,21 +26,25 @@ struct CommonTimer
 
 	//@brief 最後にRecord()が呼ばれてからの経過時間(秒)を返す
 	//@return 経過時間(秒)
-	inline double GetElapsedSeconds() {
+	template<> static const double GetElapsedSeconds() {
 		auto now = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(now - m_timeStamp);
+		return time_span.count();
+	}
+	template<> static const float GetElapsedSeconds() {
+		auto now = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<float> time_span = std::chrono::duration_cast<std::chrono::duration<float>>(now - m_timeStamp);
 		return time_span.count();
 	}
 
 	//@brief 最後にRecord()が呼ばれてからの経過時間(ミリ秒)を返す
 	//@return 経過時間(ミリ秒)
-	inline double GetElapsedMilliseconds() {
-		return GetElapsedSeconds() * 1000.0;
-	}
+	template<> static const double GetElapsedMilliseconds() { return GetElapsedSeconds<double>() * 1000.0; }
+	template<> static const float GetElapsedMilliseconds() { return GetElapsedSeconds<float>() * 1000.0f; }
 
 private:
 
-	std::chrono::high_resolution_clock::time_point m_timeStamp;
+	static std::chrono::high_resolution_clock::time_point m_timeStamp;
 
 };
 

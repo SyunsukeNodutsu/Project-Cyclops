@@ -52,6 +52,8 @@
 #include "Math/Matrix.h"
 #include "Math/Quaternion.h"
 
+#include "Math/Easing.h"
+
 //ユーティリティ
 #include "Utility/Utility.h"
 #include "Utility/Timer.h"

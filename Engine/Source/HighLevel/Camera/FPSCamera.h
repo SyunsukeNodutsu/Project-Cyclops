@@ -15,6 +15,9 @@ public:
 	void SetCameraMatrix(const Matrix& cameraMat) override;
 	void Update() override;
 
+	void OnUseStart() override;
+	void OnUseEnd() override;
+
 	void SetLocalPos(Vector3 pos) { m_localPos = pos; }
 	void SetClampAngleX(float minAng, float maxAng) { m_minAngleX = minAng; m_maxAngleX = maxAng; }
 	void SetAngle(Vector2 angle) { m_degAngle = Vector3(angle.x, angle.y, m_degAngle.z); }
