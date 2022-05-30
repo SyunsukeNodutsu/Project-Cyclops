@@ -144,7 +144,8 @@ void ImGuiProfile::CameraMonitor(ImGuiWindowFlags wflags)
 	if (!ImGui::Begin("Camera Monitor", nullptr, wflags)) { ImGui::End(); return; }
 
 	//カメラの情報
-	ImGui::Text(std::string("Use Camera: " + m_pCameraManager->GetUseCamera()->m_name).c_str());
+	const auto& cam_name = m_pCameraManager->IsNowDolly() ? "DollyCamera" : m_pCameraManager->GetUseCamera()->m_name;
+	ImGui::Text(std::string("Use Camera: " + cam_name).c_str());
 	static std::weak_ptr<Camera> wpCamera;
 	for (const auto& camera : m_pCameraManager->GetCameraList())
 	{

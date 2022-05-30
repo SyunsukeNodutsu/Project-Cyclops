@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------
 void GameDemo::OnStart()
 {
-	//初期カメラ
+	//カメラ
 	m_spCamera = std::make_shared<FPSCamera>();
 	if (m_spCamera)
 	{
