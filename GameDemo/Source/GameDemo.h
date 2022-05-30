@@ -19,13 +19,15 @@ public:
 
 	void OnUpdate() override;
 	void OnDraw3D() override;
-	void OnDraw2D() override;
+	void OnDraw2D(SpriteShader& spriteShader) override;
 	void OnLateUpdate() override;
 
 private:
 
 	Profile m_profile;
-	std::shared_ptr<FPSCamera> m_spFpsCamera = nullptr;
+	std::shared_ptr<TPSCamera> m_spCamera = nullptr;
 	std::shared_ptr<Texture> m_spTexture = nullptr;
+	ParticleSystem::EmitData m_emitData;
+	std::shared_ptr<Texture> m_spParticleTexture = nullptr;
 
 };

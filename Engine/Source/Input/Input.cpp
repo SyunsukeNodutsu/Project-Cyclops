@@ -7,6 +7,7 @@ std::array<bool, 256> Input::m_keyDownArray;
 std::array<bool, 256> Input::m_keyUpArray;
 std::array<bool, 3> Input::m_mouseDownArray;
 std::array<bool, 3> Input::m_mouseUpArray;
+std::array<bool, 3> Input::m_mousePressArray;
 
 //-----------------------------------------------------------------------------
 // 入力情報解析
@@ -24,12 +25,12 @@ void Input::ParseInputData(UINT message, WPARAM wparam, LPARAM lparam)
 	case WM_MOUSEWHEEL: m_mouseWheelDelta = (short)HIWORD(wparam); break;
 	case WM_MOUSEMOVE: { m_mouseState = wparam; m_mousePos = Vector2Int(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam)); } break;
 		//マウスボタン
-	case WM_LBUTTONDOWN:	m_mouseDownArray[(int)MouseButton::Left] = true;	break;
-	case WM_LBUTTONUP:		m_mouseUpArray[(int)MouseButton::Left] = true;		break;
-	case WM_MBUTTONDOWN:	m_mouseDownArray[(int)MouseButton::Middle] = true;	break;
-	case WM_MBUTTONUP:		m_mouseUpArray[(int)MouseButton::Middle] = true;	break;
-	case WM_RBUTTONDOWN:	m_mouseDownArray[(int)MouseButton::Right] = true;	break;
-	case WM_RBUTTONUP:		m_mouseUpArray[(int)MouseButton::Right] = true;		break;
+	case WM_LBUTTONDOWN:	m_mouseDownArray[(int)MouseButton::Left] = true;	m_mousePressArray[(int)MouseButton::Left] = true;	break;
+	case WM_LBUTTONUP:		m_mouseUpArray[(int)MouseButton::Left] = true;		m_mousePressArray[(int)MouseButton::Left] = false;	break;
+	case WM_MBUTTONDOWN:	m_mouseDownArray[(int)MouseButton::Middle] = true;	m_mousePressArray[(int)MouseButton::Middle] = true; break;
+	case WM_MBUTTONUP:		m_mouseUpArray[(int)MouseButton::Middle] = true;	m_mousePressArray[(int)MouseButton::Middle] = false;break;
+	case WM_RBUTTONDOWN:	m_mouseDownArray[(int)MouseButton::Right] = true;	m_mousePressArray[(int)MouseButton::Right] = true;	break;
+	case WM_RBUTTONUP:		m_mouseUpArray[(int)MouseButton::Right] = true;		m_mousePressArray[(int)MouseButton::Right] = false; break;
 	}
 }
 

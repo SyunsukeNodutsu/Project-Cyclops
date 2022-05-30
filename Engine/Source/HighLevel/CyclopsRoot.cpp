@@ -183,7 +183,7 @@ void CyclopsRoot::Draw()
 		//2D
 		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.Begin();
 
-		m_pApplicationBase->OnDraw2D();
+		m_pApplicationBase->OnDraw2D(m_pGraphicsDevice->m_spShaderManager->m_spriteShader);
 
 		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.End();
 	}

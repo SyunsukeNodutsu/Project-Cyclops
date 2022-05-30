@@ -20,35 +20,26 @@ void EditorCamera::Update()
 
 	//回転
 	{
-		float raito = 60.0f;
-		if (Input::IsKeyPressed(KeyCode::LeftArrow))	m_rotation.y -= raito * FpsTimer::GetDeltaTime<float>(true);
-		if (Input::IsKeyPressed(KeyCode::RightArrow))	m_rotation.y += raito * FpsTimer::GetDeltaTime<float>(true);
-		if (Input::IsKeyPressed(KeyCode::UpArrow))		m_rotation.x -= raito * FpsTimer::GetDeltaTime<float>(true);
-		if (Input::IsKeyPressed(KeyCode::DownArrow))	m_rotation.x += raito * FpsTimer::GetDeltaTime<float>(true);
-
-		/*if (Input::IsKeyPressed(KeyCode::Space))
+		float raito = 40.0f;
+		if (Input::IsMousePressed(MouseButton::Right))
 		{
-			float deltaX = m_mousePosNow.x - m_mousePosOld.x;
-			float deltaY = m_mousePosNow.y - m_mousePosOld.y;
+			int deltaX = m_mousePosNow.x - m_mousePosOld.x;
+			int deltaY = m_mousePosNow.y - m_mousePosOld.y;
 
-			m_rotation.x += deltaY * raito * (float)FpsTimer::GetDeltaTime();
-			m_rotation.y += deltaX * raito * (float)FpsTimer::GetDeltaTime();
-		}*/
+			m_rotation.x += static_cast<float>(deltaY) * raito * FpsTimer::GetDeltaTime<float>(true);
+			m_rotation.y += static_cast<float>(deltaX) * raito * FpsTimer::GetDeltaTime<float>(true);
+		}
 	}
 
 	//移動
 	{
-		float raito = 6.0f;
+		float raito = 2.0f;
 		Vector3 axisZ = GetCameraMatrix().GetAxisZ(); axisZ.Normalize();
 		Vector3 axisX = GetCameraMatrix().GetAxisX(); axisX.Normalize();
 
-		if (Input::IsKeyPressed(KeyCode::Shift)) raito = 20.0f;
-		if (Input::IsKeyPressed(KeyCode::Ctrl)) raito = 2.0f;
-
-		if (Input::IsKeyPressed(KeyCode::W)) m_position += axisZ * (raito * FpsTimer::GetDeltaTime<float>(true));
-		if (Input::IsKeyPressed(KeyCode::S)) m_position -= axisZ * (raito * FpsTimer::GetDeltaTime<float>(true));
-		if (Input::IsKeyPressed(KeyCode::A)) m_position -= axisX * (raito * FpsTimer::GetDeltaTime<float>(true));
-		if (Input::IsKeyPressed(KeyCode::D)) m_position += axisX * (raito * FpsTimer::GetDeltaTime<float>(true));
+		int wheel = Input::GetMouseWheelDelta();
+		if (wheel != 0)
+			m_position += axisZ * (wheel * raito * FpsTimer::GetDeltaTime<float>(true));
 	}
 
 	Matrix rotation = Matrix::CreateFromYawPitchRoll(DegToRad(m_rotation.y), DegToRad(m_rotation.x), DegToRad(m_rotation.z));

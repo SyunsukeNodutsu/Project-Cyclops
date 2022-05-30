@@ -112,6 +112,7 @@ public:
 	static bool IsKeyUp(KeyCode keyCode) { return m_keyUpArray[(int)keyCode]; }
 
 	static bool IsMouseDown(MouseButton mbutton) { return m_mouseDownArray[(int)mbutton]; }
+	static bool IsMousePressed(MouseButton mbutton) { return m_mousePressArray[(int)mbutton]; }
 	static bool IsMouseUp(MouseButton mbutton) { return m_mouseUpArray[(int)mbutton]; }
 
 	static Vector2Int GetMousePos() { return m_mousePos; }
@@ -130,5 +131,6 @@ private:
 	static std::array<bool, 256> m_keyUpArray;
 	static std::array<bool, 3> m_mouseDownArray;
 	static std::array<bool, 3> m_mouseUpArray;
+	static std::array<bool, 3> m_mousePressArray;
 
 };

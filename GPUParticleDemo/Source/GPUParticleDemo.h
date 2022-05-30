@@ -19,7 +19,7 @@ public:
 
 	void OnUpdate() override;
 	void OnDraw3D() override;
-	void OnDraw2D() override;
+	void OnDraw2D(SpriteShader& spriteShader) override;
 	void OnLateUpdate() override;
 
 private:

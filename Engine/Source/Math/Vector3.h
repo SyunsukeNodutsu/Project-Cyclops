@@ -21,6 +21,8 @@ public:
 
 	operator DirectX::XMVECTOR() const { return DirectX::XMLoadFloat3(this); }
 
+	static void Normalize(Vector3& v) { v = DirectX::XMVector3Normalize(v); }
+
 	Vector3& Normalize() { *this = DirectX::XMVector3Normalize(*this); return *this; }
 	Vector3& TransformNormal(const DirectX::XMMATRIX& m) { return *this = XMVector3TransformNormal(*this, m); }//指定(回転)行列でVectorを変換する
 

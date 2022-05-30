@@ -17,7 +17,7 @@ public:
 
 	virtual void OnUpdate() = 0;//更新
 	virtual void OnDraw3D() = 0;//3D描画
-	virtual void OnDraw2D() = 0;//2D描画
+	virtual void OnDraw2D(SpriteShader& spriteShader) = 0;//2D描画
 	virtual void OnLateUpdate() = 0;//描画後更新
 
 	//TODO: 隠ぺい

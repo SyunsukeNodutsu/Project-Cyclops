@@ -41,6 +41,23 @@ class Utility
 {
 public:
 
+    //@brief 文字列をハッシュ化
+    static constexpr size_t StringToHash(const char* input)
+    {
+        // https://stackoverflow.com/questions/2111667/compile-time-string-hashing
+        size_t hash = sizeof(size_t) == 8 ? 0xcbf29ce484222325 : 0x811c9dc5;
+        const size_t prime = sizeof(size_t) == 8 ? 0x00000100000001b3 : 0x01000193;
+
+        while (*input)
+        {
+            hash ^= static_cast<size_t>(*input);
+            hash *= prime;
+            ++input;
+        }
+
+        return hash;
+    }
+
     //@brief 完全パスからファイル名(拡張子含む)を返す
     static const std::string& GetFilenameFromFullpath(const std::string& fullpath);
 
@@ -48,7 +65,6 @@ public:
     static const std::wstring& GetFilenameFromFullpath(const std::wstring& fullpath);
 
     //@brief ダイアログからファイルのパスを取得
-    //@note TODO: ソリューション以下のフォルダしか取得できないっぽい
     //@param filepath 受け取るパス
     //@param filters 拡張子フィルター
     //@param relative 相対パスに変換を行うかどうか
