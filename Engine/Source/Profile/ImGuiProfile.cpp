@@ -158,6 +158,15 @@ void ImGuiProfile::CameraMonitor(ImGuiWindowFlags wflags)
 		ImGui::PopID();
 	}
 
+	if (wpCamera.lock())
+	{
+		ImGui::Text(std::string("Select: " + wpCamera.lock()->m_name).c_str());
+
+		auto fov = RadToDeg(wpCamera.lock()->GetFovAngleY());
+		if (ImGui::SliderFloat("Fov", &fov, 0.001f, 120.0f, "%.2f"))
+			wpCamera.lock()->SetFovAngleY(DegToRad(fov));
+	}
+
 	ImGui::Separator();
 	ImGui::Text("ChangeMode Select.");
 

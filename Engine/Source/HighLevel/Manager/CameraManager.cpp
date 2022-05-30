@@ -152,10 +152,11 @@ void CameraManager::UpdateDollyCamera()
 	const Quaternion& qSlerp = Quaternion::Slerp(qStart, qEnd, m_progress);
 	const Matrix& rotMatrix = Matrix::CreateFromQuaternion(qSlerp);
 
-	Matrix cameraMatrix = rotMatrix;
-	cameraMatrix.SetTranslation(nowPos);
+	//TODO: 画角などの補間も必要かも
 
 	//ドリーカメラのカメラ行列確定
+	Matrix cameraMatrix = rotMatrix;
+	cameraMatrix.SetTranslation(nowPos);
 	m_spDollyCamera->SetCameraMatrix(cameraMatrix);
 
 	//進行度更新
