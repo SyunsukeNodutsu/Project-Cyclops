@@ -15,7 +15,7 @@ CameraManager::CameraManager()
 	, m_changeTime(1.0f)
 	, m_progress(0.0f)
 	, m_nowDolly(false)
-	, m_dollyRow(false)
+	, m_dollyRow(true)
 {
 }
 
