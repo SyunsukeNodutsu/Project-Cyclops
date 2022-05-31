@@ -27,9 +27,5 @@ Mediafoundationを使用した音声ファイルの読み込み
 # Note
 チカチカ光るので注意
 
-# Author
-* 作成者：野筒隼輔
-* E-mail：nozuo0630@gmail.com
-
 # License
 "CyclopsEngine" is under [MIT license](https://en.wikipedia.org/wiki/MIT_License).
