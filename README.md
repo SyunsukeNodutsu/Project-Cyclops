@@ -8,7 +8,7 @@
 ジオメトリシェーダーで頂点をビルボード生成  
 カメラのアニメーションシステム  
 ポストプロセス  
-Mediafoundationを使用した音声ファイルを読み込み
+Mediafoundationを使用した音声ファイルの読み込み
 
 # Features
 "CyclopsEngine"のセールスポイントや差別化などの説明
