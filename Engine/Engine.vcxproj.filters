@@ -85,6 +85,9 @@
     <Filter Include="Source\Graphics\Shader\PostProcess">
       <UniqueIdentifier>{ca156c7e-232b-4c4e-bd58-c52c4e821494}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Graphics\Shader\Grass">
+      <UniqueIdentifier>{d7f4d96b-fe99-44ed-b888-fdf859b5f668}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Window\Window.cpp">
@@ -230,6 +233,9 @@
     </ClCompile>
     <ClCompile Include="Source\HighLevel\Camera\PanCamera.cpp">
       <Filter>Source\HighLevel\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Shader\Grass\GrassShader.cpp">
+      <Filter>Source\Graphics\Shader\Grass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -409,6 +415,9 @@
     </ClInclude>
     <ClInclude Include="Source\HighLevel\Camera\PanCamera.h">
       <Filter>Source\HighLevel\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Shader\Grass\GrassShader.h">
+      <Filter>Source\Graphics\Shader\Grass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
