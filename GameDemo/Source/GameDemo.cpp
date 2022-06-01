@@ -36,7 +36,7 @@ void GameDemo::OnStart()
 	m_spParticleTexture = std::make_shared<Texture>();
 	m_spParticleTexture->Load(L"../Assets/Circle.png");
 
-	m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 100000, m_spParticleTexture, true);
+	//m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 100000, m_spParticleTexture, true);
 }
 
 //-----------------------------------------------------------------------------
@@ -67,7 +67,7 @@ void GameDemo::OnDraw3D()
 //-----------------------------------------------------------------------------
 void GameDemo::OnDraw2D(SpriteShader& spriteShader)
 {
-	//spriteShader.DrawTexture(m_spTexture.get(), Vector2::Zero);
+	spriteShader.DrawTexture(m_spTexture.get(), Vector2::Zero);
 }
 
 //-----------------------------------------------------------------------------

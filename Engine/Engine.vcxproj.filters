@@ -463,6 +463,18 @@
     <FxCompile Include="Source\Graphics\Shader\Lit\LitShader_VS.hlsl">
       <Filter>Source\Graphics\Shader\Lit</Filter>
     </FxCompile>
+    <FxCompile Include="Source\Graphics\Shader\Grass\GrassShader_PS.hlsl">
+      <Filter>Source\Graphics\Shader\Grass</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Graphics\Shader\Grass\GrassShader_VS.hlsl">
+      <Filter>Source\Graphics\Shader\Grass</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Graphics\Shader\Grass\GrassShader_HS.hlsl">
+      <Filter>Source\Graphics\Shader\Grass</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Graphics\Shader\Grass\GrassShader_DS.hlsl">
+      <Filter>Source\Graphics\Shader\Grass</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\Shader\Sprite\SpriteShader.hlsli">
@@ -482,6 +494,9 @@
     </None>
     <None Include="Source\Graphics\Shader\Lit\LitShader.hlsli">
       <Filter>Source\Graphics\Shader\Lit</Filter>
+    </None>
+    <None Include="Source\Graphics\Shader\Grass\GrassShader.hlsli">
+      <Filter>Source\Graphics\Shader\Grass</Filter>
     </None>
   </ItemGroup>
 </Project>
