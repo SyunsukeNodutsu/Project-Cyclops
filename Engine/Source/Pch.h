@@ -73,6 +73,9 @@
 #include <DirectXTex.h>
 #pragma comment(lib,"DirectXTex.lib")
 
+//DirectXTK(SimpleMath)
+#include <SimpleMath.h>
+
 //imGui
 #include <imgui.h>
 #define IMGUI_DEFINE_PLACEMENT_NEW

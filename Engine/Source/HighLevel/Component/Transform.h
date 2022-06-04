@@ -13,28 +13,28 @@ public:
 	Transform();
 	~Transform() = default;
 
-	const Matrix& GetWorldMatrix() const;
-	Vector3 GetPosition() const { return m_worldPosition; }
-	Vector3 GetAngle() const { return m_worldAngle; }
-	Vector3 GetScale() const { return m_worldScale; }
+	const matrix4x4& GetWorldMatrix() const;
+	float3 GetPosition() const { return m_worldPosition; }
+	float3 GetAngle() const { return m_worldAngle; }
+	float3 GetScale() const { return m_worldScale; }
 
-	void SetWorldMatrix(const Matrix& matrix);
+	void SetWorldMatrix(const matrix4x4& matrix);
 
-	void SetPosition(const Vector3& position) { m_worldPosition = position; m_needUpdateMatrix = true; }
-	void SetPosition(const float x, const float y, const float z) { m_worldPosition = Vector3(x, y, z); m_needUpdateMatrix = true; }
+	void SetPosition(const float3& position) { m_worldPosition = position; m_needUpdateMatrix = true; }
+	void SetPosition(const float x, const float y, const float z) { m_worldPosition = float3(x, y, z); m_needUpdateMatrix = true; }
 
-	void SetAngle(const Vector3& angle) { m_worldAngle = angle; m_needUpdateMatrix = true; }
+	void SetAngle(const float3& angle) { m_worldAngle = angle; m_needUpdateMatrix = true; }
 
-	void SetScale(const Vector3& scale) { m_worldScale = scale; m_needUpdateMatrix = true; }
-	void SetScale(const float scale) { m_worldScale = Vector3(scale, scale, scale); m_needUpdateMatrix = true; }
+	void SetScale(const float3& scale) { m_worldScale = scale; m_needUpdateMatrix = true; }
+	void SetScale(const float scale) { m_worldScale = float3(scale, scale, scale); m_needUpdateMatrix = true; }
 
 private:
 
-	Vector3 m_worldPosition;	//ワールド行列を構成する座標ベクトル
-	Vector3 m_worldAngle;		//ワールド行列を構成する回転ベクトル
-	Vector3 m_worldScale;		//ワールド行列を構成する拡大
+	float3 m_worldPosition;	//ワールド行列を構成する座標ベクトル
+	float3 m_worldAngle;		//ワールド行列を構成する回転ベクトル
+	float3 m_worldScale;		//ワールド行列を構成する拡大
 
-	mutable Matrix m_worldMatrix;
+	mutable matrix4x4 m_worldMatrix;
 	mutable bool m_needUpdateMatrix;//行列を更新する必要があるか？
 
 };

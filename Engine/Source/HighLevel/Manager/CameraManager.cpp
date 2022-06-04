@@ -30,7 +30,7 @@ void CameraManager::Initialize()
 	{
 		m_spEditCamera->m_name = "EditorCamera";
 		m_spEditCamera->m_priority = FLT_MAX;
-		m_spEditCamera->SetCameraMatrix(Matrix::CreateTranslation(0, 0, -4));
+		m_spEditCamera->SetCameraMatrix(matrix4x4::CreateTranslation(0, 0, -4));
 
 		AddCameraList(m_spEditCamera);
 	}
@@ -135,28 +135,28 @@ void CameraManager::UpdateDollyCamera()
 {
 	if (!m_nowDolly) return;
 
-	const Matrix& startMatrix = m_spPrevCamera->GetCameraMatrix();
-	const Matrix& endMatrix = m_spUseCamera->GetCameraMatrix();
+	const matrix4x4& startMatrix = m_spPrevCamera->GetCameraMatrix();
+	const matrix4x4& endMatrix = m_spUseCamera->GetCameraMatrix();
 
-	const Vector3& startPos = startMatrix.GetTranslation();
-	const Vector3& endPos = endMatrix.GetTranslation();
+	const float3& startPos = startMatrix.Translation();
+	const float3& endPos = endMatrix.Translation();
 
 	//座標補間
-	const Vector3& dir = endPos - startPos;
-	const Vector3& nowPos = startPos + (dir * m_progress);
+	const float3& dir = endPos - startPos;
+	const float3& nowPos = startPos + (dir * m_progress);
 
 	//回転補間
-	const Quaternion& qStart = Quaternion::CreateFromMatrix(startMatrix);
-	const Quaternion& qEnd = Quaternion::CreateFromMatrix(endMatrix);
+	const quaternion& qStart = quaternion::CreateFromRotationMatrix(startMatrix);
+	const quaternion& qEnd = quaternion::CreateFromRotationMatrix(endMatrix);
 
-	const Quaternion& qSlerp = Quaternion::Slerp(qStart, qEnd, m_progress);
-	const Matrix& rotMatrix = Matrix::CreateFromQuaternion(qSlerp);
+	const quaternion& qSlerp = quaternion::Slerp(qStart, qEnd, m_progress);
+	const matrix4x4& rotMatrix = matrix4x4::CreateFromQuaternion(qSlerp);
 
 	//TODO: 画角などの補間も必要かも
 
 	//ドリーカメラのカメラ行列確定
-	Matrix cameraMatrix = rotMatrix;
-	cameraMatrix.SetTranslation(nowPos);
+	matrix4x4 cameraMatrix = rotMatrix;
+	cameraMatrix.Translation(nowPos);
 	m_spDollyCamera->SetCameraMatrix(cameraMatrix);
 
 	//進行度更新

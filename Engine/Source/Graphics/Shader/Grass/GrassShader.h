@@ -10,7 +10,7 @@ class GrassShader : public GraphicsDeviceChild
 {
 	struct Vertex
 	{
-		Vector3 m_position;
+		float3 m_position;
 	};
 
 public:

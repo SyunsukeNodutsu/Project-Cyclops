@@ -15,9 +15,9 @@ bool RendererStatus::Initialize()
 		m_cb4Behaviour.SetToDevice(4, SHADER_STAGE::VS);
 		m_cb4Behaviour.SetToDevice(4, SHADER_STAGE::PS);
 		m_cb4Behaviour.SetToDevice(4, SHADER_STAGE::CS);
-		m_cb4Behaviour.Work().m_worldMatrix = Matrix();
-		m_cb4Behaviour.Work().m_uvOffset = 0;
-		m_cb4Behaviour.Work().m_uvTiling = 0;
+		m_cb4Behaviour.Work().m_worldMatrix = matrix4x4();
+		m_cb4Behaviour.Work().m_uvOffset = float2::Zero;
+		m_cb4Behaviour.Work().m_uvTiling = float2::Zero;
 		m_cb4Behaviour.Write();
 	}
 	else { Debug::LogError("定数バッファ(Behaviour)作成失敗."); return false; }
@@ -26,9 +26,9 @@ bool RendererStatus::Initialize()
 	{
 		m_cb5Camera.SetToDevice(5, SHADER_STAGE::VS);
 		m_cb5Camera.SetToDevice(5, SHADER_STAGE::PS);
-		m_cb5Camera.Work().m_viewMatrix = Matrix::CreateTranslation(0.0f, 0.0f, -10.0f);
+		m_cb5Camera.Work().m_viewMatrix = matrix4x4::CreateTranslation(0.0f, 0.0f, -10.0f);
 		m_cb5Camera.Work().m_projMatrix = DirectX::XMMatrixPerspectiveFovLH(DegToRad(60.0f), 16.0f / 9.0f, 0.01f, 2000.0f);
-		m_cb5Camera.Work().m_cameraMatrix = Matrix();
+		m_cb5Camera.Work().m_cameraMatrix = matrix4x4();
 		m_cb5Camera.Write();
 	}
 	else { Debug::LogError("定数バッファ(Camera)作成失敗."); return false; }
@@ -49,6 +49,7 @@ bool RendererStatus::Initialize()
 		m_cb7Time.SetToDevice(7, SHADER_STAGE::CS);
 		m_cb7Time.Work().m_totalTime = 0.0f;
 		m_cb7Time.Work().m_deltaTime = 0.0f;
+		m_cb7Time.Work().m_timeScale = 0.0f;
 		m_cb7Time.Write();
 	}
 	else { Debug::LogError("定数バッファ(Time)作成失敗."); return false; }

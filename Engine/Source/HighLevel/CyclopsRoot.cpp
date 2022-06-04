@@ -149,6 +149,7 @@ void CyclopsRoot::Update()
 
 	m_pGraphicsDevice->m_spRendererStatus->m_cb7Time.Work().m_deltaTime = FpsTimer::GetDeltaTime<float>();
 	m_pGraphicsDevice->m_spRendererStatus->m_cb7Time.Work().m_totalTime = FpsTimer::GetTotalTime<float>();
+	m_pGraphicsDevice->m_spRendererStatus->m_cb7Time.Work().m_timeScale = FpsTimer::GetTimeScale<float>();
 	m_pGraphicsDevice->m_spRendererStatus->m_cb7Time.Write();
 
 	m_pCameraManager->Update();
@@ -184,7 +185,7 @@ void CyclopsRoot::Draw()
 	}
 
 	//ブラー描画
-	m_pGraphicsDevice->m_spShaderManager->m_postProcessShader.BlurDraw(m_spScreenRT.get(), Vector2(0, 0));
+	m_pGraphicsDevice->m_spShaderManager->m_postProcessShader.BlurDraw(m_spScreenRT.get(), float2(0, 0));
 
 	//ブルーム
 	{
@@ -208,11 +209,8 @@ void CyclopsRoot::Draw()
 		{
 			m_pGraphicsDevice->m_spShaderManager->m_unlitShader.Begin();
 
-			if (m_debugLines.size() >= 1)
-			{
-				m_pGraphicsDevice->m_spShaderManager->m_unlitShader.DrawVertices(m_debugLines, D3D_PRIMITIVE_TOPOLOGY_LINELIST);
-				m_debugLines.clear();
-			}
+			m_pGraphicsDevice->m_spShaderManager->m_unlitShader.DrawVertices(m_debugLines, D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+			m_debugLines.clear();
 		}
 	}
 
@@ -236,7 +234,7 @@ void CyclopsRoot::Draw()
 //-----------------------------------------------------------------------------
 void CyclopsRoot::LateUpdate()
 {
-	m_pAudioDevice->Update(Matrix());
+	m_pAudioDevice->Update(matrix4x4::Identity);
 
 	m_pApplicationBase->OnLateUpdate();
 }

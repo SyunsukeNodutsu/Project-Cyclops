@@ -19,6 +19,7 @@ GraphicsDevice::GraphicsDevice(GRAPHICS_DEVICE_CREATE_PARAM createParam)
 	, m_adapterName(L"")
 	, m_spBackbuffer(nullptr)
 	, m_spDefaultZbuffer(nullptr)
+	, m_texWhite(nullptr)
 	, m_spTempFixedVertexBuffer()
 	, m_spTempVertexBuffer()
 {
@@ -51,6 +52,18 @@ bool GraphicsDevice::Initialize()
 	m_spShaderManager->Initialize();
 
 	m_spParticleSystem = std::make_shared<ParticleSystem>();
+
+	//便利テクスチャ
+	{
+		const auto& col = color4(1, 1, 1, 1).RGBA();
+		D3D11_SUBRESOURCE_DATA srd;
+		srd.pSysMem = &col;
+		srd.SysMemPitch = 4;
+		srd.SysMemSlicePitch = 0;
+
+		m_texWhite = std::make_shared<Texture>();
+		m_texWhite->Create(1, 1, DXGI_FORMAT_R8G8B8A8_UNORM, 1, &srd);
+	}
 
 	//使いまわしバッファ
 	UINT bufferSize = 80;
@@ -118,7 +131,7 @@ bool GraphicsDevice::CreateDevice()
 //-----------------------------------------------------------------------------
 // 描画開始
 //-----------------------------------------------------------------------------
-void GraphicsDevice::Begin(const Vector3 clearColor)
+void GraphicsDevice::Begin(const float3 clearColor)
 {
 	float clear[] = { clearColor.x, clearColor.y, clearColor.z };
 	m_cpContext->ClearRenderTargetView(m_spBackbuffer->RTV(), clear);
@@ -225,13 +238,10 @@ void GraphicsDevice::DrawVertices(D3D_PRIMITIVE_TOPOLOGY topology, int vCount, c
 	// 単純なDISCARDでの書き込み TODO: 修正
 	buffer->WriteData(pVStream, totalSize);
 
-	// バインド
-	{
-		m_cpContext->IASetPrimitiveTopology(topology);
+	m_cpContext->IASetPrimitiveTopology(topology);
 
-		UINT offset = 0;
-		m_cpContext->IASetVertexBuffers(0, 1, buffer->GetAddress(), &stride, &offset);
-	}
+	UINT offset = 0;
+	m_cpContext->IASetVertexBuffers(0, 1, buffer->GetAddress(), &stride, &offset);
 
 	m_cpContext->Draw(vCount, 0);
 }

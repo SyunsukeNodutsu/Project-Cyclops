@@ -11,8 +11,8 @@ class GPUParticleShader : public GraphicsDeviceChild
 {
 	struct Vertex
 	{
-		Vector3 m_position;
-		Vector2 m_uv;
+		float3 m_position;
+		float2 m_uv;
 	};
 
 public:

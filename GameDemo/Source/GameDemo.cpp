@@ -11,8 +11,8 @@ void GameDemo::OnStart()
 	{
 		m_spCamera->m_name = "Camera Main";
 		m_spCamera->m_priority = 10.0f;
-		m_spCamera->SetCameraMatrix(Matrix::CreateTranslation(Vector3(0, 0, -1)));
-		m_spCamera->SetLocalPos(Vector3(0, 0, 0));
+		m_spCamera->SetCameraMatrix(matrix4x4::CreateTranslation(float3(0, 0, -1)));
+		m_spCamera->SetLocalPos(float3::Zero);
 		m_pCameraManager->AddCameraList(m_spCamera);
 	}
 
@@ -35,8 +35,7 @@ void GameDemo::OnEnd()
 //-----------------------------------------------------------------------------
 void GameDemo::OnUpdate()
 {
-	m_spCamera->SetCameraMatrix(Matrix::CreateTranslation(0, 0, -10));
-	Debug::AddDebugSphere(Vector3::Zero, 1.0f, Vector4(256, 0, 0, 256));
+	m_spCamera->SetCameraMatrix(matrix4x4::CreateTranslation(0, 0, -10));
 }
 
 //-----------------------------------------------------------------------------
@@ -51,7 +50,11 @@ void GameDemo::OnDraw3D()
 //-----------------------------------------------------------------------------
 void GameDemo::OnDraw2D(SpriteShader& spriteShader)
 {
-	spriteShader.DrawTexture(m_spTexture.get(), Vector2::Zero);
+	spriteShader.DrawTexture(m_spTexture.get(), float2(100, -80), float2(0.2f, 0.2f));
+	spriteShader.DrawTexture(m_spTexture.get(), float2(800, 400), float2(0.2f, 0.2f));
+	spriteShader.DrawTexture(m_spTexture.get(), float2(-500, 200), float2(0.2f, 0.2f));
+
+	spriteShader.DrawLine(float2(0, 400), float2(400, 400), color4(1, 1, 0, 1));
 }
 
 //-----------------------------------------------------------------------------

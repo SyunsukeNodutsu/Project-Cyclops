@@ -15,9 +15,9 @@ float4 main(VertexOutput In) : SV_TARGET
     if (color.a <= 0.0f) discard;
 
     //ƒ‚ƒmƒNƒ
-    float y = 0.299f * color.r + 0.587f * color.g + 0.114f * color.b;
+    /*float y = 0.299f * color.r + 0.587f * color.g + 0.114f * color.b;
     float3 mono_col = float3(y, y, y);
-    color.xyz = lerp(color.xyz, mono_col, abs(cos(g_totalTime)));
+    color.xyz = lerp(color.xyz, mono_col, abs(cos(g_totalTime)));*/
 
     //‰¡•ûŒüƒƒCƒv
     //float t = (int)fmod(In.m_position.x, 72.0f);

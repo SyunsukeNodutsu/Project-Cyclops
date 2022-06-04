@@ -130,7 +130,7 @@ void PostProcessShader::DrawColor(Texture* texture)
 //-----------------------------------------------------------------------------
 // ガウスブラー描画
 //-----------------------------------------------------------------------------
-void PostProcessShader::BlurDraw(Texture* texture, Vector2 dir)
+void PostProcessShader::BlurDraw(Texture* texture, float2 dir)
 {
 	//ステート記憶
 	ComPtr<ID3D11DepthStencilState> saveDS; UINT saveStencilRef = 0;
@@ -142,7 +142,7 @@ void PostProcessShader::BlurDraw(Texture* texture, Vector2 dir)
 	//サンプリング
 	{
 		//テクセルサイズ
-		Vector2 ts;
+		float2 ts;
 		ts.x = 1.0f / texture->GetWidth();
 		ts.y = 1.0f / texture->GetHeight();
 
@@ -213,11 +213,11 @@ void PostProcessShader::GenerateBlur(BlurTexture& blurTex, Texture* srcTex)
 
 		//縦ぼかし
 		m_graphicsDevice->m_cpContext->OMSetRenderTargets(1, blurTex.m_rt[i][1]->RTVAddress(), nullptr);
-		BlurDraw(blurTex.m_rt[i][0].get(), Vector2(1, 0));
+		BlurDraw(blurTex.m_rt[i][0].get(), float2(1, 0));
 
 		//横ぼかし
 		m_graphicsDevice->m_cpContext->OMSetRenderTargets(1, blurTex.m_rt[i][0]->RTVAddress(), nullptr);
-		BlurDraw(blurTex.m_rt[i][1].get(), Vector2(0, 1));
+		BlurDraw(blurTex.m_rt[i][1].get(), float2(0, 1));
 	}
 
 	//記憶したビューポートをもとに復元

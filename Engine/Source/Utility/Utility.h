@@ -5,10 +5,17 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
-class UnlitShader;
-
 //エイリアス
 using Microsoft::WRL::ComPtr;
+
+typedef DirectX::SimpleMath::Vector2	float2;
+typedef DirectX::SimpleMath::Vector3	float3;
+typedef DirectX::SimpleMath::Vector4    float4;
+
+typedef DirectX::SimpleMath::Matrix	    matrix4x4;
+typedef DirectX::SimpleMath::Quaternion quaternion;
+
+typedef DirectX::SimpleMath::Color		color4;
 
 //便利マクロ
 namespace
@@ -20,7 +27,7 @@ namespace
     static std::string ToStringV(const DirectX::XMFLOAT3& v) { return std::string("(" + std::to_string(v.x) + ", " + std::to_string(v.y) + ", " + std::to_string(v.z) + ")"); }
     static std::string ToStringV(const DirectX::XMFLOAT2& v) { return std::string("(" + std::to_string(v.x) + ", " + std::to_string(v.y) + ")"); }
 
-    static std::string ToStringV(const DirectX::XMINT2& v) { return std::string("(" + std::to_string(v.x) + ", " + std::to_string(v.y) + ")"); }//TODO: Vector2Int -> Vector2の暗黙のキャスト
+    static std::string ToStringV(const DirectX::XMINT2& v) { return std::string("(" + std::to_string(v.x) + ", " + std::to_string(v.y) + ")"); }//TODO: Vector2Int -> float2の暗黙のキャスト
 
     static constexpr float PI = 3.141592654f;
     static constexpr float DegToRad(const float deg) { return deg * (PI / 180.0f); }
@@ -118,15 +125,15 @@ public:
     //--------------------------------------------------
 
     //@brief デバッグ線を追加
-    static void AddDebugLine(const Vector3& pos1, const Vector3& pos2, const Vector4& color);
+    static void AddDebugLine(const float3& pos1, const float3& pos2, const float4& color);
 
     //@brief デバッグ矢印を追加
-    static void AddDebugArrow(const Vector3& pos1, const Vector3& pos2, const Vector4& color);
+    static void AddDebugArrow(const float3& pos1, const float3& pos2, const float4& color);
 
     //@brief デバッグ軸を追加
-    static void AddDebugAxisLine(const Vector3& pos, const float len);
+    static void AddDebugAxisLine(const float3& pos, const float len);
 
     //@brief デバッグ球を追加
-    static void AddDebugSphere(const Vector3& pos, const float rad, const Vector4& color);
+    static void AddDebugSphere(const float3& pos, const float rad, const float4& color);
 
 };

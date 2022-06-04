@@ -12,9 +12,9 @@ public:
 
 	struct Vertex
 	{
-		Vector3 m_position;
-		Vector2 m_uv;
-		Vector4 m_color;
+		float3 m_position;
+		float2 m_uv;
+		color4 m_color;
 	};
 
 	UnlitShader();

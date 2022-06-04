@@ -7,7 +7,6 @@ SpriteShader::SpriteShader()
 	: m_cpVS(nullptr)
 	, m_cpPS(nullptr)
 	, m_cpInputLayout(nullptr)
-	, m_cb0Sprite()
 	, m_prevProjMatrix()
 	, m_begin(false)
 {
@@ -49,15 +48,11 @@ bool SpriteShader::Initialize()
 		}
 	}
 
-	//定数バッファ作成
-	if (m_cb0Sprite.Create())
+	if (m_cbColor0.Create())
 	{
-		m_cb0Sprite.SetToDevice(2, SHADER_STAGE::VS);
-		m_cb0Sprite.SetToDevice(2, SHADER_STAGE::PS);
-		m_cb0Sprite.Work().m_color = Vector4::One;
-		m_cb0Sprite.Write();
+		m_cbColor0.SetToDevice(0, SHADER_STAGE::PS);
 	}
-	else { Debug::LogError("定数バッファ(Sprite)作成失敗."); return false; }
+	else { Debug::LogError("定数バッファ(Color)作成失敗."); return false; }
 
 	return true;
 }
@@ -117,7 +112,7 @@ void SpriteShader::End()
 //-----------------------------------------------------------------------------
 // テクスチャ描画
 //-----------------------------------------------------------------------------
-void SpriteShader::DrawTexture(const Texture* pTexture, Vector2 pos, Vector2 pivot)
+void SpriteShader::DrawTexture(const Texture* pTexture, float2 pos, float2 size, float2 pivot)
 {
 	if (m_graphicsDevice == nullptr) return;
 	if (m_graphicsDevice->m_cpContext == nullptr) return;
@@ -126,18 +121,23 @@ void SpriteShader::DrawTexture(const Texture* pTexture, Vector2 pos, Vector2 piv
 	if (pTexture == nullptr) return;
 	if (!m_begin) { Debug::LogError("Begin()が呼ばれていません."); return; }
 
-	//解像度に応じて拡縮
-	const float rateX = m_graphicsDevice->m_viewport.Width / 1600;
-	const float rateY = m_graphicsDevice->m_viewport.Height / 900;
-	Matrix world; world.CreateScalling(rateX, rateY, 0);
+	//基準とするウィンドウのサイズ
+	static constexpr float window_w = 1600;
+	static constexpr float window_h = 900;
 
-	m_graphicsDevice->m_spRendererStatus->m_cb4Behaviour.Work().m_worldMatrix = world;
+	//解像度に応じて拡縮
+	const float rateX = m_graphicsDevice->m_viewport.Width  / window_w * size.x;
+	const float rateY = m_graphicsDevice->m_viewport.Height / window_h * size.y;
+	m_graphicsDevice->m_spRendererStatus->m_cb4Behaviour.Work().m_worldMatrix = matrix4x4::CreateScale(rateX, rateY, 1);
 	m_graphicsDevice->m_spRendererStatus->m_cb4Behaviour.Write();
 
 	m_graphicsDevice->m_cpContext->VSSetShaderResources(0, 1, pTexture->SRVAddress());
 	m_graphicsDevice->m_cpContext->PSSetShaderResources(0, 1, pTexture->SRVAddress());
 
 	SetVertices(pTexture, pos, pivot);
+
+	m_cbColor0.Work().m_color = color4(1, 1, 1, 1);
+	m_cbColor0.Write();
 
 	m_graphicsDevice->DrawVertices(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, 4, m_vertices.data(), sizeof(Vertex));
 
@@ -148,9 +148,41 @@ void SpriteShader::DrawTexture(const Texture* pTexture, Vector2 pos, Vector2 piv
 }
 
 //-----------------------------------------------------------------------------
+// 2D線を描画
+//-----------------------------------------------------------------------------
+void SpriteShader::DrawLine(const float2 pos1, const float2 pos2, const color4 color)
+{
+	if (m_graphicsDevice == nullptr) return;
+	if (m_graphicsDevice->m_cpContext == nullptr) return;
+
+	if (!m_begin) { Debug::LogError("Begin()が呼ばれていません."); return; }
+
+	//アルファテスト回避
+	m_graphicsDevice->m_cpContext->VSSetShaderResources(0, 1, m_graphicsDevice->GetWhiteTex()->SRVAddress());
+	m_graphicsDevice->m_cpContext->PSSetShaderResources(0, 1, m_graphicsDevice->GetWhiteTex()->SRVAddress());
+
+	m_graphicsDevice->m_spRendererStatus->m_cb4Behaviour.Work().m_worldMatrix = matrix4x4::CreateScale(1, 1, 1);
+	m_graphicsDevice->m_spRendererStatus->m_cb4Behaviour.Write();
+
+	m_cbColor0.Work().m_color = color;
+	m_cbColor0.Write();
+
+	Vertex vertex[] = {
+		{ {pos1.x, pos1.y, 0},	{0, 0} },
+		{ {pos2.x, pos2.y, 0},	{1, 0} },
+	};
+
+	m_graphicsDevice->DrawVertices(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP, 2, vertex, sizeof(Vertex));
+
+	ID3D11ShaderResourceView* resource_zero = nullptr;
+	m_graphicsDevice->m_cpContext->VSSetShaderResources(0, 1, &resource_zero);
+	m_graphicsDevice->m_cpContext->PSSetShaderResources(0, 1, &resource_zero);
+}
+
+//-----------------------------------------------------------------------------
 // 頂点情報設定
 //-----------------------------------------------------------------------------
-void SpriteShader::SetVertices(const Texture* pTexture, Vector2 pos, Vector2 pivot)
+void SpriteShader::SetVertices(const Texture* pTexture, float2 pos, float2 pivot)
 {
 	pivot.x = std::clamp(pivot.x, 0.0f, 1.0f);
 	pivot.y = std::clamp(pivot.y, 0.0f, 1.0f);
@@ -170,8 +202,8 @@ void SpriteShader::SetVertices(const Texture* pTexture, Vector2 pos, Vector2 piv
 	y_02 -= pivot.y * height;
 
 	//左上 -> 右上 -> 左下 -> 右下
-	m_vertices[0] = Vertex(Vector3(x_01, y_01, 0), Vector2(0, 1));
-	m_vertices[1] = Vertex(Vector3(x_01, y_02, 0), Vector2(0, 0));
-	m_vertices[2] = Vertex(Vector3(x_02, y_01, 0), Vector2(1, 1));
-	m_vertices[3] = Vertex(Vector3(x_02, y_02, 0), Vector2(1, 0));
+	m_vertices[0] = Vertex(float3(x_01, y_01, 0), float2(0, 1));
+	m_vertices[1] = Vertex(float3(x_01, y_02, 0), float2(0, 0));
+	m_vertices[2] = Vertex(float3(x_02, y_01, 0), float2(1, 1));
+	m_vertices[3] = Vertex(float3(x_02, y_02, 0), float2(1, 0));
 }

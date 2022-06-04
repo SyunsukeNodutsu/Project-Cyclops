@@ -4,8 +4,8 @@
 // コンストラクタ
 //-----------------------------------------------------------------------------
 FPSCamera::FPSCamera()
-	: m_sensitivity(Vector2(10.0f, 8.0f))
-	, m_degAngle(Vector3::Zero)
+	: m_sensitivity(float2(10.0f, 8.0f))
+	, m_degAngle(float3::Zero)
 	, m_minAngleX(-360)
 	, m_maxAngleX(360)
 	, m_startFrame(false)
@@ -17,11 +17,11 @@ FPSCamera::FPSCamera()
 //-----------------------------------------------------------------------------
 void FPSCamera::Update()
 {
-	static const Vector2Int set_center = Vector2Int(800, 450);
+	static const float2 set_center = float2(800, 450);
 
-	const Vector2Int& nowPos = m_startFrame ? set_center : Input::GetMousePos();
+	const float2& nowPos = m_startFrame ? set_center : Input::GetMousePos();
 
-	Vector2Int mouseMove = Vector2Int(0, 0);
+	float2 mouseMove = float2(0, 0);
 	mouseMove.x = nowPos.x - set_center.x;
 	mouseMove.y = nowPos.y - set_center.y;
 
@@ -64,10 +64,10 @@ void FPSCamera::OnUseEnd()
 //-----------------------------------------------------------------------------
 // FPSカメラのカメラ行列を設定
 //-----------------------------------------------------------------------------
-void FPSCamera::SetCameraMatrix(const Matrix& cameraMatrix)
+void FPSCamera::SetCameraMatrix(const matrix4x4& cameraMatrix)
 {
-	Matrix trans = trans.CreateTranslation(m_localPos);
-	Matrix rotation = GetRotationMatrix();
+	matrix4x4 trans = trans.CreateTranslation(m_localPos);
+	matrix4x4 rotation = GetRotationMatrix();
 
 	Camera::SetCameraMatrix(rotation * trans * cameraMatrix);
 }
@@ -75,15 +75,15 @@ void FPSCamera::SetCameraMatrix(const Matrix& cameraMatrix)
 //-----------------------------------------------------------------------------
 // 回転行列を返す
 //-----------------------------------------------------------------------------
-const Matrix FPSCamera::GetRotationMatrix()
+const matrix4x4 FPSCamera::GetRotationMatrix()
 {
-	return Matrix::CreateFromYawPitchRoll(DegToRad(m_degAngle.y), DegToRad(m_degAngle.x), DegToRad(m_degAngle.z));
+	return matrix4x4::CreateFromYawPitchRoll(DegToRad(m_degAngle.y), DegToRad(m_degAngle.x), DegToRad(m_degAngle.z));
 }
 
 //-----------------------------------------------------------------------------
 // Y軸の回転行列を返す
 //-----------------------------------------------------------------------------
-const Matrix FPSCamera::GetRotationYMatrix()
+const matrix4x4 FPSCamera::GetRotationYMatrix()
 {
-	return Matrix::CreateRotationX(DegToRad(m_degAngle.y));
+	return matrix4x4::CreateRotationX(DegToRad(m_degAngle.y));
 }

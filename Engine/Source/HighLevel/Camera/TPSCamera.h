@@ -10,11 +10,11 @@ class TPSCamera : public FPSCamera
 {
 public:
 
-	void SetCameraMatrix(const Matrix& worldMatrix) override;
-	void SetViewPoint(const Vector3& v) { m_viewPoint = v; }
+	void SetCameraMatrix(const matrix4x4& worldMatrix) override;
+	void SetViewPoint(const float3& v) { m_viewPoint = v; }
 
 private:
 
-	Vector3 m_viewPoint;//注視点
+	float3 m_viewPoint;//注視点
 
 };

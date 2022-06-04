@@ -10,12 +10,12 @@ Camera::Camera()
 	, m_viewMatrix()
 	, m_projMatrix()
 	, m_viewProjMatrix()
-	, m_up(Vector3::Zero)
-	, m_down(Vector3::Zero)
-	, m_forward(Vector3::Zero)
-	, m_backward(Vector3::Zero)
-	, m_left(Vector3::Zero)
-	, m_right(Vector3::Zero)
+	, m_up(float3::Zero)
+	, m_down(float3::Zero)
+	, m_forward(float3::Zero)
+	, m_backward(float3::Zero)
+	, m_left(float3::Zero)
+	, m_right(float3::Zero)
 	, m_fovAngleY(DegToRad(60.0f))
 	, m_aspectRatio(16.0f / 9.0f)
 	, m_nearZ(0.01f)
@@ -26,7 +26,7 @@ Camera::Camera()
 	, m_dirtyProj(true)
 {
 	m_projMatrix = DirectX::XMMatrixPerspectiveFovLH(m_fovAngleY, m_aspectRatio, m_nearZ, m_farZ);
-	SetCameraMatrix(Matrix());
+	SetCameraMatrix(matrix4x4());
 }
 
 //-----------------------------------------------------------------------------
@@ -60,7 +60,7 @@ void Camera::SetToShader()
 //-----------------------------------------------------------------------------
 // ワールド座標 ->スクリーン座標
 //-----------------------------------------------------------------------------
-void Camera::WorldToScreen(const Vector3& pos, const Matrix matrix, Vector2& screen)
+void Camera::WorldToScreen(const float3& pos, const matrix4x4 matrix, float2& screen)
 {
 	if (m_graphicsDevice == nullptr) return;
 	if (m_graphicsDevice->m_cpContext == nullptr) return;
@@ -71,37 +71,40 @@ void Camera::WorldToScreen(const Vector3& pos, const Matrix matrix, Vector2& scr
 	const float HalfViewportWidth = vp.Width * 0.5f;
 	const float HalfViewportHeight = vp.Height * 0.5f;
 
-	Vector3 Scale = DirectX::XMVectorSet(HalfViewportWidth, -HalfViewportHeight, vp.MaxDepth - vp.MinDepth, 0.0f);
-	Vector3 Offset = DirectX::XMVectorSet(vp.TopLeftX + HalfViewportWidth, vp.TopLeftY + HalfViewportHeight, vp.MinDepth, 0.0f);
+	float3 Scale = DirectX::XMVectorSet(HalfViewportWidth, -HalfViewportHeight, vp.MaxDepth - vp.MinDepth, 0.0f);
+	float3 Offset = DirectX::XMVectorSet(vp.TopLeftX + HalfViewportWidth, vp.TopLeftY + HalfViewportHeight, vp.MinDepth, 0.0f);
 
-	Matrix Transform = XMMatrixMultiply(matrix, GetViewMatrix());
+	matrix4x4 Transform = XMMatrixMultiply(matrix, GetViewMatrix());
 	Transform = XMMatrixMultiply(Transform, GetProjMatrix());
 
-	Vector3 Pos = { GetCameraMatrix()._41,GetCameraMatrix()._42 ,GetCameraMatrix()._43 };
-	Vector3 Result = XMVector3TransformCoord(pos, Transform);
+	float3 Pos = { GetCameraMatrix()._41,GetCameraMatrix()._42 ,GetCameraMatrix()._43 };
+	float3 Result = XMVector3TransformCoord(pos, Transform);
 
 	Result = XMVectorMultiplyAdd(Result, Scale, Offset);
-	screen = Vector2(Result.x, Result.y);
+	screen = float2(Result.x, Result.y);
 }
 
 //-----------------------------------------------------------------------------
 // カメラ/ビュー行列の設定
 //-----------------------------------------------------------------------------
-void Camera::SetCameraMatrix(const Matrix& camera)
+void Camera::SetCameraMatrix(const matrix4x4& camera)
 {
 	m_cameraMatrix = camera;
 	m_viewMatrix = m_cameraMatrix;
-	m_viewMatrix.Inverse();
+	m_viewMatrix.Invert();
 	m_dirtyCamera = true;
 
 	//方向
-	m_up = m_cameraMatrix.GetAxisY().Normalize();
+	m_up = m_cameraMatrix.Up();
+	m_up.Normalize();
 	m_down = m_up * -1;
 
-	m_forward = m_cameraMatrix.GetAxisZ().Normalize();
+	m_forward = m_cameraMatrix.Backward();
+	m_forward.Normalize();
 	m_backward = m_forward * -1;
 
-	m_left = m_cameraMatrix.GetAxisX().Normalize();
+	m_left = m_cameraMatrix.Left();
+	m_left.Normalize();
 	m_right = m_left * -1;
 
 	//試錐台作成

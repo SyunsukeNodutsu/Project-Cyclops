@@ -161,7 +161,7 @@ void Debug::LogWarning(const std::string& log, const std::source_location& locat
 	const auto& final_log = std::string(log + "\n" + "          : " + Utility::GetFilenameFromFullpath(file_name) + ": " + func_name + "(" + ToString(line) + ", " + ToString(column) + ")\n\n");
 	OutputDebugStringA(final_log.c_str());
 
-	ImGuiProfile::AddLog(final_log, Vector3(1, 1, 0));
+	ImGuiProfile::AddLog(final_log, float3(1, 1, 0));
 #endif
 }
 void Debug::LogWarning(const std::wstring& log, const std::source_location& location)
@@ -185,7 +185,7 @@ void Debug::LogError(const std::string& log, const std::source_location& locatio
 	const auto& final_log = std::string(log + "\n" + "          : " + Utility::GetFilenameFromFullpath(file_name) + ": " + func_name + "(" + ToString(line) + ", " + ToString(column) + ")\n\n");
 	OutputDebugStringA(final_log.c_str());
 
-	ImGuiProfile::AddLog(final_log, Vector3(1, 0, 0));
+	ImGuiProfile::AddLog(final_log, float3(1, 0, 0));
 #endif
 }
 void Debug::LogError(const std::wstring& log, const std::source_location& location)
@@ -198,11 +198,11 @@ void Debug::LogError(const std::wstring& log, const std::source_location& locati
 //-----------------------------------------------------------------------------
 // デバッグ線を追加
 //-----------------------------------------------------------------------------
-void Debug::AddDebugLine(const Vector3& pos1, const Vector3& pos2, const Vector4& color)
+void Debug::AddDebugLine(const float3& pos1, const float3& pos2, const float4& color)
 {
 	UnlitShader::Vertex ver{};
 	ver.m_color = color;
-	ver.m_uv = Vector2(0.0f, 0.0f);
+	ver.m_uv = float2(0.0f, 0.0f);
 	ver.m_position = pos1;
 	CyclopsRoot::m_debugLines.push_back(ver);
 
@@ -213,29 +213,49 @@ void Debug::AddDebugLine(const Vector3& pos1, const Vector3& pos2, const Vector4
 //-----------------------------------------------------------------------------
 // デバッグ矢印を追加
 //-----------------------------------------------------------------------------
-void Debug::AddDebugArrow(const Vector3& pos1, const Vector3& pos2, const Vector4& color)
+void Debug::AddDebugArrow(const float3& pos1, const float3& pos2, const float4& color)
 {
+	AddDebugLine(pos1, pos2, color);
 
+	static constexpr float angle = DegToRad(160.0f);
+	static constexpr float distance = 0.2f;
+
+	static const float3 pos3 = float3(0, sinf(angle) * distance, cosf(angle) * distance);
+	static const float3 pos4 = float3(0, sinf(angle * -1) * distance, cosf(angle * -1) * distance);
+
+	static const float3 pos5 = float3(sinf(angle) * distance, 0, cosf(angle) * distance);
+	static const float3 pos6 = float3(sinf(angle * -1) * distance, 0, cosf(angle * -1) * distance);
+
+	//TODO: 追加パターン 線じゃなくていい(無駄)
+	AddDebugLine(pos2, pos2 + pos3, color);
+	AddDebugLine(pos2, pos2 + pos4, color);
+	AddDebugLine(pos2, pos2 + pos5, color);
+	AddDebugLine(pos2, pos2 + pos6, color);
+
+	AddDebugLine(pos2 + pos3, pos2 + pos5, color);
+	AddDebugLine(pos2 + pos3, pos2 + pos6, color);
+	AddDebugLine(pos2 + pos4, pos2 + pos5, color);
+	AddDebugLine(pos2 + pos4, pos2 + pos6, color);
 }
 
 //-----------------------------------------------------------------------------
 // デバッグ軸を追加
 //-----------------------------------------------------------------------------
-void Debug::AddDebugAxisLine(const Vector3& pos, const float len)
+void Debug::AddDebugAxisLine(const float3& pos, const float len)
 {
-	AddDebugLine(pos, pos + Vector3(len, 0.0f, 0.0f), Vector4(255, 0, 0, 255));
-	AddDebugLine(pos, pos + Vector3(0.0f, len, 0.0f), Vector4(0, 255, 0, 255));
-	AddDebugLine(pos, pos + Vector3(0.0f, 0.0f, len), Vector4(0, 0, 255, 255));
+	AddDebugLine(pos, pos + float3(len, 0.0f, 0.0f), float4(255, 0, 0, 255));
+	AddDebugLine(pos, pos + float3(0.0f, len, 0.0f), float4(0, 255, 0, 255));
+	AddDebugLine(pos, pos + float3(0.0f, 0.0f, len), float4(0, 0, 255, 255));
 }
 
 //-----------------------------------------------------------------------------
 // デバッグ球を追加
 //-----------------------------------------------------------------------------
-void Debug::AddDebugSphere(const Vector3& pos, const float rad, const Vector4& color)
+void Debug::AddDebugSphere(const float3& pos, const float rad, const float4& color)
 {
 	UnlitShader::Vertex ver{};
 	ver.m_color = color;
-	ver.m_uv = Vector2(0.0f, 0.0f);
+	ver.m_uv = float2(0.0f, 0.0f);
 
 	static constexpr int detail = 32;
 	for (UINT i = 0; i < detail + 1; ++i)

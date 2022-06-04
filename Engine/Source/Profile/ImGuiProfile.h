@@ -21,7 +21,7 @@ public:
 	void Finalize();
 	void DrawProfileMonitor();
 
-	static void AddLog(std::string_view log, const Vector3& color = Vector3(1, 1, 1) , const std::source_location& location = std::source_location::current());
+	static void AddLog(std::string_view log, const float3& color = float3(1, 1, 1) , const std::source_location& location = std::source_location::current());
 	static void ClearLog() { m_logDatas.clear(); }
 
 	void SetWindow(Window* pDevice) { m_pWindow = pDevice; }
@@ -36,7 +36,7 @@ private:
 	struct LogData
 	{
 		std::string log = "";
-		Vector3 color = Vector3::Zero;
+		float3 color = float3::Zero;
 	};
 	static std::list<LogData> m_logDatas;
 	static bool m_addLog;//ログを追加

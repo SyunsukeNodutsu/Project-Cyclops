@@ -18,22 +18,22 @@ class PostProcessShader : public GraphicsDeviceChild
 	//頂点単位
 	struct Vertex
 	{
-		Vector3 m_position;
-		Vector2 m_uv;
+		float3 m_position;
+		float2 m_uv;
 	};
 
 	//正射影用 頂点定義
 	Vertex vOrthographic[4] = {
-		{ Vector3(-1,-1, 0), Vector2(0, 1) },
-		{ Vector3(-1, 1, 0), Vector2(0, 0) },
-		{ Vector3( 1,-1, 0), Vector2(1, 1) },
-		{ Vector3( 1, 1, 0), Vector2(1, 0) },
+		{ float3(-1,-1, 0), float2(0, 1) },
+		{ float3(-1, 1, 0), float2(0, 0) },
+		{ float3( 1,-1, 0), float2(1, 1) },
+		{ float3( 1, 1, 0), float2(1, 0) },
 	};
 
 	//ブラー用 定数バッファ
 	struct cbBlur
 	{
-		Vector4 offset[31];
+		float4 offset[31];
 	};
 
 public:
@@ -44,7 +44,7 @@ public:
 	bool Initialize();
 
 	void DrawColor(Texture* texture);
-	void BlurDraw(Texture* texture, Vector2 dir);
+	void BlurDraw(Texture* texture, float2 dir);
 	void GenerateBlur(BlurTexture& blurTex, Texture* srcTex);
 	void BrightFiltering(Texture* destRT, Texture* srcTex);
 

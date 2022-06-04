@@ -15,13 +15,13 @@ public:
 	//Emitの際に設定する初期情報
 	struct EmitData
 	{
-		Vector3 m_maxPosition = Vector3::Zero;
-		Vector3 m_minPosition = Vector3::Zero;
-		Vector3 m_maxVelocity = Vector3::Zero;
-		Vector3 m_minVelocity = Vector3::Zero;
+		float3 m_maxPosition = float3::Zero;
+		float3 m_minPosition = float3::Zero;
+		float3 m_maxVelocity = float3::Zero;
+		float3 m_minVelocity = float3::Zero;
 		float m_maxLifeSpan = 0.0f;
 		float m_minLifeSpan = 0.0f;
-		Vector4 m_color = Vector4::Zero;
+		float4 m_color = float4::Zero;
 	};
 
 public:
@@ -49,11 +49,11 @@ class ParticleWork : public GraphicsDeviceChild
 	//粒子単位 定数バッファ(SRV)
 	struct Particle
 	{
-		Vector3 m_position;
+		float3 m_position;
 		float	m_lifeSpanMax;
-		Vector3 m_velocity;
+		float3 m_velocity;
 		float	m_lifeSpan;
-		Vector4 m_color;
+		float4 m_color;
 	};
 
 public:

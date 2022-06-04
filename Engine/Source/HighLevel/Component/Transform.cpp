@@ -10,19 +10,19 @@ Transform::Transform()
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
-const Matrix& Transform::GetWorldMatrix() const
+const matrix4x4& Transform::GetWorldMatrix() const
 {
 	if (m_needUpdateMatrix)
 	{
 		m_needUpdateMatrix = false;
 
-		Matrix scale;
-		scale.CreateScalling(m_worldScale);
+		matrix4x4 scale;
+		scale.CreateScale(m_worldScale);
 
-		Matrix trans;
+		matrix4x4 trans;
 		trans.CreateTranslation(m_worldPosition);
 
-		Matrix rotation;
+		matrix4x4 rotation;
 		rotation.CreateFromYawPitchRoll(DegToRad(m_worldAngle.y), DegToRad(m_worldAngle.x), DegToRad(m_worldAngle.z));
 
 		m_worldMatrix = scale * rotation * trans;
@@ -34,19 +34,19 @@ const Matrix& Transform::GetWorldMatrix() const
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
-void Transform::SetWorldMatrix(const Matrix& matrix)
+void Transform::SetWorldMatrix(const matrix4x4& matrix)
 {
 	m_worldMatrix = matrix;
 
 	m_needUpdateMatrix = false;
 
-	m_worldScale.x = m_worldMatrix.GetAxisX().Length();
-	m_worldScale.y = m_worldMatrix.GetAxisY().Length();
-	m_worldScale.z = m_worldMatrix.GetAxisZ().Length();
+	m_worldScale.x = m_worldMatrix.Left().Length();
+	m_worldScale.y = m_worldMatrix.Up().Length();
+	m_worldScale.z = m_worldMatrix.Forward().Length();
 
-	m_worldPosition = m_worldMatrix.GetTranslation();
+	m_worldPosition = m_worldMatrix.Translation();
 
-	Matrix mRota;
+	matrix4x4 mRota;
 	mRota.CreateFromYawPitchRoll(DegToRad(m_worldAngle.y), DegToRad(m_worldAngle.x), DegToRad(m_worldAngle.z));
 
 	m_worldAngle.x = atan2f(mRota.m[1][2], mRota.m[2][2]);

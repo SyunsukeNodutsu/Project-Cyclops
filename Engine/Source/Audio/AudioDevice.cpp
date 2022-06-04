@@ -88,7 +88,7 @@ void AudioDevice::Finalize()
 //-----------------------------------------------------------------------------
 // 更新
 //-----------------------------------------------------------------------------
-void AudioDevice::Update(const Matrix& listener)
+void AudioDevice::Update(const matrix4x4& listener)
 {
     if (m_pX2Audio == nullptr) return;
     if (m_pMasteringVoice == nullptr) return;

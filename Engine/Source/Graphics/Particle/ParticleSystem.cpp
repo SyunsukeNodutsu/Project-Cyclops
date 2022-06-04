@@ -276,11 +276,11 @@ void ParticleWork::EmitAsync()
 		m_pParticle = new Particle[m_numParticles];
 		for (int i = 0; i < m_numParticles; i++)
 		{
-			m_pParticle[i].m_position = Vector3(distr_pos_x(engine), distr_pos_y(engine), distr_pos_z(engine));
-			m_pParticle[i].m_velocity = Vector3(distr_vel_x(engine), distr_vel_y(engine), distr_vel_z(engine));
+			m_pParticle[i].m_position = float3(distr_pos_x(engine), distr_pos_y(engine), distr_pos_z(engine));
+			m_pParticle[i].m_velocity = float3(distr_vel_x(engine), distr_vel_y(engine), distr_vel_z(engine));
 			m_pParticle[i].m_lifeSpan = distr_life(engine);
 			//m_pParticle[i].m_color = m_data.m_color;
-			m_pParticle[i].m_color = Vector4(distr_col(engine), distr_col(engine), distr_col(engine), 1.0f);
+			m_pParticle[i].m_color = float4(distr_col(engine), distr_col(engine), distr_col(engine), 1.0f);
 			m_pParticle[i].m_lifeSpanMax = m_pParticle[i].m_lifeSpan;
 		}
 

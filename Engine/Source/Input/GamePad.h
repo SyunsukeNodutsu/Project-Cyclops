@@ -16,8 +16,8 @@ public:
 
 	static void Update();
 
-	static Vector2 Left(int index = 0);
-	static Vector2 Right(int index = 0);
+	static float2 Left(int index = 0);
+	static float2 Right(int index = 0);
 
 private:
 
@@ -29,6 +29,6 @@ private:
 
 private:
 
-	static Vector2 GetFinalStickTilt(const Vector2& stick, int index);
+	static float2 GetFinalStickTilt(const float2& stick, int index);
 
 };

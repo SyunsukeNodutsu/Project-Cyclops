@@ -86,7 +86,7 @@ void ImGuiProfile::DrawProfileMonitor()
 //-----------------------------------------------------------------------------
 // ログを追加
 //-----------------------------------------------------------------------------
-void ImGuiProfile::AddLog(std::string_view log, const Vector3& color, const std::source_location& location)
+void ImGuiProfile::AddLog(std::string_view log, const float3& color, const std::source_location& location)
 {
 	time_t times_day; tm localtime;
 
@@ -126,8 +126,8 @@ void ImGuiProfile::SceneMonitor(ImGuiWindowFlags wflags)
 		m_pFpsTimer->SetTimeScale(timeScale);
 
 	const auto& cbCamera = m_pGraphicsDevice->m_spRendererStatus->m_cb5Camera.Get();
-	ImGui::Text(std::string("CameraMatrix Trans: " + ToStringV(cbCamera.m_cameraMatrix.GetTranslation())).c_str());
-	ImGui::Text(std::string("ViewMatrix Trans  : " + ToStringV(cbCamera.m_viewMatrix.GetTranslation())).c_str());
+	ImGui::Text(std::string("CameraMatrix Trans: " + ToStringV(cbCamera.m_cameraMatrix.Translation())).c_str());
+	ImGui::Text(std::string("ViewMatrix Trans  : " + ToStringV(cbCamera.m_viewMatrix.Translation())).c_str());
 
 	ImGui::Text(std::string("NumParticles: " + ToString(ParticleSystem::m_numParticle)).c_str());
 	

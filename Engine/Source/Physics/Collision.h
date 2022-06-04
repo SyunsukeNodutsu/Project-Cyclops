@@ -15,7 +15,7 @@ namespace Collision
 
 	struct RayResult
 	{
-		Vector3	m_hitPos = Vector3();	//衝突座標
+		float3	m_hitPos = float3();	//衝突座標
 		float m_distance = FLT_MAX;		//レイの座標からヒットした位置までの距離が入る
 		bool m_hit = false;				//ヒットしたかどうか
 	};
@@ -31,7 +31,7 @@ namespace Collision
 	bool RayToMesh(const DirectX::XMVECTOR& rRayPos, const DirectX::XMVECTOR& rRayDir, float maxDistance, const Mesh& rMesh, const DirectX::XMMATRIX& rMatrix, RayResult* pResult = nullptr);
 
 	//球vsメッシュ
-	bool SphereToMesh(const Vector3& rSpherePos, float radius, const Mesh& mesh, const DirectX::XMMATRIX& matrix, Vector3& rPushedPos);
+	bool SphereToMesh(const float3& rSpherePos, float radius, const Mesh& mesh, const DirectX::XMMATRIX& matrix, float3& rPushedPos);
 
 	//点vs三角形との最近接点を求める
 	void PointToTriangle(const DirectX::XMVECTOR& p, const DirectX::XMVECTOR& a, const DirectX::XMVECTOR& b, const DirectX::XMVECTOR& c, DirectX::XMVECTOR& outPt);

@@ -14,9 +14,9 @@ public:
 	virtual ~Camera() = default;
 
 	void SetToShader();
-	void WorldToScreen(const Vector3& pos, const Matrix matrix, Vector2& screen);
+	void WorldToScreen(const float3& pos, const matrix4x4 matrix, float2& screen);
 
-	virtual void SetCameraMatrix(const Matrix& camera);
+	virtual void SetCameraMatrix(const matrix4x4& camera);
 
 	virtual void Update() {}
 	virtual void OnUseStart() {}
@@ -29,17 +29,17 @@ public:
 	void SetViewWidth(float viewWidth) { m_viewWidth = viewWidth; m_dirtyProj = true; }
 	void SetViewHeight(float viewHeight) { m_viewHeight = viewHeight; m_dirtyProj = true; }
 
-	inline const Matrix& GetCameraMatrix() const { return m_cameraMatrix; }
-	inline const Matrix& GetViewMatrix() const { return m_viewMatrix; }
-	inline const Matrix& GetProjMatrix() const { return m_projMatrix; }
-	inline const Matrix& GetViewProjMatrix() const { return m_viewProjMatrix; }
+	inline const matrix4x4& GetCameraMatrix() const { return m_cameraMatrix; }
+	inline const matrix4x4& GetViewMatrix() const { return m_viewMatrix; }
+	inline const matrix4x4& GetProjMatrix() const { return m_projMatrix; }
+	inline const matrix4x4& GetViewProjMatrix() const { return m_viewProjMatrix; }
 
-	inline const Vector3& Up() const { return m_up; }
-	inline const Vector3& Down() const { return m_down; }
-	inline const Vector3& Forward() const { return m_forward; }
-	inline const Vector3& Backward() const { return m_backward; }
-	inline const Vector3& Left() const { return m_left; }
-	inline const Vector3& Right() const { return m_right; }
+	inline const float3& Up() const { return m_up; }
+	inline const float3& Down() const { return m_down; }
+	inline const float3& Forward() const { return m_forward; }
+	inline const float3& Backward() const { return m_backward; }
+	inline const float3& Left() const { return m_left; }
+	inline const float3& Right() const { return m_right; }
 
 	float GetFovAngleY() const { return m_fovAngleY; }
 	float GetAspect() const { return m_aspectRatio; }
@@ -56,15 +56,15 @@ public:
 private:
 
 	//各行列
-	Matrix	m_cameraMatrix;		//カメラ行列
-	Matrix	m_viewMatrix;		//ビュー行列
-	Matrix	m_projMatrix;		//射影行列
-	Matrix	m_viewProjMatrix;	//ビュープロジェクション行列
+	matrix4x4	m_cameraMatrix;		//カメラ行列
+	matrix4x4	m_viewMatrix;		//ビュー行列
+	matrix4x4	m_projMatrix;		//射影行列
+	matrix4x4	m_viewProjMatrix;	//ビュープロジェクション行列
 
 	//方向
-	Vector3 m_up, m_down;
-	Vector3 m_forward, m_backward;
-	Vector3 m_left, m_right;
+	float3 m_up, m_down;
+	float3 m_forward, m_backward;
+	float3 m_left, m_right;
 
 	//射影関連
 	float	m_fovAngleY;		//画角(ラジアン)

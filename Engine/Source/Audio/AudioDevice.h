@@ -18,7 +18,7 @@ public:
     bool Initialize();
     void Finalize();
 
-    void Update(const Matrix& listener);
+    void Update(const matrix4x4& listener);
 
     void AddSound(const std::shared_ptr<Sound> sound) { m_soundList.push_back(sound); }
     const std::list<std::shared_ptr<Sound>>& GetSoundList() { return m_soundList; }

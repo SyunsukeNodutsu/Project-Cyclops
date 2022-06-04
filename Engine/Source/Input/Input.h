@@ -115,16 +115,16 @@ public:
 	static bool IsMousePressed(MouseButton mbutton) { return m_mousePressArray[(int)mbutton]; }
 	static bool IsMouseUp(MouseButton mbutton) { return m_mouseUpArray[(int)mbutton]; }
 
-	static Vector2Int GetMousePos() { return m_mousePos; }
+	static float2 GetMousePos() { return m_mousePos; }
 	static int GetMouseWheelDelta() { return m_mouseWheelDelta; }
 
-	static void SetMousePos(const Vector2Int& pos);
+	static void SetMousePos(const float2& pos);
 	static void SetMouseHide(bool show);
 
 private:
 
 	static WPARAM m_mouseState;
-	static Vector2Int m_mousePos;
+	static float2 m_mousePos;
 	static int m_mouseWheelDelta;
 
 	static std::array<bool, 256> m_keyDownArray;

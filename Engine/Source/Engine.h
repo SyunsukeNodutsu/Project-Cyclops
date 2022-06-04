@@ -45,13 +45,6 @@
 #include "Subsystem.h"
 
 //算術
-#include "Math/Vector2.h"
-#include "Math/Vector3.h"
-#include "Math/Vector4.h"
-#include "Math/Vector2Int.h"
-#include "Math/Matrix.h"
-#include "Math/Quaternion.h"
-
 #include "Math/Easing.h"
 
 //ユーティリティ

@@ -1,7 +1,7 @@
 ﻿#include "Input.h"
 
 WPARAM Input::m_mouseState;
-Vector2Int Input::m_mousePos;
+float2 Input::m_mousePos;
 int Input::m_mouseWheelDelta;
 std::array<bool, 256> Input::m_keyDownArray;
 std::array<bool, 256> Input::m_keyUpArray;
@@ -23,7 +23,7 @@ void Input::ParseInputData(UINT message, WPARAM wparam, LPARAM lparam)
 	case WM_KEYUP: m_keyUpArray[key_code] = true; break;
 		//マウス
 	case WM_MOUSEWHEEL: m_mouseWheelDelta = (short)HIWORD(wparam); break;
-	case WM_MOUSEMOVE: { m_mouseState = wparam; m_mousePos = Vector2Int(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam)); } break;
+	case WM_MOUSEMOVE: { m_mouseState = wparam; m_mousePos = float2((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam)); } break;
 		//マウスボタン
 	case WM_LBUTTONDOWN:	m_mouseDownArray[(int)MouseButton::Left] = true;	m_mousePressArray[(int)MouseButton::Left] = true;	break;
 	case WM_LBUTTONUP:		m_mouseUpArray[(int)MouseButton::Left] = true;		m_mousePressArray[(int)MouseButton::Left] = false;	break;
@@ -49,11 +49,11 @@ void Input::Refresh()
 //-----------------------------------------------------------------------------
 // マウス座標を設定する
 //-----------------------------------------------------------------------------
-void Input::SetMousePos(const Vector2Int& pos)
+void Input::SetMousePos(const float2& pos)
 {
 	if (GetFocus() != m_hwnd) return;
 
-	POINT at{ pos.x, pos.y };
+	POINT at{ (int)pos.x, (int)pos.y };
 	ClientToScreen(m_hwnd, &at);
 
 	SetCursorPos(at.x, at.y);

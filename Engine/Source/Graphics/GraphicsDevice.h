@@ -43,7 +43,7 @@ public:
 	bool Initialize();
 	bool Finalize();
 
-	void Begin(const Vector3 clearColor = Vector3(0.0f, 0.0f, 1.0f));
+	void Begin(const float3 clearColor = float3(0.0f, 0.0f, 1.0f));
 	void End(UINT syncInterval = 0, UINT flags = 0);
 
 	void Resize(WPARAM wparam, UINT width, UINT height);
@@ -53,6 +53,8 @@ public:
 
 	const HRESULT CreateBufferSRV(ID3D11Buffer* pBuffer, ID3D11ShaderResourceView** ppSRVOut);
 	const HRESULT CreateBufferUAV(ID3D11Buffer* pBuffer, ID3D11UnorderedAccessView** ppUAVOut);
+
+	std::shared_ptr<Texture> GetWhiteTex() const { return m_texWhite; }
 
 public://TODO: アクセス制限 例)"ACCESS_ENGINE"みたいな
 
@@ -78,6 +80,8 @@ private:
 
 	std::shared_ptr<Texture>	m_spBackbuffer;
 	std::shared_ptr<Texture>	m_spDefaultZbuffer;
+
+	std::shared_ptr<Texture>	m_texWhite;
 
 	std::shared_ptr<Buffer>		m_spTempFixedVertexBuffer[10];
 	std::shared_ptr<Buffer>		m_spTempVertexBuffer;

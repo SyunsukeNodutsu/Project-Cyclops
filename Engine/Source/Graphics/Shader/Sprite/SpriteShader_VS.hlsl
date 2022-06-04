@@ -13,7 +13,7 @@ VertexOutput main(float4 position : POSITION, float2 uv : TEXCOORD0)
     //ã‚Ì2“_
     if (uv.y == 0.0f)// or uv.y >= 0.9f
     {
-        position.x += sin(g_totalTime) * 100;
+        //position.x += sin(g_totalTime) * 100.0f * g_timeScale;
     }
 
     //’¸“_À•W‚ğË‰e•ÏŠ·

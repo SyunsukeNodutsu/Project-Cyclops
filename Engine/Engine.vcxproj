@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Library\DirectXTK\SimpleMath.cpp" />
     <ClCompile Include="..\Library\imGui\imgui.cpp" />
     <ClCompile Include="..\Library\imGui\imgui_demo.cpp" />
     <ClCompile Include="..\Library\imGui\imgui_draw.cpp" />
@@ -56,9 +57,6 @@
     <ClCompile Include="Source\Input\GamePad.cpp" />
     <ClCompile Include="Source\Input\Input.cpp" />
     <ClCompile Include="Source\Math\Easing.cpp" />
-    <ClCompile Include="Source\Math\Vector2.cpp" />
-    <ClCompile Include="Source\Math\Vector3.cpp" />
-    <ClCompile Include="Source\Math\Vector4.cpp" />
     <ClCompile Include="Source\Pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pch.h</PrecompiledHeaderFile>
@@ -79,6 +77,7 @@
     <ClCompile Include="Source\Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Library\DirectXTK\SimpleMath.h" />
     <ClInclude Include="..\Library\imGui\imconfig.h" />
     <ClInclude Include="..\Library\imGui\imgui.h" />
     <ClInclude Include="..\Library\imGui\imgui_glyph_ranges_jp.h" />
@@ -120,16 +119,7 @@
     <ClInclude Include="Source\HighLevel\Manager\CameraManager.h" />
     <ClInclude Include="Source\Input\GamePad.h" />
     <ClInclude Include="Source\Input\Input.h" />
-    <ClInclude Include="Source\Math\Color.h" />
     <ClInclude Include="Source\Math\Easing.h" />
-    <ClInclude Include="Source\Math\Matrix.h" />
-    <ClInclude Include="Source\Math\Quaternion.h" />
-    <ClInclude Include="Source\Math\Vector2.h" />
-    <ClInclude Include="Source\Math\Vector2Int.h" />
-    <ClInclude Include="Source\Math\Vector3.h" />
-    <ClInclude Include="Source\Math\Vector3Int.h" />
-    <ClInclude Include="Source\Math\Vector4.h" />
-    <ClInclude Include="Source\Math\Vector4Int.h" />
     <ClInclude Include="Source\Pch.h" />
     <ClInclude Include="Source\Physics\Collision.h" />
     <ClInclude Include="Source\Profile\ImGuiProfile.h" />
@@ -579,6 +569,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Library\DirectXTK\SimpleMath.inl" />
     <None Include="Source\Graphics\Shader\ConstantBuffer.hlsli" />
     <None Include="Source\Graphics\Shader\GPUParticle\GPUParticle.hlsli" />
     <None Include="Source\Graphics\Shader\Grass\GrassShader.hlsli" />
@@ -646,22 +637,22 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>../Library/StringConverter;../Library/DirectXTex;../Library/imGui;./Source;$(IncludePath)</IncludePath>
+    <IncludePath>../Library/StringConverter;../Library/DirectXTK;../Library/DirectXTex;../Library/imGui;./Source;$(IncludePath)</IncludePath>
     <LibraryPath>../Library/DirectXTK/Bin/Desktop_2019_Win10/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>../Library/StringConverter;../Library/DirectXTex;../Library/imGui;./Source;$(IncludePath)</IncludePath>
+    <IncludePath>../Library/StringConverter;../Library/DirectXTK;../Library/DirectXTex;../Library/imGui;./Source;$(IncludePath)</IncludePath>
     <LibraryPath>../Library/DirectXTK/Bin/Desktop_2019_Win10/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>../Library/StringConverter;../Library/DirectXTex;../Library/imGui;./Source;$(IncludePath)</IncludePath>
+    <IncludePath>../Library/StringConverter;../Library/DirectXTK;../Library/DirectXTex;../Library/imGui;./Source;$(IncludePath)</IncludePath>
     <LibraryPath>../Library/DirectXTK/Bin/Desktop_2019_Win10/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>../Library/StringConverter;../Library/DirectXTex;../Library/imGui;./Source;$(IncludePath)</IncludePath>
+    <IncludePath>../Library/StringConverter;../Library/DirectXTK;../Library/DirectXTex;../Library/imGui;./Source;$(IncludePath)</IncludePath>
     <LibraryPath>../Library/DirectXTK/Bin/Desktop_2019_Win10/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

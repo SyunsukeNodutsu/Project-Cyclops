@@ -75,6 +75,5 @@ void UnlitShader::DrawVertices(const std::vector<Vertex>& vertices, D3D_PRIMITIV
 	if (m_graphicsDevice == nullptr) return;
 	if (m_graphicsDevice->m_cpContext == nullptr) return;
 
-	//m_graphicsDevice->m_cpContext->IASetPrimitiveTopology(topology);
 	m_graphicsDevice->DrawVertices(topology, (int)vertices.size(), &vertices[0], sizeof(Vertex));
 }

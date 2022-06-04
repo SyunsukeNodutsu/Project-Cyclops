@@ -29,15 +29,15 @@ private:
 	//エンジンがデフォルトで提供する定数バッファ -------------------->
 	struct CBBehaviour
 	{
-		Matrix m_worldMatrix;
-		Vector2 m_uvOffset;
-		Vector2 m_uvTiling;
+		matrix4x4 m_worldMatrix;
+		float2 m_uvOffset;
+		float2 m_uvTiling;
 	};
 	struct CBCamera
 	{
-		Matrix m_viewMatrix;
-		Matrix m_projMatrix;
-		Matrix m_cameraMatrix;
+		matrix4x4 m_viewMatrix;
+		matrix4x4 m_projMatrix;
+		matrix4x4 m_cameraMatrix;
 	};
 	struct CBLight
 	{
@@ -46,9 +46,10 @@ private:
 	};
 	struct CBTime
 	{
-		float m_totalTime = 0.0f; // 総経過時間
-		float m_deltaTime = 1.0f; // デルタティック
-		float tmp[2];
+		float m_totalTime = 0.0f; //総経過時間
+		float m_deltaTime = 1.0f; //デルタティック
+		float m_timeScale = 1.0f; //経過スケール
+		float tmp[1];
 	};
 	//<--------------------エンジンがデフォルトで提供する定数バッファ
 

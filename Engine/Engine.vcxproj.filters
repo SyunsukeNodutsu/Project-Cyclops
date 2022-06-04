@@ -28,9 +28,6 @@
     <Filter Include="Source\Model">
       <UniqueIdentifier>{6b38558b-39e7-4516-aaa5-fce7714232f3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Math">
-      <UniqueIdentifier>{4955ffb9-00ab-46a5-80e4-6d22ddb14b3b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Audio\Vender">
       <UniqueIdentifier>{6e577cfc-2724-40ab-a66b-018e2ea7e0f8}</UniqueIdentifier>
     </Filter>
@@ -87,6 +84,12 @@
     </Filter>
     <Filter Include="Source\Graphics\Shader\Grass">
       <UniqueIdentifier>{d7f4d96b-fe99-44ed-b888-fdf859b5f668}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\DirectXTK">
+      <UniqueIdentifier>{9f6ce622-6b2c-4ec4-bd75-f0ab2312e8fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Math">
+      <UniqueIdentifier>{317e82c1-4952-4a22-b4a4-81eea0c8e5d6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -147,9 +150,6 @@
     <ClCompile Include="Source\HighLevel\CyclopsRoot.cpp">
       <Filter>Source\HighLevel</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Math\Vector3.cpp">
-      <Filter>Source\Math</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Graphics\Buffer.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
@@ -170,9 +170,6 @@
     </ClCompile>
     <ClCompile Include="Source\Profile\ImGuiProfile.cpp">
       <Filter>Source\Profile</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Math\Vector2.cpp">
-      <Filter>Source\Math</Filter>
     </ClCompile>
     <ClCompile Include="..\Library\imGui\imgui.cpp">
       <Filter>Library\imGui</Filter>
@@ -210,9 +207,6 @@
     <ClCompile Include="Source\Graphics\Camera\Camera.cpp">
       <Filter>Source\Graphics\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Math\Vector4.cpp">
-      <Filter>Source\Math</Filter>
-    </ClCompile>
     <ClCompile Include="Source\HighLevel\Camera\TPSCamera.cpp">
       <Filter>Source\HighLevel\Camera</Filter>
     </ClCompile>
@@ -228,14 +222,17 @@
     <ClCompile Include="Source\Graphics\Shader\PostProcess\PostProcessShader.cpp">
       <Filter>Source\Graphics\Shader\PostProcess</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Math\Easing.cpp">
-      <Filter>Source\Math</Filter>
-    </ClCompile>
     <ClCompile Include="Source\HighLevel\Camera\PanCamera.cpp">
       <Filter>Source\HighLevel\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\Shader\Grass\GrassShader.cpp">
       <Filter>Source\Graphics\Shader\Grass</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Math\Easing.cpp">
+      <Filter>Source\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\DirectXTK\SimpleMath.cpp">
+      <Filter>Library\DirectXTK</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -250,18 +247,6 @@
     </ClInclude>
     <ClInclude Include="Source\Engine.h">
       <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Math\Vector3.h">
-      <Filter>Source\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Math\Vector4.h">
-      <Filter>Source\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Math\Matrix.h">
-      <Filter>Source\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Math\Quaternion.h">
-      <Filter>Source\Math</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Texture.h">
       <Filter>Source\Graphics</Filter>
@@ -302,12 +287,6 @@
     <ClInclude Include="Source\Utility\Utility.h">
       <Filter>Source\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Vector2.h">
-      <Filter>Source\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Math\Vector2Int.h">
-      <Filter>Source\Math</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Input\GamePad.h">
       <Filter>Source\Input</Filter>
     </ClInclude>
@@ -317,17 +296,8 @@
     <ClInclude Include="Source\Physics\Collision.h">
       <Filter>Source\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Vector3Int.h">
-      <Filter>Source\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Math\Vector4Int.h">
-      <Filter>Source\Math</Filter>
-    </ClInclude>
     <ClInclude Include="Source\HighLevel\CyclopsRoot.h">
       <Filter>Source\HighLevel</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Math\Color.h">
-      <Filter>Source\Math</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Buffer.h">
       <Filter>Source\Graphics</Filter>
@@ -410,14 +380,17 @@
     <ClInclude Include="Source\Graphics\Shader\PostProcess\PostProcessShader.h">
       <Filter>Source\Graphics\Shader\PostProcess</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Easing.h">
-      <Filter>Source\Math</Filter>
-    </ClInclude>
     <ClInclude Include="Source\HighLevel\Camera\PanCamera.h">
       <Filter>Source\HighLevel\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Shader\Grass\GrassShader.h">
       <Filter>Source\Graphics\Shader\Grass</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\Easing.h">
+      <Filter>Source\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\DirectXTK\SimpleMath.h">
+      <Filter>Library\DirectXTK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -497,6 +470,9 @@
     </None>
     <None Include="Source\Graphics\Shader\Grass\GrassShader.hlsli">
       <Filter>Source\Graphics\Shader\Grass</Filter>
+    </None>
+    <None Include="..\Library\DirectXTK\SimpleMath.inl">
+      <Filter>Library\DirectXTK</Filter>
     </None>
   </ItemGroup>
 </Project>

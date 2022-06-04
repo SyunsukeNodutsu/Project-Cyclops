@@ -19,7 +19,7 @@ bool Collision::RayToMesh(const DirectX::XMVECTOR& rRayPos, const DirectX::XMVEC
 //-----------------------------------------------------------------------------
 // 
 //-----------------------------------------------------------------------------
-bool Collision::SphereToMesh(const Vector3& rSpherePos, float radius, const Mesh& mesh, const DirectX::XMMATRIX& matrix, Vector3& rPushedPos)
+bool Collision::SphereToMesh(const float3& rSpherePos, float radius, const Mesh& mesh, const DirectX::XMMATRIX& matrix, float3& rPushedPos)
 {
 	return false;
 }
