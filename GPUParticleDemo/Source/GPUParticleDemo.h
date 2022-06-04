@@ -25,6 +25,7 @@ public:
 private:
 
 	ParticleSystem::EmitData m_emitData;
+	std::shared_ptr<FPSCamera> m_spCamera = nullptr;
 	std::shared_ptr<Texture> m_spParticleTexture = nullptr;
 
 };

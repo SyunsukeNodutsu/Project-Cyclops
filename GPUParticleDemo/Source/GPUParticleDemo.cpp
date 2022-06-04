@@ -5,6 +5,17 @@
 //-----------------------------------------------------------------------------
 void GPUParticleDemo::OnStart()
 {
+	//カメラ
+	m_spCamera = std::make_shared<FPSCamera>();
+	if (m_spCamera)
+	{
+		m_spCamera->m_name = "Camera Main";
+		m_spCamera->m_priority = 10.0f;
+		m_spCamera->SetCameraMatrix(Matrix::CreateTranslation(Vector3(0, 0, -1)));
+		m_spCamera->SetLocalPos(Vector3(0, 0, 0));
+		m_pCameraManager->AddCameraList(m_spCamera);
+	}
+
 	//エミッターデータ
 	static constexpr float pos = 10.0f, vel = 0.4f;
 	m_emitData = {
@@ -20,7 +31,7 @@ void GPUParticleDemo::OnStart()
 	m_spParticleTexture = std::make_shared<Texture>();
 	m_spParticleTexture->Load(L"../Assets/Circle.png");
 
-	m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 100000, m_spParticleTexture, true);
+	m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 80000, m_spParticleTexture, true);
 }
 
 //-----------------------------------------------------------------------------
@@ -36,6 +47,7 @@ void GPUParticleDemo::OnEnd()
 //-----------------------------------------------------------------------------
 void GPUParticleDemo::OnUpdate()
 {
+	m_spCamera->SetCameraMatrix(Matrix::CreateTranslation(0, 0, -10));
 }
 
 //-----------------------------------------------------------------------------
