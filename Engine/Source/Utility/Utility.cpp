@@ -1,5 +1,4 @@
 ﻿#include "Utility.h"
-//#include "../Profile/ImGuiProfile.h"
 
 //-----------------------------------------------------------------------------
 // 完全パスからファイル名(拡張子含む)を返す
@@ -194,4 +193,84 @@ void Debug::LogError(const std::wstring& log, const std::source_location& locati
 #if _DEBUG
 	LogError(wide_to_sjis(log), location);
 #endif
+}
+
+//-----------------------------------------------------------------------------
+// デバッグ線を追加
+//-----------------------------------------------------------------------------
+void Debug::AddDebugLine(const Vector3& pos1, const Vector3& pos2, const Vector4& color)
+{
+	UnlitShader::Vertex ver{};
+	ver.m_color = color;
+	ver.m_uv = Vector2(0.0f, 0.0f);
+	ver.m_position = pos1;
+	CyclopsRoot::m_debugLines.push_back(ver);
+
+	ver.m_position = pos2;
+	CyclopsRoot::m_debugLines.push_back(ver);
+}
+
+//-----------------------------------------------------------------------------
+// デバッグ矢印を追加
+//-----------------------------------------------------------------------------
+void Debug::AddDebugArrow(const Vector3& pos1, const Vector3& pos2, const Vector4& color)
+{
+
+}
+
+//-----------------------------------------------------------------------------
+// デバッグ軸を追加
+//-----------------------------------------------------------------------------
+void Debug::AddDebugAxisLine(const Vector3& pos, const float len)
+{
+	AddDebugLine(pos, pos + Vector3(len, 0.0f, 0.0f), Vector4(255, 0, 0, 255));
+	AddDebugLine(pos, pos + Vector3(0.0f, len, 0.0f), Vector4(0, 255, 0, 255));
+	AddDebugLine(pos, pos + Vector3(0.0f, 0.0f, len), Vector4(0, 0, 255, 255));
+}
+
+//-----------------------------------------------------------------------------
+// デバッグ球を追加
+//-----------------------------------------------------------------------------
+void Debug::AddDebugSphere(const Vector3& pos, const float rad, const Vector4& color)
+{
+	UnlitShader::Vertex ver{};
+	ver.m_color = color;
+	ver.m_uv = Vector2(0.0f, 0.0f);
+
+	static constexpr int detail = 32;
+	for (UINT i = 0; i < detail + 1; ++i)
+	{
+		//XZ平面
+		ver.m_position = pos;
+		ver.m_position.x += cosf((float)i * DegToRad(360 / detail)) * rad;
+		ver.m_position.z += sinf((float)i * DegToRad(360 / detail)) * rad;
+		CyclopsRoot::m_debugLines.push_back(ver);
+
+		ver.m_position = pos;
+		ver.m_position.x += cosf((float)(i + 1) * DegToRad(360 / detail)) * rad;
+		ver.m_position.z += sinf((float)(i + 1) * DegToRad(360 / detail)) * rad;
+		CyclopsRoot::m_debugLines.push_back(ver);
+
+		//XY平面
+		ver.m_position = pos;
+		ver.m_position.x += cosf((float)i * DegToRad(360 / detail)) * rad;
+		ver.m_position.y += sinf((float)i * DegToRad(360 / detail)) * rad;
+		CyclopsRoot::m_debugLines.push_back(ver);
+
+		ver.m_position = pos;
+		ver.m_position.x += cosf((float)(i + 1) * DegToRad(360 / detail)) * rad;
+		ver.m_position.y += sinf((float)(i + 1) * DegToRad(360 / detail)) * rad;
+		CyclopsRoot::m_debugLines.push_back(ver);
+
+		//YZ平面
+		ver.m_position = pos;
+		ver.m_position.y += cosf((float)i * DegToRad(360 / detail)) * rad;
+		ver.m_position.z += sinf((float)i * DegToRad(360 / detail)) * rad;
+		CyclopsRoot::m_debugLines.push_back(ver);
+
+		ver.m_position = pos;
+		ver.m_position.y += cosf((float)(i + 1) * DegToRad(360 / detail)) * rad;
+		ver.m_position.z += sinf((float)(i + 1) * DegToRad(360 / detail)) * rad;
+		CyclopsRoot::m_debugLines.push_back(ver);
+	}
 }

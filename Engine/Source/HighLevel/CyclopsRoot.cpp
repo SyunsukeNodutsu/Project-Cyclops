@@ -11,6 +11,8 @@ AudioDevice*		CyclopsRoot::m_pAudioDevice		= nullptr;
 ImGuiProfile*		CyclopsRoot::m_pImGuiProfile	= nullptr;
 CameraManager*		CyclopsRoot::m_pCameraManager	= nullptr;
 
+std::vector<UnlitShader::Vertex> CyclopsRoot::m_debugLines;
+
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
@@ -179,13 +181,6 @@ void CyclopsRoot::Draw()
 		m_pGraphicsDevice->m_spParticleSystem->Update();
 		m_pGraphicsDevice->m_spParticleSystem->Draw(true);
 		m_pGraphicsDevice->m_spShaderManager->m_GPUParticleShader.End();
-
-		//2D
-		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.Begin();
-
-		m_pApplicationBase->OnDraw2D(m_pGraphicsDevice->m_spShaderManager->m_spriteShader);
-
-		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.End();
 	}
 
 	//ブラー描画
@@ -207,6 +202,30 @@ void CyclopsRoot::Draw()
 		m_pGraphicsDevice->m_spRendererStatus->SetBlend(BlendMode::Alpha);
 	}
 
+	//デバッグライン
+	{
+		if (m_debugLines.size() >= 1)
+		{
+			m_pGraphicsDevice->m_spShaderManager->m_unlitShader.Begin();
+
+			if (m_debugLines.size() >= 1)
+			{
+				m_pGraphicsDevice->m_spShaderManager->m_unlitShader.DrawVertices(m_debugLines, D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+				m_debugLines.clear();
+			}
+		}
+	}
+
+	//2D
+	{
+		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.Begin();
+
+		m_pApplicationBase->OnDraw2D(m_pGraphicsDevice->m_spShaderManager->m_spriteShader);
+
+		m_pGraphicsDevice->m_spShaderManager->m_spriteShader.End();
+	}
+	
+	//ImGui
 	m_pImGuiProfile->DrawProfileMonitor();
 
 	m_pGraphicsDevice->End();

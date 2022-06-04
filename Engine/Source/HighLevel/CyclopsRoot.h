@@ -40,6 +40,8 @@ public:
 
 	void Run();
 
+	static std::vector<UnlitShader::Vertex> m_debugLines;
+
 private:
 
 	ApplicationBase*		m_pApplicationBase;
@@ -69,5 +71,4 @@ private:
 	void Update();
 	void Draw();
 	void LateUpdate();
-
 };

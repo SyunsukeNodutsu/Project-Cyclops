@@ -36,7 +36,7 @@ void GameDemo::OnStart()
 	m_spParticleTexture = std::make_shared<Texture>();
 	m_spParticleTexture->Load(L"../Assets/Circle.png");
 
-	//m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 100000, m_spParticleTexture, true);
+	m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 100, m_spParticleTexture, true);
 }
 
 //-----------------------------------------------------------------------------
@@ -53,6 +53,7 @@ void GameDemo::OnEnd()
 void GameDemo::OnUpdate()
 {
 	m_spCamera->SetCameraMatrix(Matrix::CreateTranslation(0, 0, -10));
+	Debug::AddDebugSphere(Vector3::Zero, 1.0f, Vector4(256, 0, 0, 256));
 }
 
 //-----------------------------------------------------------------------------

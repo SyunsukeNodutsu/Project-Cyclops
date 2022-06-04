@@ -23,6 +23,8 @@ public:
 	bool Initialize();
 	void Begin();
 
+	void DrawVertices(const std::vector<Vertex>& vertices, D3D_PRIMITIVE_TOPOLOGY topology);
+
 private:
 
 	ComPtr<ID3D11VertexShader>	m_cpVS;

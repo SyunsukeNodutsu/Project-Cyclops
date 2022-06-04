@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
+class UnlitShader;
+
 //エイリアス
 using Microsoft::WRL::ComPtr;
 
@@ -83,6 +85,10 @@ class Debug
 {
 public:
 
+    //--------------------------------------------------
+    // ロガー
+    //--------------------------------------------------
+
     //@brief ログを投げる
     //@param location ログに出力するロケーション情報 この値は設定しない
     static void Log(const std::string& log, const std::source_location& location = std::source_location::current());
@@ -106,5 +112,21 @@ public:
     //@brief エラーログを投げる
     //@param location ログに出力するロケーション情報 この値は設定しない
     static void LogError(const std::wstring& log, const std::source_location& location = std::source_location::current());
+
+    //--------------------------------------------------
+    // デバッグ線
+    //--------------------------------------------------
+
+    //@brief デバッグ線を追加
+    static void AddDebugLine(const Vector3& pos1, const Vector3& pos2, const Vector4& color);
+
+    //@brief デバッグ矢印を追加
+    static void AddDebugArrow(const Vector3& pos1, const Vector3& pos2, const Vector4& color);
+
+    //@brief デバッグ軸を追加
+    static void AddDebugAxisLine(const Vector3& pos, const float len);
+
+    //@brief デバッグ球を追加
+    static void AddDebugSphere(const Vector3& pos, const float rad, const Vector4& color);
 
 };
