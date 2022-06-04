@@ -55,7 +55,7 @@ bool GraphicsDevice::Initialize()
 
 	//便利テクスチャ
 	{
-		const auto& col = color4(1, 1, 1, 1).RGBA();
+		const auto& col = color4::White.RGBA();
 		D3D11_SUBRESOURCE_DATA srd;
 		srd.pSysMem = &col;
 		srd.SysMemPitch = 4;

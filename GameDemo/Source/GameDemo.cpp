@@ -54,7 +54,7 @@ void GameDemo::OnDraw2D(SpriteShader& spriteShader)
 	spriteShader.DrawTexture(m_spTexture.get(), float2(800, 400), float2(0.2f, 0.2f));
 	spriteShader.DrawTexture(m_spTexture.get(), float2(-500, 200), float2(0.2f, 0.2f));
 
-	spriteShader.DrawLine(float2(0, 400), float2(400, 400), color4(1, 1, 0, 1));
+	spriteShader.DrawLine(float2(0, 400), float2(400, 400), color4::Green);
 }
 
 //-----------------------------------------------------------------------------
