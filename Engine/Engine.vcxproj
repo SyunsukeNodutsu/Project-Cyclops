@@ -53,6 +53,7 @@
     <ClCompile Include="Source\HighLevel\Camera\TPSCamera.cpp" />
     <ClCompile Include="Source\HighLevel\Component\Transform.cpp" />
     <ClCompile Include="Source\HighLevel\CyclopsRoot.cpp" />
+    <ClCompile Include="Source\HighLevel\GUI\Button2D.cpp" />
     <ClCompile Include="Source\HighLevel\Manager\CameraManager.cpp" />
     <ClCompile Include="Source\Input\GamePad.cpp" />
     <ClCompile Include="Source\Input\Input.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="Source\HighLevel\Component\Component.h" />
     <ClInclude Include="Source\HighLevel\Component\Transform.h" />
     <ClInclude Include="Source\HighLevel\CyclopsRoot.h" />
+    <ClInclude Include="Source\HighLevel\GUI\Button2D.h" />
     <ClInclude Include="Source\HighLevel\Manager\CameraManager.h" />
     <ClInclude Include="Source\Input\GamePad.h" />
     <ClInclude Include="Source\Input\Input.h" />

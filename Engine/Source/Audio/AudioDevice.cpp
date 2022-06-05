@@ -96,8 +96,20 @@ void AudioDevice::Update(const matrix4x4& listener)
     //TOOD: サウンドリスナー更新
 
     //サウンドリスト更新
-    for (const auto& sound : m_soundList)
-        sound->Update();
+    for (auto itr = m_soundList.begin(); itr != m_soundList.end();)
+    {
+        if (!(*itr)->IsPlaying())
+        {
+            itr = m_soundList.erase(itr);
+            continue;
+        }
+        else
+        {
+            (*itr)->Update();
+        }
+        ++itr;
+    }
+
 
     UpdateFade();
     UpdateVolumeMeter();

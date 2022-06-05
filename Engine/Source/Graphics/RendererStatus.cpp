@@ -27,7 +27,7 @@ bool RendererStatus::Initialize()
 		m_cb5Camera.SetToDevice(5, SHADER_STAGE::VS);
 		m_cb5Camera.SetToDevice(5, SHADER_STAGE::PS);
 		m_cb5Camera.Work().m_viewMatrix = matrix4x4::CreateTranslation(0.0f, 0.0f, -10.0f);
-		m_cb5Camera.Work().m_projMatrix = DirectX::XMMatrixPerspectiveFovLH(DegToRad(60.0f), 16.0f / 9.0f, 0.01f, 2000.0f);
+		m_cb5Camera.Work().m_projMatrix = matrix4x4::CreatePerspectiveFieldOfView(DegToRad(60.0f), 16.0f / 9.0f, 0.01f, 2000.0f);
 		m_cb5Camera.Work().m_cameraMatrix = matrix4x4();
 		m_cb5Camera.Write();
 	}

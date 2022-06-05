@@ -15,6 +15,7 @@ public:
 	Texture(const std::wstring& filepath) { Load(filepath); }
 	~Texture() = default;
 
+	bool Load(const std::string& filepath, bool renderTarget = false, bool depthStencil = false, bool mipmap = true);
 	bool Load(const std::wstring& filepath, bool renderTarget = false, bool depthStencil = false, bool mipmap = true);
 
 	bool Create(ID3D11Texture2D* pTexture2D);

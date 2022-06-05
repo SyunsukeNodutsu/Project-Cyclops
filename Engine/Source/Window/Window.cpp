@@ -2,16 +2,19 @@
 
 LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
 
+HWND Window::m_hWnd = nullptr;
+
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
 Window::Window(WINDOE_CREATE_PARAM createParam)
-	: m_hWnd(nullptr)
-	, m_hInstance(nullptr)
+	: m_hInstance(nullptr)
 	, m_className(createParam.ClassName)
 	, m_titleName(createParam.TitleName)
 	, m_clientWidth(createParam.ClientWidth)
 	, m_clientHeight(createParam.ClientHeight)
+	, m_windowWidth(0)
+	, m_windowHeight(0)
 {
 }
 
@@ -190,6 +193,9 @@ LRESULT Window::WindowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam
 		{
 			if (GraphicsDeviceChild::GetDevice())
 				GraphicsDeviceChild::GetDevice()->Resize(wparam, LOWORD(lparam), HIWORD(lparam));
+
+			ApplicationBase::m_clientSize.x = LOWORD(lparam);
+			ApplicationBase::m_clientSize.y = HIWORD(lparam);
 		}
 		break;
 

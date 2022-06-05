@@ -48,6 +48,8 @@ public:
 	float GetViewWidth() const { return m_viewWidth; }
 	float GetViewHeight() const { return m_viewHeight; }
 
+	const DirectX::BoundingFrustum GetBoundingFrustum() const { return m_frustum; }
+
 public:
 
 	std::string m_name;			//カメラの名前
@@ -60,6 +62,8 @@ private:
 	matrix4x4	m_viewMatrix;		//ビュー行列
 	matrix4x4	m_projMatrix;		//射影行列
 	matrix4x4	m_viewProjMatrix;	//ビュープロジェクション行列
+
+	DirectX::BoundingFrustum m_frustum;//視錐台
 
 	//方向
 	float3 m_up, m_down;

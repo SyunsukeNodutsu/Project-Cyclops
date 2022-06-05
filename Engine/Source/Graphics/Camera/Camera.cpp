@@ -10,6 +10,7 @@ Camera::Camera()
 	, m_viewMatrix()
 	, m_projMatrix()
 	, m_viewProjMatrix()
+	, m_frustum()
 	, m_up(float3::Zero)
 	, m_down(float3::Zero)
 	, m_forward(float3::Zero)
@@ -25,8 +26,8 @@ Camera::Camera()
 	, m_dirtyCamera(true)
 	, m_dirtyProj(true)
 {
-	m_projMatrix = DirectX::XMMatrixPerspectiveFovLH(m_fovAngleY, m_aspectRatio, m_nearZ, m_farZ);
-	SetCameraMatrix(matrix4x4());
+	m_projMatrix = matrix4x4::CreatePerspectiveFieldOfView(m_fovAngleY, m_aspectRatio, m_nearZ, m_farZ);
+	SetCameraMatrix(matrix4x4::CreateTranslation(float3::Zero));
 }
 
 //-----------------------------------------------------------------------------
@@ -49,7 +50,7 @@ void Camera::SetToShader()
 
 	if (m_dirtyProj)
 	{
-		m_projMatrix = DirectX::XMMatrixPerspectiveFovLH(m_fovAngleY, m_aspectRatio, m_nearZ, m_farZ);
+		m_projMatrix = matrix4x4::CreatePerspectiveFieldOfView(m_fovAngleY, m_aspectRatio, m_nearZ, m_farZ);
 		m_viewProjMatrix = m_viewMatrix * m_projMatrix;
 
 		m_graphicsDevice->m_spRendererStatus->m_cb5Camera.Work().m_projMatrix = m_projMatrix;
@@ -108,8 +109,10 @@ void Camera::SetCameraMatrix(const matrix4x4& camera)
 	m_right = m_left * -1;
 
 	//試錐台作成
-	/*Quaternion quaternion = XMQuaternionRotationMatrix(m_cameraMatrix);
-	BoundingFrustum::CreateFromMatrix(m_frustum, m_projMatrix);
-	m_frustum.Origin = m_cameraMatrix.Translation();
-	m_frustum.Orientation = quaternion;*/
+	DirectX::BoundingFrustum::CreateFromMatrix(m_frustum, m_projMatrix);
+	m_frustum.Origin		= m_cameraMatrix.Translation();
+	m_frustum.Orientation	= quaternion::CreateFromRotationMatrix(m_cameraMatrix);
+
+	//quaternion q = XMQuaternionRotationMatrix(m_cameraMatrix);
+	//m_frustum.Orientation	= q;
 }

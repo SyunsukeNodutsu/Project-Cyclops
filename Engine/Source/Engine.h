@@ -103,4 +103,6 @@
 
 #include "HighLevel/Manager/CameraManager.h"
 
+#include "HighLevel/GUI/Button2D.h"
+
 #include "HighLevel/CyclopsRoot.h"

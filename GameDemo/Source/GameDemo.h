@@ -28,4 +28,6 @@ private:
 	std::shared_ptr<FPSCamera> m_spCamera = nullptr;
 	std::shared_ptr<Texture> m_spTexture = nullptr;
 
+	Button2D m_button;
+
 };

@@ -28,6 +28,8 @@ public:
 	static AudioDevice* m_pAudioDevice;
 	static CameraManager* m_pCameraManager;
 
+	static float2 m_clientSize;
+
 };
 
 //エンジンのルート(スーパー)クラス

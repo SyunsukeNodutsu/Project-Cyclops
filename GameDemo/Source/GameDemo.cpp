@@ -18,8 +18,11 @@ void GameDemo::OnStart()
 
 	m_profile.Start("Load texture.");
 	m_spTexture = std::make_shared<Texture>();
-	m_spTexture->Load(L"../Assets/100Alligator.jpg");
+	m_spTexture->Load("../Assets/100Alligator.jpg");
 	m_profile.End();
+
+	std::array<std::string, 3> paths = { "../Assets/A.png", "../Assets/B.png" , "../Assets/C.png" };
+	m_button.SetInfo(paths, float2(800 - 100, 450 - 50));
 }
 
 //-----------------------------------------------------------------------------
@@ -36,6 +39,15 @@ void GameDemo::OnEnd()
 void GameDemo::OnUpdate()
 {
 	m_spCamera->SetCameraMatrix(matrix4x4::CreateTranslation(0, 0, -10));
+
+	if (m_button.IsPush())
+	{
+		std::shared_ptr<Sound> new_sound = std::make_shared<Sound>("../Assets/Enter.wav", false, false);
+		m_pAudioDevice->SetFadeSoundList(1.0f, 0.1f);
+		if (new_sound) { new_sound->Play(); m_pAudioDevice->AddSound(new_sound); }
+	}
+
+	m_button.Update();
 }
 
 //-----------------------------------------------------------------------------
@@ -50,11 +62,13 @@ void GameDemo::OnDraw3D()
 //-----------------------------------------------------------------------------
 void GameDemo::OnDraw2D(SpriteShader& spriteShader)
 {
-	spriteShader.DrawTexture(m_spTexture.get(), float2(100, -80), float2(0.2f, 0.2f));
-	spriteShader.DrawTexture(m_spTexture.get(), float2(800, 400), float2(0.2f, 0.2f));
+	spriteShader.DrawTexture(m_spTexture.get(), float2( 100, -80), float2(0.2f, 0.2f));
+	spriteShader.DrawTexture(m_spTexture.get(), float2( 800, 400), float2(0.2f, 0.2f));
 	spriteShader.DrawTexture(m_spTexture.get(), float2(-500, 200), float2(0.2f, 0.2f));
 
 	spriteShader.DrawLine(float2(0, 400), float2(400, 400), color4::Green);
+
+	m_button.Draw();
 }
 
 //-----------------------------------------------------------------------------

@@ -12,6 +12,7 @@ ImGuiProfile*		CyclopsRoot::m_pImGuiProfile	= nullptr;
 CameraManager*		CyclopsRoot::m_pCameraManager	= nullptr;
 
 std::vector<UnlitShader::Vertex> CyclopsRoot::m_debugLines;
+float2 ApplicationBase::m_clientSize = float2::Zero;
 
 //-----------------------------------------------------------------------------
 // コンストラクタ

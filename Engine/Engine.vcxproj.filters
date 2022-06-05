@@ -91,6 +91,9 @@
     <Filter Include="Source\Math">
       <UniqueIdentifier>{317e82c1-4952-4a22-b4a4-81eea0c8e5d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\HighLevel\GUI">
+      <UniqueIdentifier>{b29a3cbc-886e-408a-9dbe-3de3a581fd21}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Window\Window.cpp">
@@ -233,6 +236,9 @@
     </ClCompile>
     <ClCompile Include="..\Library\DirectXTK\SimpleMath.cpp">
       <Filter>Library\DirectXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\HighLevel\GUI\Button2D.cpp">
+      <Filter>Source\HighLevel\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -391,6 +397,9 @@
     </ClInclude>
     <ClInclude Include="..\Library\DirectXTK\SimpleMath.h">
       <Filter>Library\DirectXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HighLevel\GUI\Button2D.h">
+      <Filter>Source\HighLevel\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

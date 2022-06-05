@@ -36,6 +36,14 @@ ID3D11Texture2D* Texture::GetResource() const
 //-----------------------------------------------------------------------------
 // パスから読み込み(DirectX Texライブラリを使用して画像を読み込む)
 //-----------------------------------------------------------------------------
+bool Texture::Load(const std::string& filepath, bool renderTarget, bool depthStencil, bool mipmap)
+{
+	return Load(sjis_to_wide(filepath), renderTarget, depthStencil, mipmap);
+}
+
+//-----------------------------------------------------------------------------
+// パスから読み込み(DirectX Texライブラリを使用して画像を読み込む)
+//-----------------------------------------------------------------------------
 bool Texture::Load(const std::wstring& filepath, bool renderTarget, bool depthStencil, bool mipmap)
 {
 	if (m_graphicsDevice == nullptr) return false;
