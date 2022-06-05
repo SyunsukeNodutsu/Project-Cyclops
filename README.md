@@ -1,5 +1,5 @@
 # Project Cyclops
-"CyclopsEngine"は暇つぶしに自作しているフレームワーク。  
+"CyclopsEngine"は暇つぶし,学習用に自作しているフレームワーク。  
 将来的にはゲームエンジンを目指すのでエンジンと命名。
 
 # DEMO
@@ -10,22 +10,8 @@
 ポストプロセス  
 Mediafoundationを使用した音声ファイルの読み込み
 
-# Features
-"CyclopsEngine"のセールスポイントや差別化などの説明
-
 # Requirement
 ・ImGui  
 ・DirectXTex  
+・DirectXTK(SimpleMath)  
 ・strconv
-
-# Installation
-そのままzipに付属しています
-
-# Usage
-スタートアッププロジェクトを設定し、ビルドを行う
-
-# Note
-チカチカ光るので注意
-
-# License
-"CyclopsEngine" is under [MIT license](https://en.wikipedia.org/wiki/MIT_License).
