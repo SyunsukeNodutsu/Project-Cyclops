@@ -165,6 +165,14 @@ void ImGuiProfile::CameraMonitor(ImGuiWindowFlags wflags)
 		auto fov = RadToDeg(wpCamera.lock()->GetFovAngleY());
 		if (ImGui::SliderFloat("Fov", &fov, 0.001f, 120.0f, "%.2f"))
 			wpCamera.lock()->SetFovAngleY(DegToRad(fov));
+
+		ImGui::Text(std::string("Up      : " + ToStringV(wpCamera.lock()->Up())).c_str());
+		ImGui::Text(std::string("Down    : " + ToStringV(wpCamera.lock()->Down())).c_str());
+		ImGui::Text(std::string("Left    : " + ToStringV(wpCamera.lock()->Left())).c_str());
+		ImGui::Text(std::string("Right   : " + ToStringV(wpCamera.lock()->Right())).c_str());
+		ImGui::Text(std::string("Forward : " + ToStringV(wpCamera.lock()->Forward())).c_str());
+		ImGui::Text(std::string("Backward: " + ToStringV(wpCamera.lock()->Backward())).c_str());
+
 	}
 
 	ImGui::Separator();

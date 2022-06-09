@@ -120,6 +120,9 @@ public:
     //@param location ログに出力するロケーション情報 この値は設定しない
     static void LogError(const std::wstring& log, const std::source_location& location = std::source_location::current());
 
+    //@brief ログをクリアする
+    static void LogClear();
+
     //--------------------------------------------------
     // デバッグ線
     //--------------------------------------------------

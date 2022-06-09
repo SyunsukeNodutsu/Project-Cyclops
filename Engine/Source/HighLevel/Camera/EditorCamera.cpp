@@ -27,14 +27,14 @@ void EditorCamera::Update()
 		float deltaX = m_mousePosNow.x - m_mousePosOld.x;
 		float deltaY = m_mousePosNow.y - m_mousePosOld.y;
 
-		m_position -= Left() * (deltaX * m_moveSpeed * FpsTimer::GetDeltaTime<float>(true));
+		m_position -= Right() * (deltaX * m_moveSpeed * FpsTimer::GetDeltaTime<float>(true));
 		m_position += Up() * (deltaY * m_moveSpeed * FpsTimer::GetDeltaTime<float>(true));
 	}
 
 	//ズーム移動
 	if (int wheel = Input::GetMouseWheelDelta(); wheel != 0)
 	{
-		m_position += Forward() * (wheel * m_zoomSpeed * FpsTimer::GetDeltaTime<float>(true));
+		m_position += Backward() * (wheel * m_zoomSpeed * FpsTimer::GetDeltaTime<float>(true));
 	}
 
 	//回転
@@ -53,4 +53,8 @@ void EditorCamera::Update()
 	SetCameraMatrix(rotation * trans);
 
 	m_mousePosOld = m_mousePosNow;
+
+	Debug::LogClear();
+	Debug::Log("m_position: " + ToStringV(m_position));
+	Debug::Log("m_rotation: " + ToStringV(m_rotation));
 }

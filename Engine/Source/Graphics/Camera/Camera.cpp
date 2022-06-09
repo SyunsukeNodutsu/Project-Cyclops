@@ -26,7 +26,7 @@ Camera::Camera()
 	, m_dirtyCamera(true)
 	, m_dirtyProj(true)
 {
-	m_projMatrix = matrix4x4::CreatePerspectiveFieldOfView(m_fovAngleY, m_aspectRatio, m_nearZ, m_farZ);
+	m_projMatrix = DirectX::XMMatrixPerspectiveFovLH(m_fovAngleY, m_aspectRatio, m_nearZ, m_farZ);
 	SetCameraMatrix(matrix4x4::CreateTranslation(float3::Zero));
 }
 
@@ -50,7 +50,7 @@ void Camera::SetToShader()
 
 	if (m_dirtyProj)
 	{
-		m_projMatrix = matrix4x4::CreatePerspectiveFieldOfView(m_fovAngleY, m_aspectRatio, m_nearZ, m_farZ);
+		m_projMatrix = DirectX::XMMatrixPerspectiveFovLH(m_fovAngleY, m_aspectRatio, m_nearZ, m_farZ);
 		m_viewProjMatrix = m_viewMatrix * m_projMatrix;
 
 		m_graphicsDevice->m_spRendererStatus->m_cb5Camera.Work().m_projMatrix = m_projMatrix;
@@ -66,23 +66,21 @@ void Camera::WorldToScreen(const float3& pos, const matrix4x4 matrix, float2& sc
 	if (m_graphicsDevice == nullptr) return;
 	if (m_graphicsDevice->m_cpContext == nullptr) return;
 
-	// ビューポートを取得する
 	const auto& vp = m_graphicsDevice->m_viewport;
+	const float vpWidthHalf = vp.Width * 0.5f;
+	const float vpHeightHalf = vp.Height * 0.5f;
 
-	const float HalfViewportWidth = vp.Width * 0.5f;
-	const float HalfViewportHeight = vp.Height * 0.5f;
+	float3 scale = DirectX::XMVectorSet(vpWidthHalf, -vpHeightHalf, vp.MaxDepth - vp.MinDepth, 0.0f);
+	float3 offset = DirectX::XMVectorSet(vp.TopLeftX + vpWidthHalf, vp.TopLeftY + vpHeightHalf, vp.MinDepth, 0.0f);
 
-	float3 Scale = DirectX::XMVectorSet(HalfViewportWidth, -HalfViewportHeight, vp.MaxDepth - vp.MinDepth, 0.0f);
-	float3 Offset = DirectX::XMVectorSet(vp.TopLeftX + HalfViewportWidth, vp.TopLeftY + HalfViewportHeight, vp.MinDepth, 0.0f);
+	matrix4x4 transform = XMMatrixMultiply(matrix, GetViewMatrix());
+	transform = XMMatrixMultiply(transform, GetProjMatrix());
 
-	matrix4x4 Transform = XMMatrixMultiply(matrix, GetViewMatrix());
-	Transform = XMMatrixMultiply(Transform, GetProjMatrix());
+	float3 cameraPos = { GetCameraMatrix()._41,GetCameraMatrix()._42 ,GetCameraMatrix()._43 };
+	float3 result = DirectX::XMVector3TransformCoord(cameraPos, transform);
 
-	float3 Pos = { GetCameraMatrix()._41,GetCameraMatrix()._42 ,GetCameraMatrix()._43 };
-	float3 Result = XMVector3TransformCoord(pos, Transform);
-
-	Result = XMVectorMultiplyAdd(Result, Scale, Offset);
-	screen = float2(Result.x, Result.y);
+	result = DirectX::XMVectorMultiplyAdd(result, scale, offset);
+	screen = float2(result.x, result.y);
 }
 
 //-----------------------------------------------------------------------------
@@ -90,28 +88,23 @@ void Camera::WorldToScreen(const float3& pos, const matrix4x4 matrix, float2& sc
 //-----------------------------------------------------------------------------
 void Camera::SetCameraMatrix(const matrix4x4& camera)
 {
-	m_cameraMatrix = camera;
-	m_viewMatrix = m_cameraMatrix;
-	m_viewMatrix.Invert();
 	m_dirtyCamera = true;
 
+	m_cameraMatrix = camera;
+	m_viewMatrix = m_cameraMatrix.Invert();
+
 	//方向
-	m_up = m_cameraMatrix.Up();
-	m_up.Normalize();
-	m_down = m_up * -1;
-
-	m_forward = m_cameraMatrix.Backward();
-	m_forward.Normalize();
-	m_backward = m_forward * -1;
-
-	m_left = m_cameraMatrix.Left();
-	m_left.Normalize();
-	m_right = m_left * -1;
+	m_up		= m_cameraMatrix.Up();
+	m_down		= m_cameraMatrix.Down();
+	m_forward	= m_cameraMatrix.Forward();
+	m_backward	= m_cameraMatrix.Backward();
+	m_left		= m_cameraMatrix.Left();
+	m_right		= m_cameraMatrix.Right();
 
 	//試錐台作成
-	DirectX::BoundingFrustum::CreateFromMatrix(m_frustum, m_projMatrix);
-	m_frustum.Origin		= m_cameraMatrix.Translation();
-	m_frustum.Orientation	= quaternion::CreateFromRotationMatrix(m_cameraMatrix);
+	/*DirectX::BoundingFrustum::CreateFromMatrix(m_frustum, m_projMatrix);
+	m_frustum.Origin = m_cameraMatrix.Translation();
+	m_frustum.Orientation = quaternion::CreateFromRotationMatrix(m_cameraMatrix);*/
 
 	//quaternion q = XMQuaternionRotationMatrix(m_cameraMatrix);
 	//m_frustum.Orientation	= q;

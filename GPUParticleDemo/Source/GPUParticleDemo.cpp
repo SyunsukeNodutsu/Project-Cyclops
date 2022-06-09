@@ -11,21 +11,21 @@ void GPUParticleDemo::OnStart()
 	{
 		m_spCamera->m_name = "Camera Main";
 		m_spCamera->m_priority = 10.0f;
-		m_spCamera->SetCameraMatrix(Matrix::CreateTranslation(Vector3(0, 0, -1)));
-		m_spCamera->SetLocalPos(Vector3(0, 0, 0));
+		m_spCamera->SetCameraMatrix(matrix4x4::CreateTranslation(float3(0, 0, -1)));
+		m_spCamera->SetLocalPos(float3(0, 0, 0));
 		m_pCameraManager->AddCameraList(m_spCamera);
 	}
 
 	//エミッターデータ
 	static constexpr float pos = 10.0f, vel = 0.4f;
 	m_emitData = {
-		.m_maxPosition = Vector3( pos,  pos,  pos),
-		.m_minPosition = Vector3(-pos, -pos, -pos),
-		.m_maxVelocity = Vector3( vel,  vel,  vel),
-		.m_minVelocity = Vector3(-vel, -vel, -vel),
+		.m_maxPosition = float3( pos,  pos,  pos),
+		.m_minPosition = float3(-pos, -pos, -pos),
+		.m_maxVelocity = float3( vel,  vel,  vel),
+		.m_minVelocity = float3(-vel, -vel, -vel),
 		.m_maxLifeSpan = 20.0f,
 		.m_minLifeSpan = 10.0f,
-		.m_color = Vector4(0, 1, 0, 1),
+		.m_color = float4(0, 1, 0, 1),
 	};
 
 	m_spParticleTexture = std::make_shared<Texture>();
@@ -47,7 +47,7 @@ void GPUParticleDemo::OnEnd()
 //-----------------------------------------------------------------------------
 void GPUParticleDemo::OnUpdate()
 {
-	m_spCamera->SetCameraMatrix(Matrix::CreateTranslation(0, 0, -10));
+	m_spCamera->SetCameraMatrix(matrix4x4::CreateTranslation(0, 0, -10));
 }
 
 //-----------------------------------------------------------------------------
