@@ -54,6 +54,8 @@ class ParticleWork : public GraphicsDeviceChild
 		float3 m_velocity;
 		float	m_lifeSpan;
 		float4 m_color;
+		float m_loop;
+		float tmp[3];
 	};
 
 public:
@@ -75,7 +77,7 @@ private:
 	ParticleSystem::EmitData			m_data;
 	int									m_numParticles;		//粒子の数
 	float								m_lifeSpan;
-	float								m_loop;
+	bool								m_isLoop;
 	bool								m_generated;		//生成完了
 	std::mutex							m_generatedMutex;
 

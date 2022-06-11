@@ -22,8 +22,17 @@ void main(const ComputeInput In)
     BufOut[index].m_life          = BufIn[index].m_life - g_deltaTime;
     BufOut[index].m_color         = BufIn[index].m_color;
     BufOut[index].m_lifeSpanMax   = BufIn[index].m_lifeSpanMax;
-
+    
+    if (!BufOut[index].m_loop)
+    {
+        if (BufOut[index].m_life <= 0.0f)
+        {
+            BufOut[index].m_life = BufOut[index].m_lifeSpanMax;
+            BufOut[index].m_velocity *= -1;
+        }
+    }
+    
     //¶‘¶ŠúŠÔ‚É‰ž‚¶‚Ä“§–¾“x‚ðÝ’è
     BufOut[index].m_color.a = (BufOut[index].m_life / BufIn[index].m_lifeSpanMax);
-    BufOut[index].m_color.a = clamp(BufOut[index].m_color.a, 0, 1);
+	BufOut[index].m_color.a = saturate(BufOut[index].m_color.a);
 }

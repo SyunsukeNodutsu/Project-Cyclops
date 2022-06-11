@@ -12,6 +12,8 @@ struct Particle
     float3  m_velocity;
     float   m_life;
     float4  m_color;
+    float   m_loop;
+    float3  tmp;
 };
 
 //頂点シェーダが返す値

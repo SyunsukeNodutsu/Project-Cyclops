@@ -21,6 +21,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		return -1;
 	}
 
+	//DirectXMathの計算に対応しているCPUか確認
+	if (!DirectX::XMVerifyCPUSupport()) {
+		MessageBoxA(nullptr, "DirectXMath is not supported.", "Failed", MB_OK);
+		return -1;
+	}
+
 	MFStartup(MF_VERSION, MFSTARTUP_NOSOCKET);
 
 	//エンジン起動

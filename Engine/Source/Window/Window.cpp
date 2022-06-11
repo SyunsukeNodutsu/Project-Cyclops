@@ -82,7 +82,7 @@ bool Window::ProcessMessage()
 }
 
 //-----------------------------------------------------------------------------
-// 
+// クライアントのサイズを指定サイズに設定
 //-----------------------------------------------------------------------------
 void Window::SetClientSize(int width, int height)
 {
@@ -94,7 +94,7 @@ void Window::SetClientSize(int width, int height)
 	int nWidth = width + (rcWindow.right - rcWindow.left) - (rcClient.right - rcClient.left);
 	int nHeight = height + (rcWindow.bottom - rcWindow.top) - (rcClient.bottom - rcClient.top);
 
-	//ウィンドウの余白を考え クライアントのサイズを指定サイズに設定
+	//ウィンドウの余白を加味し設定
 	MoveWindow(m_hWnd, rcWindow.left, rcWindow.top, nWidth, nHeight, TRUE);
 }
 
@@ -105,7 +105,10 @@ bool Window::MoveDesktopCenterWindow(HWND hwnd)
 {
 	//デスクトップサイズ取得
 	RECT desktopRect;
-	SystemParametersInfo(SPI_GETWORKAREA, 0, &desktopRect, 0);
+	if (!SystemParametersInfoW(SPI_GETWORKAREA, 0, &desktopRect, 0))
+	{
+		Debug::LogError("SystemParametersInfoW失敗.");
+	}
 
 	//ウィンドウ情報取得
 	WINDOWINFO winfo;

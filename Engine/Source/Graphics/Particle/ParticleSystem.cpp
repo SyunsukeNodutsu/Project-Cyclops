@@ -98,7 +98,7 @@ ParticleWork::ParticleWork()
 	, m_data()
 	, m_numParticles(0)
 	, m_lifeSpan(0.0f)
-	, m_loop(false)
+	, m_isLoop(false)
 	, m_generated(false)
 	, m_generatedMutex()
 	, m_spTexture(nullptr)
@@ -160,23 +160,9 @@ void ParticleWork::Update()
 	m_lifeSpan -= FpsTimer::GetDeltaTime<float>();
 	if (m_lifeSpan <= 0)
 	{
-		if (m_loop)
-		{
-			for (;;)
-			{
-				if (!IsGenerated()) continue;
-				if (m_pParticle != nullptr) { delete[] m_pParticle; m_pParticle = nullptr; }
-				break;
-			}
-
-			m_lifeSpan = m_data.m_maxLifeSpan;
-
-			EmitAsync();
-		}
-		else
-		{
+		//ループ処理毎に生成はコスト高 ->シェーダー側でループ処理
+		if (!m_isLoop)
 			End();
-		}
 	}
 }
 
@@ -213,7 +199,7 @@ void ParticleWork::Emit(UINT numParticles, ParticleSystem::EmitData data, std::s
 
 	m_numParticles	= numParticles;
 	m_data			= data;
-	m_loop			= loop;
+	m_isLoop		= loop;
 	m_lifeSpan		= data.m_maxLifeSpan;
 
 	m_spTexture = pTexture;
@@ -282,6 +268,7 @@ void ParticleWork::EmitAsync()
 			//m_pParticle[i].m_color = m_data.m_color;
 			m_pParticle[i].m_color = float4(distr_col(engine), distr_col(engine), distr_col(engine), 1.0f);
 			m_pParticle[i].m_lifeSpanMax = m_pParticle[i].m_lifeSpan;
+			m_pParticle[i].m_loop = m_isLoop;
 		}
 
 		SetGenerated(true);

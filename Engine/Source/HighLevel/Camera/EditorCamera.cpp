@@ -53,8 +53,4 @@ void EditorCamera::Update()
 	SetCameraMatrix(rotation * trans);
 
 	m_mousePosOld = m_mousePosNow;
-
-	Debug::LogClear();
-	Debug::Log("m_position: " + ToStringV(m_position));
-	Debug::Log("m_rotation: " + ToStringV(m_rotation));
 }
