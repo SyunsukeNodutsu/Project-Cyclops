@@ -161,6 +161,7 @@ static inline std::string char8_to_sjis(const std::u8string &s)
 #if defined(_MSC_VER)
 #pragma warning(push)
 #pragma warning(disable : 4996)
+#pragma warning(disable : 26451)
 #endif
 
 static inline std::wstring vformat(const wchar_t *format, va_list args)

@@ -92,18 +92,18 @@ bool RendererStatus::SetSampler(SS_FilterMode filter, SS_AddressMode address)
 	if (m_graphicsDevice->m_cpContext == nullptr) return false;
 
 	//MAP確認 新規作成
-	if (m_samplerStates.find(filter | address) == m_samplerStates.end())
+	if (m_samplerStates.find(static_cast<int>(filter) | static_cast<int>(address)) == m_samplerStates.end())
 	{
 		if (!CreateSampler(filter, address))
 			return false;
 	}
 	
 	//TODO: ステージ
-	m_graphicsDevice->m_cpContext.Get()->VSSetSamplers(0, 1, m_samplerStates[filter | address].GetAddressOf());
-	m_graphicsDevice->m_cpContext.Get()->PSSetSamplers(0, 1, m_samplerStates[filter | address].GetAddressOf());
-	m_graphicsDevice->m_cpContext.Get()->CSSetSamplers(0, 1, m_samplerStates[filter | address].GetAddressOf());
-	m_graphicsDevice->m_cpContext.Get()->GSSetSamplers(0, 1, m_samplerStates[filter | address].GetAddressOf());
-	m_graphicsDevice->m_cpContext.Get()->DSSetSamplers(0, 1, m_samplerStates[filter | address].GetAddressOf());
+	m_graphicsDevice->m_cpContext.Get()->VSSetSamplers(0, 1, m_samplerStates[static_cast<int>(filter) | static_cast<int>(address)].GetAddressOf());
+	m_graphicsDevice->m_cpContext.Get()->PSSetSamplers(0, 1, m_samplerStates[static_cast<int>(filter) | static_cast<int>(address)].GetAddressOf());
+	m_graphicsDevice->m_cpContext.Get()->CSSetSamplers(0, 1, m_samplerStates[static_cast<int>(filter) | static_cast<int>(address)].GetAddressOf());
+	m_graphicsDevice->m_cpContext.Get()->GSSetSamplers(0, 1, m_samplerStates[static_cast<int>(filter) | static_cast<int>(address)].GetAddressOf());
+	m_graphicsDevice->m_cpContext.Get()->DSSetSamplers(0, 1, m_samplerStates[static_cast<int>(filter) | static_cast<int>(address)].GetAddressOf());
 
 	return true;
 }
@@ -116,14 +116,14 @@ bool RendererStatus::SetBlend(BlendMode flag)
 	if (m_graphicsDevice == nullptr) return false;
 	if (m_graphicsDevice->m_cpContext == nullptr) return false;
 
-	if (m_blendStates[flag] == nullptr)
-		m_blendStates[flag] = CreateBlend(flag);
+	if (m_blendStates[static_cast<int>(flag)] == nullptr)
+		m_blendStates[static_cast<int>(flag)] = CreateBlend(flag);
 
-	if (m_blendStates[flag] == nullptr)
+	if (m_blendStates[static_cast<int>(flag)] == nullptr)
 		return false;
 
 	float a[4]{ 0,0,0,0 };
-	m_graphicsDevice->m_cpContext.Get()->OMSetBlendState(m_blendStates[flag].Get(), a, 0xFFFFFFFF);
+	m_graphicsDevice->m_cpContext.Get()->OMSetBlendState(m_blendStates[static_cast<int>(flag)].Get(), a, 0xFFFFFFFF);
 
 	return true;
 }
@@ -136,13 +136,13 @@ bool RendererStatus::SetRasterize(RS_CullMode cull, RS_FillMode fill)
 	if (m_graphicsDevice == nullptr) return false;
 	if (m_graphicsDevice->m_cpContext == nullptr) return false;
 
-	if (m_rasterizerState.find(cull | fill) == m_rasterizerState.end())
+	if (m_rasterizerState.find(static_cast<int>(cull) | static_cast<int>(fill)) == m_rasterizerState.end())
 	{
 		if (!CreateRasterrize(cull, fill))
 			return false;
 	}
 
-	m_graphicsDevice->m_cpContext.Get()->RSSetState(m_rasterizerState[(cull | fill)].Get());
+	m_graphicsDevice->m_cpContext.Get()->RSSetState(m_rasterizerState[(static_cast<int>(cull) | static_cast<int>(fill))].Get());
 
 	return true;
 }
@@ -180,7 +180,7 @@ bool RendererStatus::CreateSampler(SS_FilterMode filter, SS_AddressMode address)
 	}
 
 	//登録/追加
-	m_samplerStates[(filter | address)] = state;
+	m_samplerStates[(static_cast<int>(filter) | static_cast<int>(address))] = state;
 
 	return true;
 }
@@ -224,7 +224,7 @@ bool RendererStatus::CreateRasterrize(RS_CullMode cull, RS_FillMode fill)
 		Debug::LogError("ラスタライザーステート作成失敗"); return false;
 	}
 
-	m_rasterizerState[(cull | fill)] = state;
+	m_rasterizerState[(static_cast<int>(cull) | static_cast<int>(fill))] = state;
 
 	return true;
 }

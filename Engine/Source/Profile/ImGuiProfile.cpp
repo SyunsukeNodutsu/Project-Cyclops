@@ -121,6 +121,8 @@ void ImGuiProfile::SceneMonitor(ImGuiWindowFlags wflags)
 	ImGui::Text(std::string("TimeScale: " + std::to_string(m_pFpsTimer->GetTimeScale<float>())).c_str());
 	ImGui::Text(std::string("\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e").c_str());
 
+	ImGui::Text(reinterpret_cast<const char*>(u8"これで日本語いける(;o;)"));
+
 	static float timeScale = m_pFpsTimer->GetTimeScale<float>();
 	if (ImGui::SliderFloat("TimeScale", &timeScale, 0, 5, "%.2f"))
 		m_pFpsTimer->SetTimeScale(timeScale);

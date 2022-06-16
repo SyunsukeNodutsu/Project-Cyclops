@@ -26,6 +26,7 @@ cbuffer cdTime : register(b7)
 	float g_totalTime;
 	float g_deltaTime;
 	float g_timeScale;
+    float tmp;
 }
 
 //ACESフィルムトーン

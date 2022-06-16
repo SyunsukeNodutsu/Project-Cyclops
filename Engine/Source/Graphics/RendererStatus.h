@@ -5,9 +5,9 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
-enum SS_FilterMode; enum SS_AddressMode;
-enum RS_CullMode; enum RS_FillMode;
-enum BlendMode;
+enum class SS_FilterMode; enum class SS_AddressMode;
+enum class RS_CullMode; enum class RS_FillMode;
+enum class BlendMode;
 
 //描画状態クラス
 class RendererStatus : public GraphicsDeviceChild
@@ -96,13 +96,13 @@ private:
 
 #pragma region enums
 //サンプラーステート
-enum SS_FilterMode
+enum class SS_FilterMode : int
 {
 	Point		= 0x00000001,	//ドット調
 	Linear		= 0x00000002,	//線形補完
 	Aniso		= 0x00000004,	//異方性
 };
-enum SS_AddressMode
+enum class SS_AddressMode : int
 {
 	Wrap		= 0x00010000,	//繰り返し
 	Clamp		= 0x00020000,	//端を無視
@@ -110,7 +110,7 @@ enum SS_AddressMode
 };
 
 //ブレンドステート
-enum BlendMode
+enum class BlendMode : int
 {
 	BlendNone	= 0,			//ブレンドしない
 	Add,						//加算合成
@@ -118,13 +118,13 @@ enum BlendMode
 };
 
 // ラスタライザーステート
-enum RS_CullMode
+enum class RS_CullMode : int
 {
 	CullNone	= 0x00000001,	//カリングなし
 	Back		= 0x00000002,	//裏面カリング
 	Front		= 0x00000004,	//表面カリング
 };
-enum RS_FillMode
+enum class RS_FillMode : int
 {
 	Wire		= 0x00000001,	//ワイヤーフレーム表示
 	Solid		= 0x00000002,	//塗りつぶし
