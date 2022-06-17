@@ -57,6 +57,7 @@
 
 //ウィンドウ
 #include "Window/Window.h"
+#include "Window/ShellSystem.h"
 
 //グラフィックス
 #include "Graphics/GraphicsDevice.h"

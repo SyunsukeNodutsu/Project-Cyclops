@@ -75,6 +75,7 @@
     <ClCompile Include="Source\Utility\Timer.cpp" />
     <ClCompile Include="Source\Utility\Utility.cpp" />
     <ClCompile Include="Source\Video\VideoDevice.cpp" />
+    <ClCompile Include="Source\Window\ShellSystem.cpp" />
     <ClCompile Include="Source\Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +131,7 @@
     <ClInclude Include="Source\Utility\Timer.h" />
     <ClInclude Include="Source\Utility\Utility.h" />
     <ClInclude Include="Source\Video\VideoDevice.h" />
+    <ClInclude Include="Source\Window\ShellSystem.h" />
     <ClInclude Include="Source\Window\Window.h" />
   </ItemGroup>
   <ItemGroup>

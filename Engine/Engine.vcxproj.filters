@@ -240,6 +240,9 @@
     <ClCompile Include="Source\HighLevel\GUI\Button2D.cpp">
       <Filter>Source\HighLevel\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Window\ShellSystem.cpp">
+      <Filter>Source\Window</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window\Window.h">
@@ -400,6 +403,9 @@
     </ClInclude>
     <ClInclude Include="Source\HighLevel\GUI\Button2D.h">
       <Filter>Source\HighLevel\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Window\ShellSystem.h">
+      <Filter>Source\Window</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -133,6 +133,8 @@ void CyclopsRoot::Finalize()
 	m_pGraphicsDevice->Finalize();
 	m_pWindow->Finalize();
 
+	ShellSystem::DeleteBatFileAll();
+
 	SafeDelete(m_pCameraManager);
 	SafeDelete(m_pImGuiProfile);
 	SafeDelete(m_pFpsTimer);

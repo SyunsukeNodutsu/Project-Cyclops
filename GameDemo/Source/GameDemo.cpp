@@ -1,122 +1,5 @@
 ﻿#include "GameDemo.h"
 
-bool Shell(const std::string& cmd = "svn help")
-{
-	//コマンドを記憶したbatファイルの作成
-	{
-		FILE* fp = nullptr;
-		fopen_s(&fp, "C:/Windows/Temp/test.bat", "w");
-		if (fp)
-		{
-			fprintf(fp, cmd.c_str());
-			fclose(fp);
-		}
-		else
-		{
-			OutputDebugStringA("バッチファイルの読み込み失敗.");
-			return false;
-		}
-	}
-
-	//コマンド実行
-	{
-		SHELLEXECUTEINFO info{ 0 };
-		info.cbSize			= sizeof(SHELLEXECUTEINFO);
-		info.fMask			= SEE_MASK_NOCLOSEPROCESS;//プロセス終了待つ用
-		info.hwnd			= NULL;
-		info.lpVerb			= L"open";
-		info.lpFile			= L"test.bat";
-		info.lpParameters	= L" 1> cmd_ret_log.txt 2> cmd_err_log.txt";
-		info.lpDirectory	= L"C:/Windows/Temp/";
-		info.nShow			= SW_HIDE;
-		info.hInstApp		= NULL;
-
-		if (ShellExecuteEx(&info) == 0 || (int)(info.hInstApp) <= 32)
-		{
-			OutputDebugStringA("ShellExecuteEx失敗.");
-			return false;
-		}
-
-		//TODO: 拡張エラー情報(WAIT_OBJECT_0までループとか？)
-		WaitForSingleObject(info.hProcess, INFINITE);
-
-		if (CloseHandle(info.hProcess) == 0)
-		{
-			OutputDebugStringA("CloseHandle失敗.");
-			return false;
-		}
-
-		//バッチファイルの削除
-		if (DeleteFileA("C:/Windows/Temp/test.bat") == 0)
-		{
-			OutputDebugStringA("DeleteFileA失敗.");
-			return false;
-		}
-	}
-
-	//コマンドの実行結果をファイルで取得
-	//通常ログ
-	{
-		FILE* fp = nullptr;
-		fopen_s(&fp, "C:/Windows/Temp/cmd_ret_log.txt", "r");
-		if (fp)
-		{
-			OutputDebugStringA("\n正常ログここから  ------------------->\n");
-
-			char line[128] = "";
-			while (fgets(line, _countof(line), fp) != NULL)
-				OutputDebugStringA(line);//TODO: とりあえず出力に表示
-
-			OutputDebugStringA("\n<---------------------正常ログここまで\n");
-
-			fclose(fp);
-		}
-		else
-		{
-			OutputDebugStringA("ログファイルの読み込み失敗.");
-			return false;
-		}
-
-		//ログファイル削除
-		if (DeleteFileA("C:/Windows/Temp/cmd_ret_log.txt") == 0)
-		{
-			OutputDebugStringA("DeleteFileA失敗.");
-			return false;
-		}
-	}
-	//エラーログ
-	{
-		FILE* fp = nullptr;
-		fopen_s(&fp, "C:/Windows/Temp/cmd_err_log.txt", "r");
-		if (fp)
-		{
-			OutputDebugStringA("\nエラーログここから------------------->\n");
-
-			char line[128] = "";
-			while (fgets(line, _countof(line), fp) != NULL)
-				OutputDebugStringA(line);//TODO: とりあえず出力に表示
-
-			OutputDebugStringA("\n<-------------------エラーログここまで\n");
-
-			fclose(fp);
-		}
-		else
-		{
-			OutputDebugStringA("ログファイルの読み込み失敗.");
-			return false;
-		}
-
-		//ログファイル削除
-		if (DeleteFileA("C:/Windows/Temp/cmd_err_log.txt") == 0)
-		{
-			OutputDebugStringA("DeleteFileA失敗.");
-			return false;
-		}
-	}
-
-	return true;
-}
-
 //-----------------------------------------------------------------------------
 // サブシステム初期化直後
 //-----------------------------------------------------------------------------
@@ -159,11 +42,8 @@ void GameDemo::OnUpdate()
 
 	if (m_button.IsPush())
 	{
-		Shell("svn commit");
-
-		std::shared_ptr<Sound> new_sound = std::make_shared<Sound>("../Assets/Enter.wav", false, false);
-		m_pAudioDevice->SetFadeSoundList(1.0f, 0.1f);
-		if (new_sound) { new_sound->Play(); m_pAudioDevice->AddSound(new_sound); }
+		ShellSystem::MakeBatfile("svn info D:/PRJ002", "test.bat");
+		ShellSystem::ExecuteShell(L"test.bat", true);
 	}
 
 	m_button.Update();
