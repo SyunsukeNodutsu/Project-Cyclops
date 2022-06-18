@@ -43,7 +43,7 @@ void GameDemo::OnUpdate()
 	if (m_button.IsPush())
 	{
 		ShellSystem::MakeBatfile("dir", "test.bat");
-		ShellSystem::ExecuteShell(L"test.bat", "D:", ShellExecuteMode::ShowDebugLog);
+		ShellSystem::ExecuteShell(L"test.bat", "C:/Windows", ShellExecuteMode::HideImmediate);
 	}
 
 	m_button.Update();

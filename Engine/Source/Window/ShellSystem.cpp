@@ -1,6 +1,6 @@
 ﻿#include "ShellSystem.h"
 
-const std::string ShellSystem::m_operationDir = "C:/Windows/Temp/";//TODO: filesystem
+const std::string_view ShellSystem::m_operationDir = "C:/Windows/Temp/";
 std::list<std::string> ShellSystem::m_batfileList;
 
 //-----------------------------------------------------------------------------
@@ -8,14 +8,17 @@ std::list<std::string> ShellSystem::m_batfileList;
 //-----------------------------------------------------------------------------
 bool ShellSystem::MakeBatfile(std::string_view cmd, std::string_view batFilename)
 {
+	std::string filepath = m_operationDir.data();
+	filepath.append(batFilename);
+
 	FILE* fp = nullptr;
-	fopen_s(&fp, std::string(m_operationDir + batFilename.data()).c_str(), "w");
+	fopen_s(&fp, filepath.c_str(), "w");
 	if (fp)
 	{
 		fprintf(fp, cmd.data());
 		fclose(fp);
 
-		m_batfileList.push_back(std::string(m_operationDir + batFilename.data()));
+		m_batfileList.push_back(filepath);
 
 		return true;
 	}
@@ -35,6 +38,7 @@ bool ShellSystem::ExecuteShell(std::wstring_view batFilename, std::string_view d
 
 	SHELLEXECUTEINFO info{ 0 };
 	info.cbSize			= sizeof(SHELLEXECUTEINFO);
+	info.fMask			= SEE_MASK_NOCLOSEPROCESS;
 	info.hwnd			= NULL;
 	info.lpVerb			= L"open";
 	info.lpFile			= L"test.bat";
@@ -45,19 +49,16 @@ bool ShellSystem::ExecuteShell(std::wstring_view batFilename, std::string_view d
 	switch (exeMode)
 	{
 	case ShellExecuteMode::HideImmediate:
-		info.fMask			= SEE_MASK_NOCLOSEPROCESS;
 		info.lpParameters	= NULL;
 		info.nShow			= SW_HIDE;
 		break;
 
 	case ShellExecuteMode::ShowDebugLog:
-		info.fMask			= SEE_MASK_NOCLOSEPROCESS;
-		info.lpParameters	= L" 1> CmdLogStd.txt 2> CmdLogErr.txt";
+		info.lpParameters	= L"1> CmdLogStd.txt 2> CmdLogErr.txt";
 		info.nShow			= SW_HIDE;
 		break;
 
 	case ShellExecuteMode::ShowCmdPrompt:
-		info.fMask			= SEE_MASK_NOCLOSEPROCESS;
 		info.lpParameters	= NULL;
 		info.nShow			= SW_SHOWNORMAL;
 		break;
@@ -107,7 +108,7 @@ void ShellSystem::DeleteBatFileAll()
 //-----------------------------------------------------------------------------
 bool ShellSystem::ShowCommandLog(std::string_view filename, bool error)
 {
-	std::string filepath = "C:/Windows/Temp/";
+	std::string filepath = m_operationDir.data();
 	filepath.append(filename);
 
 	FILE* fp = nullptr;
@@ -118,6 +119,7 @@ bool ShellSystem::ShowCommandLog(std::string_view filename, bool error)
 		while (fgets(line, _countof(line), fp) != NULL)
 		{
 			OutputDebugStringA(line);
+			ImGuiProfile::AddLog(line);
 		}
 
 		fclose(fp);
@@ -143,14 +145,17 @@ bool ShellSystem::ShowCommandLog(std::string_view filename, bool error)
 //-----------------------------------------------------------------------------
 bool ShellSystem::ChangeExecuteDirectory(std::wstring_view batFilename, std::string_view dir, ShellExecuteMode exeMode)
 {
+	std::string filepath = m_operationDir.data();
+	filepath.append(wide_to_sjis(batFilename.data()));
+
 	//既存のバッチファイルを読み込み ->変数に保存
-	char batcmd[128] = "";
+	char batcmd[256] = "";
 	FILE* fp = nullptr;
-	fopen_s(&fp, std::string(m_operationDir + wide_to_sjis(batFilename.data())).c_str(), "r");
+	fopen_s(&fp, filepath.c_str(), "r");
 	if (fp)
 	{
-		while (fgets(batcmd, 128, fp) != NULL);
-
+		//fscanf_s(fp, "%s", batcmd, 256);
+		while (fgets(batcmd, 256, fp) != NULL);
 		fclose(fp);
 	}
 	else
@@ -159,10 +164,11 @@ bool ShellSystem::ChangeExecuteDirectory(std::wstring_view batFilename, std::str
 		return false;
 	}
 
-	//cdコマンドで実行ディレクトリ変更
-	//2022/06/19 SHOW_HIDEで実行したプロセスを"cmd /K"コマンドで実行すると ゾンビプロセスになる... WIN32くんさぁ...
-	if (exeMode == ShellExecuteMode::ShowCmdPrompt)
-		return MakeBatfile(std::string("cd /d " + std::string(dir) + " & cmd /K " + std::string(batcmd)).data(), wide_to_sjis(batFilename.data()));
-	else
-		return MakeBatfile(std::string("cd /d " + std::string(dir) + " & cmd /C " + std::string(batcmd)).data(), wide_to_sjis(batFilename.data()));
+	//ディレクトリ移動/終了後のふるまいを設定して再作成
+	std::string cmd = "cd /d ";
+	cmd.append(dir);
+	cmd.append((exeMode == ShellExecuteMode::ShowCmdPrompt) ? " & cmd /K " : " & cmd /C ");
+	cmd.append(batcmd);
+
+	return MakeBatfile(cmd, wide_to_sjis(batFilename.data()));
 }
