@@ -42,8 +42,8 @@ void GameDemo::OnUpdate()
 
 	if (m_button.IsPush())
 	{
-		ShellSystem::MakeBatfile("svn info D:/PRJ002", "test.bat");
-		ShellSystem::ExecuteShell(L"test.bat", true);
+		ShellSystem::MakeBatfile("dir", "test.bat");
+		ShellSystem::ExecuteShell(L"test.bat", "D:", ShellExecuteMode::ShowDebugLog);
 	}
 
 	m_button.Update();

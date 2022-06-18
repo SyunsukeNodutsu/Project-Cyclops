@@ -30,38 +30,69 @@ bool ShellSystem::MakeBatfile(std::string_view cmd, std::string_view batFilename
 //-----------------------------------------------------------------------------
 // 外部アプリケーションの実行
 //-----------------------------------------------------------------------------
-bool ShellSystem::ExecuteShell(std::wstring_view batFilename, bool showLog, bool showWindow)
+bool ShellSystem::ExecuteShell(std::wstring_view batFilename, std::string_view dir, ShellExecuteMode exeMode)
 {
+	ChangeExecuteDirectory(batFilename, dir);
+
 	SHELLEXECUTEINFO info{ 0 };
 	info.cbSize			= sizeof(SHELLEXECUTEINFO);
-	info.fMask			= SEE_MASK_NOCLOSEPROCESS;//プロセス終了待つ用
 	info.hwnd			= NULL;
 	info.lpVerb			= L"open";
 	info.lpFile			= batFilename.data();
-	info.lpParameters	= L" 1> CmdLogStd.txt 2> CmdLogErr.txt";
 	info.lpDirectory	= m_operationDirW.c_str();
-	info.nShow			= showWindow ? SW_SHOWNORMAL : SW_HIDE;
 	info.hInstApp		= NULL;
 
-	if (ShellExecuteEx(&info) == 0 || reinterpret_cast<unsigned long long>(info.hInstApp) <= 32)
+	//実行Modeによってパラメータ設定
+	switch (exeMode)
 	{
-		Debug::LogError("ShellExecuteEx失敗."); return false;
+	case ShellExecuteMode::HideImmediate:
+		info.fMask			= SEE_MASK_NOCLOSEPROCESS;
+		info.lpParameters	= NULL;
+		info.nShow			= SW_HIDE;
+		break;
+
+	case ShellExecuteMode::ShowDebugLog:
+		info.fMask			= SEE_MASK_NOCLOSEPROCESS;
+		info.lpParameters	= L" 1> CmdLogStd.txt 2> CmdLogErr.txt";
+		info.nShow			= SW_HIDE;
+		break;
+
+	case ShellExecuteMode::ShowCmdPrompt:
+		info.fMask			= SEE_MASK_NOCLOSEPROCESS;
+		info.lpParameters	= NULL;
+		info.nShow			= SW_SHOWNORMAL;
+		break;
 	}
 
-	//TODO: 拡張エラー情報(WAIT_OBJECT_0までループとか？)
-	WaitForSingleObject(info.hProcess, INFINITE);
+	if (ShellExecuteEx(&info) == 0)
+	{
+		CloseHandle(info.hProcess);
+		Debug::LogError("ShellExecuteEx失敗."); return false;
+	}
+	if (reinterpret_cast<unsigned long long>(info.hInstApp) <= 32)
+	{
+		CloseHandle(info.hProcess);
+		return false;
+	}
+
+	if (WaitForSingleObject(info.hProcess, INFINITE) == WAIT_FAILED)
+	{
+		CloseHandle(info.hProcess);
+		Debug::LogError("WaitForSingleObject失敗."); return false;
+	}
 
 	if (CloseHandle(info.hProcess) == 0)
 	{
 		Debug::LogError("CloseHandle失敗."); return false;
 	}
 
-	if (showLog)
+	if (exeMode == ShellExecuteMode::ShowDebugLog)
 	{
 		ShowCommandLog("CmdLogStd.txt");
 		ShowCommandLog("CmdLogErr.txt");
 	}
 
+	Debug::Log("Done ExecuteShell.");
 	return true;
 }
 
@@ -90,7 +121,7 @@ bool ShellSystem::ShowCommandLog(std::string_view filename, bool error)
 	fopen_s(&fp, std::string(m_operationDir + filename.data()).c_str(), "r");
 	if (fp)
 	{
-		char line[128] = "";
+		char line[256] = "";
 		while (fgets(line, _countof(line), fp) != NULL)
 		{
 			OutputDebugStringA(line);
@@ -112,4 +143,29 @@ bool ShellSystem::ShowCommandLog(std::string_view filename, bool error)
 	}
 
 	return true;
+}
+
+//-----------------------------------------------------------------------------
+// batファイルの実行ディレクトリを変更
+//-----------------------------------------------------------------------------
+bool ShellSystem::ChangeExecuteDirectory(std::wstring_view batFilename, std::string_view dir)
+{
+	//既存のバッチファイルを読み込み ->変数に保存
+	char batcmd[128] = "";
+	FILE* fp = nullptr;
+	fopen_s(&fp, std::string(m_operationDir + wide_to_sjis(batFilename.data())).c_str(), "r");
+	if (fp)
+	{
+		while (fgets(batcmd, 128, fp) != NULL);
+
+		fclose(fp);
+	}
+	else
+	{
+		Debug::LogError("バッチファイルの読み込み失敗.");
+		return false;
+	}
+
+	//cdコマンドで実行ディレクトリ変更
+	return MakeBatfile(std::string("cd /d " + std::string(dir) + " & cmd /K " + std::string(batcmd)).data(), wide_to_sjis(batFilename.data()));
 }
