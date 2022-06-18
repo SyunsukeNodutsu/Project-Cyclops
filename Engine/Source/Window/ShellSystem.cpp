@@ -1,8 +1,7 @@
 ﻿#include "ShellSystem.h"
 
-const std::string		ShellSystem::m_operationDir		=  "C:/Windows/Temp/";
-const std::wstring		ShellSystem::m_operationDirW	= L"C:/Windows/Temp/";
-std::list<std::string>	ShellSystem::m_batfileList;
+const std::string ShellSystem::m_operationDir = "C:/Windows/Temp/";//TODO: filesystem
+std::list<std::string> ShellSystem::m_batfileList;
 
 //-----------------------------------------------------------------------------
 // バッチファイルの作成
@@ -32,14 +31,14 @@ bool ShellSystem::MakeBatfile(std::string_view cmd, std::string_view batFilename
 //-----------------------------------------------------------------------------
 bool ShellSystem::ExecuteShell(std::wstring_view batFilename, std::string_view dir, ShellExecuteMode exeMode)
 {
-	ChangeExecuteDirectory(batFilename, dir);
+	ChangeExecuteDirectory(batFilename, dir, exeMode);
 
 	SHELLEXECUTEINFO info{ 0 };
 	info.cbSize			= sizeof(SHELLEXECUTEINFO);
 	info.hwnd			= NULL;
 	info.lpVerb			= L"open";
-	info.lpFile			= batFilename.data();
-	info.lpDirectory	= m_operationDirW.c_str();
+	info.lpFile			= L"test.bat";
+	info.lpDirectory	= L"C:/Windows/Temp/";
 	info.hInstApp		= NULL;
 
 	//実行Modeによってパラメータ設定
@@ -64,22 +63,13 @@ bool ShellSystem::ExecuteShell(std::wstring_view batFilename, std::string_view d
 		break;
 	}
 
-	if (ShellExecuteEx(&info) == 0)
-	{
-		CloseHandle(info.hProcess);
-		Debug::LogError("ShellExecuteEx失敗."); return false;
-	}
-	if (reinterpret_cast<unsigned long long>(info.hInstApp) <= 32)
+	if (ShellExecuteEx(&info) == 0 || reinterpret_cast<unsigned long long>(info.hInstApp) <= 32)
 	{
 		CloseHandle(info.hProcess);
 		return false;
 	}
 
-	if (WaitForSingleObject(info.hProcess, INFINITE) == WAIT_FAILED)
-	{
-		CloseHandle(info.hProcess);
-		Debug::LogError("WaitForSingleObject失敗."); return false;
-	}
+	WaitForSingleObject(info.hProcess, INFINITE);
 
 	if (CloseHandle(info.hProcess) == 0)
 	{
@@ -117,8 +107,11 @@ void ShellSystem::DeleteBatFileAll()
 //-----------------------------------------------------------------------------
 bool ShellSystem::ShowCommandLog(std::string_view filename, bool error)
 {
+	std::string filepath = "C:/Windows/Temp/";
+	filepath.append(filename);
+
 	FILE* fp = nullptr;
-	fopen_s(&fp, std::string(m_operationDir + filename.data()).c_str(), "r");
+	fopen_s(&fp, filepath.c_str(), "r");
 	if (fp)
 	{
 		char line[256] = "";
@@ -136,7 +129,7 @@ bool ShellSystem::ShowCommandLog(std::string_view filename, bool error)
 	}
 
 	//ログファイル削除
-	if (DeleteFileA(std::string(m_operationDir + filename.data()).c_str()) == 0)
+	if (DeleteFileA(filepath.c_str()) == 0)
 	{
 		Debug::LogError("DeleteFileA失敗.");
 		return false;
@@ -148,7 +141,7 @@ bool ShellSystem::ShowCommandLog(std::string_view filename, bool error)
 //-----------------------------------------------------------------------------
 // batファイルの実行ディレクトリを変更
 //-----------------------------------------------------------------------------
-bool ShellSystem::ChangeExecuteDirectory(std::wstring_view batFilename, std::string_view dir)
+bool ShellSystem::ChangeExecuteDirectory(std::wstring_view batFilename, std::string_view dir, ShellExecuteMode exeMode)
 {
 	//既存のバッチファイルを読み込み ->変数に保存
 	char batcmd[128] = "";
@@ -167,5 +160,9 @@ bool ShellSystem::ChangeExecuteDirectory(std::wstring_view batFilename, std::str
 	}
 
 	//cdコマンドで実行ディレクトリ変更
-	return MakeBatfile(std::string("cd /d " + std::string(dir) + " & cmd /K " + std::string(batcmd)).data(), wide_to_sjis(batFilename.data()));
+	//2022/06/19 SHOW_HIDEで実行したプロセスを"cmd /K"コマンドで実行すると ゾンビプロセスになる... WIN32くんさぁ...
+	if (exeMode == ShellExecuteMode::ShowCmdPrompt)
+		return MakeBatfile(std::string("cd /d " + std::string(dir) + " & cmd /K " + std::string(batcmd)).data(), wide_to_sjis(batFilename.data()));
+	else
+		return MakeBatfile(std::string("cd /d " + std::string(dir) + " & cmd /C " + std::string(batcmd)).data(), wide_to_sjis(batFilename.data()));
 }

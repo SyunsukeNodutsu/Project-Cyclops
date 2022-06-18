@@ -40,12 +40,11 @@ public:
 private:
 
 	static const std::string		m_operationDir;		//操作ディレクトリ
-	static const std::wstring		m_operationDirW;	//操作ディレクトリ(ワイドver)
 	static std::list<std::string>	m_batfileList;		//作成したbatファイルを保存しておく
 
 private:
 
 	static bool ShowCommandLog(std::string_view filename, bool error = false);
-	static bool ChangeExecuteDirectory(std::wstring_view batFilename, std::string_view dir);
+	static bool ChangeExecuteDirectory(std::wstring_view batFilename, std::string_view dir, ShellExecuteMode exeMode);
 
 };
