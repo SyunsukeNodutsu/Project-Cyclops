@@ -2,6 +2,11 @@
 // File: ParticleSystem.h
 //
 // 粒子シミュレーションシステム
+// 
+// TODO: エミッターを複数作成した場合に エミッター毎にDispatchするのはよくない
+// TOOD: コストがバカ高そう(発生に関しても計算シェーダー,アロケータ自作)
+// TOOD: 乱数生成装置をクラス化
+// TOOD: 最小値が最大値を上回ってないかの確認(expression invalid min max arguments for uniform_real)
 //-----------------------------------------------------------------------------
 #pragma once
 

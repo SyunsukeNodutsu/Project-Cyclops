@@ -62,6 +62,10 @@ void ParticleSystem::Emit(EmitData data, UINT numParticles, std::shared_ptr<Text
 	const auto& particle = std::make_shared<ParticleWork>();
 	if (particle)
 	{
+		//テクスチャがnullの場合は1x1の白テクスチャを使用
+		if (pTexture == nullptr)
+			pTexture = m_graphicsDevice->GetWhiteTex();
+
 		particle->Emit(numParticles, data, pTexture, loop);
 
 		//描画順の関係上 先頭に追加する必要がある
@@ -126,7 +130,6 @@ void ParticleWork::Update()
 	m_spInputBuffer->WriteData(m_pParticle, sizeof(Particle) * m_numParticles);
 
 	//コンピュートシェーダー実行/粒子のシュミレーション
-	//TODO: エミッターを複数作成した場合に エミッター毎にDispatchするのはよくない
 	{
 		ID3D11ShaderResourceView* pSRVs[1] = { m_cpInputSRV.Get() };
 		m_graphicsDevice->m_cpContext->CSSetShaderResources(0, 1, pSRVs);
@@ -234,10 +237,6 @@ void ParticleWork::End()
 //-----------------------------------------------------------------------------
 void ParticleWork::EmitAsync()
 {
-	//TOOD: コストがバカ高そう(発生に関しても計算シェーダー or アロケータ自作)
-	//TOOD: 乱数生成装置をクラス化
-	//TOOD: 最小値が最大値を上回ってないかの確認(expression invalid min max arguments for uniform_real)
-
 	SetGenerated(false);
 
 	std::thread([=] {

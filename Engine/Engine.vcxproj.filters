@@ -94,6 +94,9 @@
     <Filter Include="Source\HighLevel\GUI">
       <UniqueIdentifier>{b29a3cbc-886e-408a-9dbe-3de3a581fd21}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Graphics\Particle\Module">
+      <UniqueIdentifier>{efae874a-0ade-4d66-bc07-f036ce83915e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Window\Window.cpp">
@@ -242,6 +245,21 @@
     </ClCompile>
     <ClCompile Include="Source\Window\ShellSystem.cpp">
       <Filter>Source\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Particle\Module\ParticleSystemModule.cpp">
+      <Filter>Source\Graphics\Particle\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Particle\Module\ShapeModule.cpp">
+      <Filter>Source\Graphics\Particle\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Particle\Module\CollisionModule.cpp">
+      <Filter>Source\Graphics\Particle\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Particle\Module\EmissionModule.cpp">
+      <Filter>Source\Graphics\Particle\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Particle\Module\MainModule.cpp">
+      <Filter>Source\Graphics\Particle\Module</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -406,6 +424,21 @@
     </ClInclude>
     <ClInclude Include="Source\Window\ShellSystem.h">
       <Filter>Source\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Particle\Module\ParticleSystemModule.h">
+      <Filter>Source\Graphics\Particle\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Particle\Module\MainModule.h">
+      <Filter>Source\Graphics\Particle\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Particle\Module\EmissionModule.h">
+      <Filter>Source\Graphics\Particle\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Particle\Module\ShapeModule.h">
+      <Filter>Source\Graphics\Particle\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Particle\Module\CollisionModule.h">
+      <Filter>Source\Graphics\Particle\Module</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

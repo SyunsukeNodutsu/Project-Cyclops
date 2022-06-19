@@ -42,8 +42,8 @@ void GameDemo::OnUpdate()
 
 	if (m_button.IsPush())
 	{
-		ShellSystem::MakeBatfile("dir", "test.bat");
-		ShellSystem::ExecuteShell(L"test.bat", "C:/Windows", ShellExecuteMode::HideImmediate);
+		ShellSystem::MakeBatfile("dir /s", "test.bat");
+		ShellSystem::ExecuteShell(L"test.bat", "D:", ShellExecuteMode::ShowCmdPrompt);
 	}
 
 	m_button.Update();

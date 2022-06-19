@@ -37,6 +37,11 @@
     <ClCompile Include="Source\Graphics\Camera\Camera.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsDevice.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsDeviceChild.cpp" />
+    <ClCompile Include="Source\Graphics\Particle\Module\CollisionModule.cpp" />
+    <ClCompile Include="Source\Graphics\Particle\Module\EmissionModule.cpp" />
+    <ClCompile Include="Source\Graphics\Particle\Module\MainModule.cpp" />
+    <ClCompile Include="Source\Graphics\Particle\Module\ParticleSystemModule.cpp" />
+    <ClCompile Include="Source\Graphics\Particle\Module\ShapeModule.cpp" />
     <ClCompile Include="Source\Graphics\Particle\ParticleSystem.cpp" />
     <ClCompile Include="Source\Graphics\RendererStatus.cpp" />
     <ClCompile Include="Source\Graphics\Shader\GPUParticle\GPUParticleShader.cpp" />
@@ -100,6 +105,11 @@
     <ClInclude Include="Source\Graphics\Camera\Camera.h" />
     <ClInclude Include="Source\Graphics\GraphicsDevice.h" />
     <ClInclude Include="Source\Graphics\GraphicsDeviceChild.h" />
+    <ClInclude Include="Source\Graphics\Particle\Module\CollisionModule.h" />
+    <ClInclude Include="Source\Graphics\Particle\Module\EmissionModule.h" />
+    <ClInclude Include="Source\Graphics\Particle\Module\MainModule.h" />
+    <ClInclude Include="Source\Graphics\Particle\Module\ParticleSystemModule.h" />
+    <ClInclude Include="Source\Graphics\Particle\Module\ShapeModule.h" />
     <ClInclude Include="Source\Graphics\Particle\ParticleSystem.h" />
     <ClInclude Include="Source\Graphics\RendererStatus.h" />
     <ClInclude Include="Source\Graphics\Shader\GPUParticle\GPUParticleShader.h" />
