@@ -24,13 +24,14 @@ void Input::ParseInputData(UINT message, WPARAM wparam, LPARAM lparam)
 		//マウス
 	case WM_MOUSEWHEEL: m_mouseWheelDelta = (short)HIWORD(wparam); break;
 	case WM_MOUSEMOVE: { m_mouseState = wparam; m_mousePos = float2((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam)); } break;
-		//マウスボタン
-	case WM_LBUTTONDOWN:	m_mouseDownArray[(int)MouseButton::Left] = true;	m_mousePressArray[(int)MouseButton::Left] = true;	break;
-	case WM_LBUTTONUP:		m_mouseUpArray[(int)MouseButton::Left] = true;		m_mousePressArray[(int)MouseButton::Left] = false;	break;
-	case WM_MBUTTONDOWN:	m_mouseDownArray[(int)MouseButton::Middle] = true;	m_mousePressArray[(int)MouseButton::Middle] = true; break;
-	case WM_MBUTTONUP:		m_mouseUpArray[(int)MouseButton::Middle] = true;	m_mousePressArray[(int)MouseButton::Middle] = false;break;
-	case WM_RBUTTONDOWN:	m_mouseDownArray[(int)MouseButton::Right] = true;	m_mousePressArray[(int)MouseButton::Right] = true;	break;
-	case WM_RBUTTONUP:		m_mouseUpArray[(int)MouseButton::Right] = true;		m_mousePressArray[(int)MouseButton::Right] = false; break;
+
+		//マウス(ボタン)
+	case WM_LBUTTONDOWN: if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow)) { m_mouseDownArray[(int)MouseButton::Left] = true; m_mousePressArray[(int)MouseButton::Left] = true; } break;
+	case WM_LBUTTONUP: if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow)) { m_mouseUpArray[(int)MouseButton::Left] = true; m_mousePressArray[(int)MouseButton::Left] = false; } break;
+	case WM_MBUTTONDOWN: if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow)) { m_mouseDownArray[(int)MouseButton::Middle] = true; m_mousePressArray[(int)MouseButton::Middle] = true; } break;
+	case WM_MBUTTONUP: if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow)) { m_mouseUpArray[(int)MouseButton::Middle] = true;	m_mousePressArray[(int)MouseButton::Middle] = false; } break;
+	case WM_RBUTTONDOWN: if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow)) { m_mouseDownArray[(int)MouseButton::Right] = true;	m_mousePressArray[(int)MouseButton::Right] = true; } break;
+	case WM_RBUTTONUP: if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow)) { m_mouseUpArray[(int)MouseButton::Right] = true;		m_mousePressArray[(int)MouseButton::Right] = false; } break;
 	}
 }
 
@@ -44,6 +45,15 @@ void Input::Refresh()
 	m_mouseDownArray.fill(false);
 	m_mouseUpArray.fill(false);
 	m_mouseWheelDelta = 0;
+}
+
+//-----------------------------------------------------------------------------
+// マウスホイール量を返す
+//-----------------------------------------------------------------------------
+int Input::GetMouseWheelDelta()
+{
+	if (ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow)) return 0;
+	return m_mouseWheelDelta;
 }
 
 //-----------------------------------------------------------------------------

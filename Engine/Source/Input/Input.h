@@ -116,7 +116,7 @@ public:
 	static bool IsMouseUp(MouseButton mbutton) { return m_mouseUpArray[(int)mbutton]; }
 
 	static float2 GetMousePos() { return m_mousePos; }
-	static int GetMouseWheelDelta() { return m_mouseWheelDelta; }
+	static int GetMouseWheelDelta();
 
 	static void SetMousePos(const float2& pos);
 	static void SetMouseHide(bool show);
