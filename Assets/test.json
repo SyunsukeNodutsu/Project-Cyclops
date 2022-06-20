@@ -1,4 +1,5 @@
 {
+  "schema": 0,
   "project name": "JSON test",
   "window": {
     "name": "OpenGL window",
@@ -8,7 +9,6 @@
   "intrinsics": {
     "fx": 525.0,
     "fy": 525.0,
-    "cx": 319.5,
-    "cx": 239.5
+    "cx": 319.5
   }
 }

@@ -42,17 +42,29 @@ void GameDemo::OnUpdate()
 
 	if (m_button.IsPush())
 	{
-		//ShellSystem::MakeBatfile("dir /s", "test.bat");
-		//ShellSystem::ExecuteShell(L"test.bat", "D:", ShellExecuteMode::ShowCmdPrompt);
+		ShellSystem::RegistBatfile("dir", "test.bat");
+		ShellSystem::ExecuteShell(L"test.bat", "D:", ShellExecuteMode::ShowCmdPrompt);
 
 		std::ifstream ifs("../Assets/test.json");
 		if (ifs.good())
 		{
-			nlohmann::json j; ifs >> j;
+			nlohmann::json j;
+			ifs >> j;
 
-			const auto& str = static_cast<std::string>(j["project name"]);
-			OutputDebugStringA(str.c_str());
+			if (!j["project name"].is_null())
+			{
+				if (j["project name"].is_string())
+				{
+					const auto& str = static_cast<std::string>(j["project name"]);
+					OutputDebugStringA(std::string("project name: " + str + "\n").c_str());
+				}
+			}
+
+			const auto& str2 = static_cast<std::string>(j["window"]["name"]);
+			OutputDebugStringA(std::string("window name: " + str2 + "\n").c_str());
 		}
+
+		ifs.close();
 	}
 
 	m_button.Update();

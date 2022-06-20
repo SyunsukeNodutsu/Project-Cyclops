@@ -22,11 +22,11 @@ public:
 	ShellSystem() = default;
 	~ShellSystem() = default;
 
-	//@brief batファイルを作成する
+	//@brief batファイルを作成/登録する
 	//@param cmd 記憶させるコマンド
 	//@param batFilename 作成したbatファイルにつける名前(拡張子含む)
 	//@return 成功...true, 失敗...false
-	static bool MakeBatfile(std::string_view cmd, std::string_view batFilename);
+	static bool RegistBatfile(std::string_view cmd, std::string_view batFilename);
 
 	//@brief batファイルを実行する
 	//@param batFilename 実行するbatファイルの名前(拡張子含む)

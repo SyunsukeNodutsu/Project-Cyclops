@@ -109,7 +109,7 @@ void ImGuiProfile::AddLog(std::string_view log, const float3& color, const std::
 }
 
 //-----------------------------------------------------------------------------
-// ゲームシーン監視
+// ゲームシーン
 //-----------------------------------------------------------------------------
 void ImGuiProfile::SceneMonitor(ImGuiWindowFlags wflags)
 {
@@ -197,7 +197,7 @@ void ImGuiProfile::CameraMonitor(ImGuiWindowFlags wflags)
 }
 
 //-----------------------------------------------------------------------------
-// ゲームオーディオ監視
+// ゲームオーディオ
 //-----------------------------------------------------------------------------
 void ImGuiProfile::AudioMonitor(ImGuiWindowFlags wflags)
 {
@@ -244,10 +244,8 @@ void ImGuiProfile::AudioMonitor(ImGuiWindowFlags wflags)
 		ImGui::Text(std::string("Select: " + wpSound.lock()->GetName()).c_str());
 
 		auto val = wpSound.lock()->GetVolume();
-		if (ImGui::SliderFloat("Volume", &val, 0.0f, 2.0f, "%.2f"))
-			wpSound.lock()->SetVolume(val);
-
-		static float frequencym = 0.0f;
+		if (ImGui::SliderFloat("Volume", &val, 0.0f, 1.0f, "%.2f")) wpSound.lock()->SetVolume(val);
+		static float frequencym = 0.0f;//フィルタ/パンの値もSoundクラスに保存してもよさそう
 		if (ImGui::SliderFloat("Frequencym", &frequencym, 0.0f, XAUDIO2_MAX_FILTER_FREQUENCY, "%.4f")) {}
 		static float oneOverQ = 1.4142f;
 		if (ImGui::SliderFloat("OneOverQ", &oneOverQ, 0.1f, XAUDIO2_MAX_FILTER_ONEOVERQ, "%.4f")) {}

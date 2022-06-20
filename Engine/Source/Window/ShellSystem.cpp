@@ -6,7 +6,7 @@ std::list<std::string> ShellSystem::m_batfileList;
 //-----------------------------------------------------------------------------
 // バッチファイルの作成
 //-----------------------------------------------------------------------------
-bool ShellSystem::MakeBatfile(std::string_view cmd, std::string_view batFilename)
+bool ShellSystem::RegistBatfile(std::string_view cmd, std::string_view batFilename)
 {
 	std::string filepath = m_operationDir.data();
 	filepath.append(batFilename);
@@ -170,5 +170,5 @@ bool ShellSystem::ChangeExecuteDirectory(std::wstring_view batFilename, std::str
 	cmd.append((exeMode == ShellExecuteMode::ShowCmdPrompt) ? " & cmd /K " : " & cmd /C ");
 	cmd.append(batcmd);
 
-	return MakeBatfile(cmd, wide_to_sjis(batFilename.data()));
+	return RegistBatfile(cmd, wide_to_sjis(batFilename.data()));
 }
