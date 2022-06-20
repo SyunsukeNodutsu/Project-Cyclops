@@ -10,6 +10,7 @@
 //-------------------------------------------------------------------------------------
 
 #pragma once
+#pragma warning(disable : 26812)
 
 #include <cstddef>
 #include <cstdint>

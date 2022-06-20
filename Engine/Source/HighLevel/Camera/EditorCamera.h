@@ -14,6 +14,7 @@ public:
 	~EditorCamera() = default;
 
 	void Update();
+	void SetZoomSpeed(float speed) { m_zoomSpeed = speed; }
 
 private:
 
