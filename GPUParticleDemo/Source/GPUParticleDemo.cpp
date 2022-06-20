@@ -28,10 +28,10 @@ void GPUParticleDemo::OnStart()
 		.m_color = float4(0, 1, 0, 1),
 	};
 
-	//m_spParticleTexture = std::make_shared<Texture>();
-	//m_spParticleTexture->Load(L"../Assets/Circle.png");
+	m_spParticleTexture = std::make_shared<Texture>();
+	m_spParticleTexture->Load(L"../Assets/Circle.png");
 
-	m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 800, nullptr, true);
+	m_pGraphicsDevice->m_spParticleSystem->Emit(m_emitData, 80000, nullptr, true);
 }
 
 //-----------------------------------------------------------------------------

@@ -76,6 +76,9 @@
 //DirectXTK(SimpleMath)
 #include <SimpleMath.h>
 
+//json
+#include <nlohmann/json.hpp>
+
 //imGui
 #include <imgui.h>
 #define IMGUI_DEFINE_PLACEMENT_NEW

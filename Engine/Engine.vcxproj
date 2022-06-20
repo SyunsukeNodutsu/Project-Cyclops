@@ -94,6 +94,11 @@
     <ClInclude Include="..\Library\imGui\imstb_rectpack.h" />
     <ClInclude Include="..\Library\imGui\imstb_textedit.h" />
     <ClInclude Include="..\Library\imGui\imstb_truetype.h" />
+    <ClInclude Include="..\Library\json\nlohmann\adl_serializer.hpp" />
+    <ClInclude Include="..\Library\json\nlohmann\byte_container_with_subtype.hpp" />
+    <ClInclude Include="..\Library\json\nlohmann\json.hpp" />
+    <ClInclude Include="..\Library\json\nlohmann\json_fwd.hpp" />
+    <ClInclude Include="..\Library\json\nlohmann\ordered_map.hpp" />
     <ClInclude Include="Source\Audio\AudioDevice.h" />
     <ClInclude Include="Source\Audio\AudioDeviceChild.h" />
     <ClInclude Include="Source\Audio\Sound.h" />
@@ -651,22 +656,22 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>../Library/StringConverter;../Library/DirectXTK;../Library/DirectXTex;../Library/imGui;./Source;$(IncludePath)</IncludePath>
+    <IncludePath>../Library/StringConverter;../Library/DirectXTK;../Library/DirectXTex;../Library/json;../Library/imGui;./Source;$(IncludePath)</IncludePath>
     <LibraryPath>../Library/DirectXTK/Bin/Desktop_2019_Win10/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>../Library/StringConverter;../Library/DirectXTK;../Library/DirectXTex;../Library/imGui;./Source;$(IncludePath)</IncludePath>
+    <IncludePath>../Library/StringConverter;../Library/DirectXTK;../Library/DirectXTex;../Library/json;../Library/imGui;./Source;$(IncludePath)</IncludePath>
     <LibraryPath>../Library/DirectXTK/Bin/Desktop_2019_Win10/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>../Library/StringConverter;../Library/DirectXTK;../Library/DirectXTex;../Library/imGui;./Source;$(IncludePath)</IncludePath>
+    <IncludePath>../Library/StringConverter;../Library/DirectXTK;../Library/DirectXTex;../Library/json;../Library/imGui;./Source;$(IncludePath)</IncludePath>
     <LibraryPath>../Library/DirectXTK/Bin/Desktop_2019_Win10/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>../Library/StringConverter;../Library/DirectXTK;../Library/DirectXTex;../Library/imGui;./Source;$(IncludePath)</IncludePath>
+    <IncludePath>../Library/StringConverter;../Library/DirectXTK;../Library/DirectXTex;../Library/json;../Library/imGui;./Source;$(IncludePath)</IncludePath>
     <LibraryPath>../Library/DirectXTK/Bin/Desktop_2019_Win10/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

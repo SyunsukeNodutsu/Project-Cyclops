@@ -97,6 +97,15 @@
     <Filter Include="Source\Graphics\Particle\Module">
       <UniqueIdentifier>{efae874a-0ade-4d66-bc07-f036ce83915e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Input\KeyMouse">
+      <UniqueIdentifier>{b8498e20-a5a3-4ad4-9344-eaad13f4cf16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Input\Pad">
+      <UniqueIdentifier>{332874e4-b0aa-46e5-a225-a8aa5bfc5bc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\json">
+      <UniqueIdentifier>{d0fece95-376d-42ec-8571-ca1f45de24b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Window\Window.cpp">
@@ -439,6 +448,21 @@
     </ClInclude>
     <ClInclude Include="Source\Graphics\Particle\Module\CollisionModule.h">
       <Filter>Source\Graphics\Particle\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\json\nlohmann\adl_serializer.hpp">
+      <Filter>Library\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\json\nlohmann\byte_container_with_subtype.hpp">
+      <Filter>Library\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\json\nlohmann\json.hpp">
+      <Filter>Library\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\json\nlohmann\json_fwd.hpp">
+      <Filter>Library\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\json\nlohmann\ordered_map.hpp">
+      <Filter>Library\json</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
