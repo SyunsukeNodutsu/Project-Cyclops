@@ -245,7 +245,7 @@ void ParticleWork::EmitAsync()
 
 		for (int i = 0; i < m_numParticles; i++)
 		{
-			RandomSystem::Initialize();
+			//RandomSystem::Initialize();
 
 			float posX = RandomSystem::GetRandom<float>(m_data.m_minPosition.x, m_data.m_maxPosition.x);
 			float posY = RandomSystem::GetRandom<float>(m_data.m_minPosition.y, m_data.m_maxPosition.y);

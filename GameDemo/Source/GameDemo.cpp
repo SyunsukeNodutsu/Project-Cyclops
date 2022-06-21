@@ -42,7 +42,44 @@ void GameDemo::OnUpdate()
 
 	if (m_button.IsPush())
 	{
-		ShellSystem::RegistBatfile("dir", "test.bat");
+		auto num = RandomSystem::GetRandomInt<int>(0, 10);
+
+		Debug::Log("num + " + ToString(num));
+	}
+
+	m_button.Update();
+}
+
+//-----------------------------------------------------------------------------
+// 3D描画
+//-----------------------------------------------------------------------------
+void GameDemo::OnDraw3D()
+{
+}
+
+//-----------------------------------------------------------------------------
+// 2D描画
+//-----------------------------------------------------------------------------
+void GameDemo::OnDraw2D(SpriteShader& spriteShader)
+{
+	spriteShader.DrawTexture(m_spTexture.get(), float2( 100, -80), float2(0.2f, 0.2f));
+	spriteShader.DrawTexture(m_spTexture.get(), float2( 800, 400), float2(0.2f, 0.2f));
+	spriteShader.DrawTexture(m_spTexture.get(), float2(-500, 200), float2(0.2f, 0.2f));
+
+	spriteShader.DrawLine(float2(0, 400), float2(400, 400), color4::Green);
+
+	m_button.Draw();
+}
+
+//-----------------------------------------------------------------------------
+// 描画後更新
+//-----------------------------------------------------------------------------
+void GameDemo::OnLateUpdate()
+{
+}
+
+/*
+ShellSystem::RegistBatfile("dir", "test.bat");
 		ShellSystem::ExecuteShell("test.bat", "C:Window/Temp", ShellExecuteMode::HideRedirect);
 		{
 			FILE* fp = nullptr;
@@ -77,36 +114,4 @@ void GameDemo::OnUpdate()
 			OutputDebugStringA(std::string("window name: " + str2 + "\n\n").c_str());
 		}
 
-		ifs.close();
-	}
-
-	m_button.Update();
-}
-
-//-----------------------------------------------------------------------------
-// 3D描画
-//-----------------------------------------------------------------------------
-void GameDemo::OnDraw3D()
-{
-}
-
-//-----------------------------------------------------------------------------
-// 2D描画
-//-----------------------------------------------------------------------------
-void GameDemo::OnDraw2D(SpriteShader& spriteShader)
-{
-	spriteShader.DrawTexture(m_spTexture.get(), float2( 100, -80), float2(0.2f, 0.2f));
-	spriteShader.DrawTexture(m_spTexture.get(), float2( 800, 400), float2(0.2f, 0.2f));
-	spriteShader.DrawTexture(m_spTexture.get(), float2(-500, 200), float2(0.2f, 0.2f));
-
-	spriteShader.DrawLine(float2(0, 400), float2(400, 400), color4::Green);
-
-	m_button.Draw();
-}
-
-//-----------------------------------------------------------------------------
-// 描画後更新
-//-----------------------------------------------------------------------------
-void GameDemo::OnLateUpdate()
-{
-}
+		ifs.close();*/
