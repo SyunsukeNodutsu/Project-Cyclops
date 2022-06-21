@@ -43,7 +43,20 @@ void GameDemo::OnUpdate()
 	if (m_button.IsPush())
 	{
 		ShellSystem::RegistBatfile("dir", "test.bat");
-		ShellSystem::ExecuteShell("test.bat", "D:", ShellExecuteMode::HideRedirect);
+		ShellSystem::ExecuteShell("test.bat", "C:Window/Temp", ShellExecuteMode::HideRedirect);
+		{
+			FILE* fp = nullptr;
+			fopen_s(&fp, ShellSystem::m_stdRedirectFiepath.data(), "r");
+			if (fp)
+			{
+				char line[256] = "";
+				while (fgets(line, _countof(line), fp) != NULL)
+					OutputDebugStringA(line);
+
+				fclose(fp);
+			}
+			else Debug::LogError("ログファイルの読み込み失敗.");
+		}
 
 		std::ifstream ifs("../Assets/test.json");
 		if (ifs.good())

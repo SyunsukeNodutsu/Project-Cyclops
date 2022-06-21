@@ -270,6 +270,9 @@
     <ClCompile Include="Source\Graphics\Particle\Module\MainModule.cpp">
       <Filter>Source\Graphics\Particle\Module</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Math\RandomSystem.cpp">
+      <Filter>Source\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window\Window.h">
@@ -463,6 +466,9 @@
     </ClInclude>
     <ClInclude Include="..\Library\json\nlohmann\ordered_map.hpp">
       <Filter>Library\json</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\RandomSystem.h">
+      <Filter>Source\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

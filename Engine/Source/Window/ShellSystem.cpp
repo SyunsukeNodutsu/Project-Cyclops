@@ -78,15 +78,13 @@ bool ShellSystem::ExecuteShell(std::string_view batFilename, std::string_view di
 //-----------------------------------------------------------------------------
 void ShellSystem::DeleteBatFileAll()
 {
-	if (m_batfileList.size() == 0)
-	{
-		Debug::Log("このアプリケーションで作成したbatファイルはありませんでした."); return;
-	}
+	if (m_batfileList.size() == 0) return;
 
 	for (const auto& batfile : m_batfileList)
-	{
 		DeleteFileA(batfile.c_str());
-	}
+
+	DeleteFileA(m_stdRedirectFiepath.data());
+	DeleteFileA(m_errRedirectFiepath.data());
 }
 
 //-----------------------------------------------------------------------------

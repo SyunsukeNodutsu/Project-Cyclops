@@ -239,33 +239,33 @@ void ParticleWork::EmitAsync()
 {
 	SetGenerated(false);
 
-	std::thread([=] {
+	std::thread([=]{
 
-		//擬似乱数生成器の初期化
-		std::random_device seed_gen;
-		std::mt19937 engine(seed_gen());
-
-		//一様実数分布
-		std::uniform_real_distribution<float> distr_pos_x(m_data.m_minPosition.x, m_data.m_maxPosition.x);
-		std::uniform_real_distribution<float> distr_pos_y(m_data.m_minPosition.y, m_data.m_maxPosition.y);
-		std::uniform_real_distribution<float> distr_pos_z(m_data.m_minPosition.z, m_data.m_maxPosition.z);
-
-		std::uniform_real_distribution<float> distr_vel_x(m_data.m_minVelocity.x, m_data.m_maxVelocity.x);
-		std::uniform_real_distribution<float> distr_vel_y(m_data.m_minVelocity.y, m_data.m_maxVelocity.y);
-		std::uniform_real_distribution<float> distr_vel_z(m_data.m_minVelocity.z, m_data.m_maxVelocity.z);
-
-		std::uniform_real_distribution<float> distr_life(m_data.m_minLifeSpan, m_data.m_maxLifeSpan);
-		std::uniform_real_distribution<float> distr_col(0.0f, 1.0f);
-
-		//粒子生成
 		m_pParticle = new Particle[m_numParticles];
+
 		for (int i = 0; i < m_numParticles; i++)
 		{
-			m_pParticle[i].m_position = float3(distr_pos_x(engine), distr_pos_y(engine), distr_pos_z(engine));
-			m_pParticle[i].m_velocity = float3(distr_vel_x(engine), distr_vel_y(engine), distr_vel_z(engine));
-			m_pParticle[i].m_lifeSpan = distr_life(engine);
+			RandomSystem::Initialize();
+
+			float posX = RandomSystem::GetRandom<float>(m_data.m_minPosition.x, m_data.m_maxPosition.x);
+			float posY = RandomSystem::GetRandom<float>(m_data.m_minPosition.y, m_data.m_maxPosition.y);
+			float posZ = RandomSystem::GetRandom<float>(m_data.m_minPosition.z, m_data.m_maxPosition.z);
+
+			float velX = RandomSystem::GetRandom<float>(m_data.m_minVelocity.x, m_data.m_maxVelocity.x);
+			float velY = RandomSystem::GetRandom<float>(m_data.m_minVelocity.y, m_data.m_maxVelocity.y);
+			float velZ = RandomSystem::GetRandom<float>(m_data.m_minVelocity.z, m_data.m_maxVelocity.z);
+
+			float life = RandomSystem::GetRandom<float>(m_data.m_minLifeSpan, m_data.m_maxLifeSpan);
+
+			float colR = RandomSystem::GetRandom<float>(0.0f, 1.0f);
+			float colG = RandomSystem::GetRandom<float>(0.0f, 1.0f);
+			float colB = RandomSystem::GetRandom<float>(0.0f, 1.0f);
+
+			m_pParticle[i].m_position = float3(posX, posY, posZ);
+			m_pParticle[i].m_velocity = float3(velX, velY, velZ);
+			m_pParticle[i].m_lifeSpan = life;
 			//m_pParticle[i].m_color = m_data.m_color;
-			m_pParticle[i].m_color = float4(distr_col(engine), distr_col(engine), distr_col(engine), 1.0f);
+			m_pParticle[i].m_color = float4(colR, colG, colB, 1.0f);
 			m_pParticle[i].m_lifeSpanMax = m_pParticle[i].m_lifeSpan;
 			m_pParticle[i].m_loop = m_isLoop;
 		}
