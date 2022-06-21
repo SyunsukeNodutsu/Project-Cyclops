@@ -36,6 +36,7 @@ public:
 	const std::list<std::shared_ptr<Camera>>& GetCameraList() const { return m_spCameraList; }
 	const std::shared_ptr<Camera>& GetUseCamera() const { return m_spUseCamera; }
 	const std::shared_ptr<Camera> SearchCamera(const std::string& name) const;
+	const std::shared_ptr<EditorCamera>& GetEditorCamera() const { return m_spEditCamera; }
 
 	const bool IsNowDolly() const { return m_nowDolly; }
 
