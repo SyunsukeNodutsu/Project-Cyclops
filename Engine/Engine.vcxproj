@@ -60,6 +60,7 @@
     <ClCompile Include="Source\HighLevel\CyclopsRoot.cpp" />
     <ClCompile Include="Source\HighLevel\GUI\Button2D.cpp" />
     <ClCompile Include="Source\HighLevel\Manager\CameraManager.cpp" />
+    <ClCompile Include="Source\HighLevel\Manager\ResourceManager.cpp" />
     <ClCompile Include="Source\Input\GamePad.cpp" />
     <ClCompile Include="Source\Input\Input.cpp" />
     <ClCompile Include="Source\Math\Easing.cpp" />
@@ -136,6 +137,7 @@
     <ClInclude Include="Source\HighLevel\CyclopsRoot.h" />
     <ClInclude Include="Source\HighLevel\GUI\Button2D.h" />
     <ClInclude Include="Source\HighLevel\Manager\CameraManager.h" />
+    <ClInclude Include="Source\HighLevel\Manager\ResourceManager.h" />
     <ClInclude Include="Source\Input\GamePad.h" />
     <ClInclude Include="Source\Input\Input.h" />
     <ClInclude Include="Source\Math\Easing.h" />

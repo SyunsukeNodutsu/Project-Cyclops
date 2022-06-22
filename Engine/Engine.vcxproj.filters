@@ -273,6 +273,9 @@
     <ClCompile Include="Source\Math\RandomSystem.cpp">
       <Filter>Source\Math</Filter>
     </ClCompile>
+    <ClCompile Include="Source\HighLevel\Manager\ResourceManager.cpp">
+      <Filter>Source\HighLevel\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window\Window.h">
@@ -469,6 +472,9 @@
     </ClInclude>
     <ClInclude Include="Source\Math\RandomSystem.h">
       <Filter>Source\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HighLevel\Manager\ResourceManager.h">
+      <Filter>Source\HighLevel\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
