@@ -245,21 +245,19 @@ void ParticleWork::EmitAsync()
 
 		for (int i = 0; i < m_numParticles; i++)
 		{
-			//RandomSystem::Initialize();
+			float posX = RandomSystem::GetRandomReal<float>(m_data.m_minPosition.x, m_data.m_maxPosition.x);
+			float posY = RandomSystem::GetRandomReal<float>(m_data.m_minPosition.y, m_data.m_maxPosition.y);
+			float posZ = RandomSystem::GetRandomReal<float>(m_data.m_minPosition.z, m_data.m_maxPosition.z);
 
-			float posX = RandomSystem::GetRandom<float>(m_data.m_minPosition.x, m_data.m_maxPosition.x);
-			float posY = RandomSystem::GetRandom<float>(m_data.m_minPosition.y, m_data.m_maxPosition.y);
-			float posZ = RandomSystem::GetRandom<float>(m_data.m_minPosition.z, m_data.m_maxPosition.z);
+			float velX = RandomSystem::GetRandomReal<float>(m_data.m_minVelocity.x, m_data.m_maxVelocity.x);
+			float velY = RandomSystem::GetRandomReal<float>(m_data.m_minVelocity.y, m_data.m_maxVelocity.y);
+			float velZ = RandomSystem::GetRandomReal<float>(m_data.m_minVelocity.z, m_data.m_maxVelocity.z);
 
-			float velX = RandomSystem::GetRandom<float>(m_data.m_minVelocity.x, m_data.m_maxVelocity.x);
-			float velY = RandomSystem::GetRandom<float>(m_data.m_minVelocity.y, m_data.m_maxVelocity.y);
-			float velZ = RandomSystem::GetRandom<float>(m_data.m_minVelocity.z, m_data.m_maxVelocity.z);
+			float life = RandomSystem::GetRandomReal<float>(m_data.m_minLifeSpan, m_data.m_maxLifeSpan);
 
-			float life = RandomSystem::GetRandom<float>(m_data.m_minLifeSpan, m_data.m_maxLifeSpan);
-
-			float colR = RandomSystem::GetRandom<float>(0.0f, 1.0f);
-			float colG = RandomSystem::GetRandom<float>(0.0f, 1.0f);
-			float colB = RandomSystem::GetRandom<float>(0.0f, 1.0f);
+			float colR = RandomSystem::GetRandomReal<float>(0.0f, 1.0f);
+			float colG = RandomSystem::GetRandomReal<float>(0.0f, 1.0f);
+			float colB = RandomSystem::GetRandomReal<float>(0.0f, 1.0f);
 
 			m_pParticle[i].m_position = float3(posX, posY, posZ);
 			m_pParticle[i].m_velocity = float3(velX, velY, velZ);

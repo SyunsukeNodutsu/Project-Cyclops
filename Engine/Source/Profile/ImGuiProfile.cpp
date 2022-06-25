@@ -241,7 +241,13 @@ void ImGuiProfile::AudioMonitor(ImGuiWindowFlags wflags)
 	//サウンドリストで選んだサウンドを編集
 	if (wpSound.lock())
 	{
-		ImGui::Text(std::string("Select: " + wpSound.lock()->GetName()).c_str());
+		UINT len = wpSound.lock()->GetLength();
+		UINT lenM = wpSound.lock()->GetLength() / 60;
+		UINT lenS = wpSound.lock()->GetLength() % 60;
+
+
+		ImGui::Text(std::string("Name  : " + wpSound.lock()->GetName()).c_str());
+		ImGui::Text(std::string("Length: " + ToString(lenM) + ":" + ToString(lenS)).c_str());
 
 		auto val = wpSound.lock()->GetVolume();
 		if (ImGui::SliderFloat("Volume", &val, 0.0f, 1.0f, "%.2f")) wpSound.lock()->SetVolume(val);

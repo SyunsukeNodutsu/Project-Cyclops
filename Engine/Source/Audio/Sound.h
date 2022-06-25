@@ -47,7 +47,8 @@ public:
 	float GetVolume();
 	bool IsPlaying();
 
-	const std::string GetName();
+	const std::string& GetName() { return Utility::GetFilenameFromFullpath(m_soundData.m_filepath); }
+	const unsigned int GetLength() const { return m_soundSeconds; }
 
 private:
 
@@ -62,6 +63,7 @@ private:
 	bool					m_fade;			//フェードを行っている
 	bool					m_done;			//解放済み
 	float					m_prevVolume;	//音量が変化する前の音量
+	unsigned int			m_soundSeconds;	//サウンドの秒数
 
 private:
 

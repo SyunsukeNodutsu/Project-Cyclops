@@ -20,7 +20,7 @@ public:
 	//@brief 一様分布乱数を返す
 	//@param min 最小値
 	//@param max 最大値
-	template<class T> static constexpr T GetRandom(T min, T max)
+	template<class T> static constexpr T GetRandomReal(T min, T max)
 	{
 		if (min > max) { assert(0 && "min max 引数が無効な式です."); return 0; }
 		if (max < min) { assert(0 && "min max 引数が無効な式です."); return 0; }

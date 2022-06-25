@@ -44,7 +44,7 @@ void GameDemo::OnUpdate()
 	{
 		auto num = RandomSystem::GetRandomInt<int>(0, 10);
 
-		Debug::Log("num + " + ToString(num));
+		Debug::Log("num: " + ToString(num));
 	}
 
 	m_button.Update();

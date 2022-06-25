@@ -211,14 +211,6 @@ bool Sound::IsPlaying()
 }
 
 //-----------------------------------------------------------------------------
-// 名前を返す
-//-----------------------------------------------------------------------------
-const std::string Sound::GetName()
-{
-    return Utility::GetFilenameFromFullpath(m_soundData.m_filepath);
-}
-
-//-----------------------------------------------------------------------------
 // フェード更新
 //-----------------------------------------------------------------------------
 void Sound::UpdateFade()
@@ -273,6 +265,20 @@ bool Sound::Load(const std::string& filepath, bool loop, bool useFilter)
     //オーディオバッファを追加
     if (!SubmitBuffer(loop, 0))
         return false;
+
+    //サウンドの秒数取得
+    {
+        XAUDIO2_VOICE_DETAILS VoiceDetails{};
+        m_pSourceVoice->GetVoiceDetails(&VoiceDetails);
+
+        auto TotalBytes = m_soundData.m_buffer.AudioBytes;//これを提供するのは
+        auto Stereo = 2;//はモノラルなら1
+        auto NumBytesPerChannelSample = 2;//ここで、2は16ビット整数の8ビットバイト数（1モノラルサンプル）
+        auto BytesPerSample = Stereo * NumBytesPerChannelSample;//ステレオサンプルペアあたり何バイトか
+        auto SampleRate = VoiceDetails.InputSampleRate;//何回目のステレオサンプル/秒か
+
+        m_soundSeconds = TotalBytes / BytesPerSample / SampleRate;//秒換算
+    }
 
     Debug::Log("SourceVoice作成: " + Utility::GetFilenameFromFullpath(m_soundData.m_filepath));
     return true;
