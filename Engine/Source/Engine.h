@@ -14,6 +14,7 @@
 //X2Audio X3DAudio
 #include <xaudio2.h>
 #include <xaudio2fx.h>
+#include <xapofx.h>
 #include <x3daudio.h>
 #pragma comment(lib,"xaudio2.lib")
 

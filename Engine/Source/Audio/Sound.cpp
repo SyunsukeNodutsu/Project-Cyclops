@@ -187,6 +187,22 @@ void Sound::SetFilter(XAUDIO2_FILTER_TYPE type, float frequencym, float oneOverQ
 }
 
 //-----------------------------------------------------------------------------
+// イコライザー検証
+//-----------------------------------------------------------------------------
+void Sound::SetEqualizer(FXEQ_PARAMETERS eqParam)
+{
+    if (m_audioDevice == nullptr) return;
+    if (m_audioDevice->m_pX2Audio == nullptr) return;
+    if (m_audioDevice->m_pMasteringVoice == nullptr) return;
+    if (m_pSourceVoice == nullptr) return;
+
+    if (FAILED(m_pSourceVoice->SetEffectParameters(0, &eqParam, sizeof(eqParam))))
+    {
+        Debug::LogError("SetEffectParameters失敗.");
+    }
+}
+
+//-----------------------------------------------------------------------------
 // 音量を返す
 //-----------------------------------------------------------------------------
 float Sound::GetVolume()
@@ -268,16 +284,41 @@ bool Sound::Load(const std::string& filepath, bool loop, bool useFilter)
 
     //サウンドの秒数取得
     {
-        XAUDIO2_VOICE_DETAILS VoiceDetails{};
-        m_pSourceVoice->GetVoiceDetails(&VoiceDetails);
+        XAUDIO2_VOICE_DETAILS voiceDetails = { 0 };
+        m_pSourceVoice->GetVoiceDetails(&voiceDetails);
 
-        auto TotalBytes = m_soundData.m_buffer.AudioBytes;//これを提供するのは
-        auto Stereo = 2;//はモノラルなら1
-        auto NumBytesPerChannelSample = 2;//ここで、2は16ビット整数の8ビットバイト数（1モノラルサンプル）
-        auto BytesPerSample = Stereo * NumBytesPerChannelSample;//ステレオサンプルペアあたり何バイトか
-        auto SampleRate = VoiceDetails.InputSampleRate;//何回目のステレオサンプル/秒か
+        const UINT NumBytesPerChannelSample = 2;//TODO: 調査
+        const UINT bytesPerSample = voiceDetails.InputChannels * NumBytesPerChannelSample;
 
-        m_soundSeconds = TotalBytes / BytesPerSample / SampleRate;//秒換算
+        m_soundSeconds = m_soundData.m_buffer.AudioBytes / bytesPerSample / voiceDetails.InputSampleRate;
+    }
+
+    //TODO: エフェクトチェインの作成は 関数化するべき
+    {
+        IUnknown* pXAPO;
+        if (FAILED(CreateFX(__uuidof(FXEQ), &pXAPO)))
+        {
+            Debug::Log("CreateFX(FXEQ)失敗.");// return false;
+        }
+
+        XAUDIO2_VOICE_DETAILS details{};
+        m_audioDevice->m_pMasteringVoice->GetVoiceDetails(&details);
+
+        //エフェクトチェイン作成
+        XAUDIO2_EFFECT_DESCRIPTOR descriptor{};
+        descriptor.InitialState = true;
+        descriptor.OutputChannels = details.InputChannels;
+        descriptor.pEffect = pXAPO;
+
+        XAUDIO2_EFFECT_CHAIN chain{};
+        chain.EffectCount = 1;
+        chain.pEffectDescriptors = &descriptor;
+        if (FAILED(m_pSourceVoice->SetEffectChain(&chain)))
+        {
+            Debug::Log("SetEffectChain失敗.");// return false;
+        }
+
+        pXAPO->Release();
     }
 
     Debug::Log("SourceVoice作成: " + Utility::GetFilenameFromFullpath(m_soundData.m_filepath));

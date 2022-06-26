@@ -227,13 +227,13 @@ void AudioDevice::UpdateVolumeMeter()
     XAUDIO2_VOICE_DETAILS details{};
     m_pMasteringVoice->GetVoiceDetails(&details);
 
-    XAUDIO2FX_VOLUMEMETER_LEVELS Levels{};
-    Levels.pPeakLevels  = &m_peakLevels[0];
-    Levels.pRMSLevels   = &m_RMSLevels[0];
-    Levels.ChannelCount = details.InputChannels;
+    XAUDIO2FX_VOLUMEMETER_LEVELS levels{};
+    levels.pPeakLevels  = &m_peakLevels[0];
+    levels.pRMSLevels   = &m_RMSLevels[0];
+    levels.ChannelCount = details.InputChannels;
 
     //パラメータ受信
-    if (FAILED(m_pMasteringVoice->GetEffectParameters(0, &Levels, sizeof(Levels))))
+    if (FAILED(m_pMasteringVoice->GetEffectParameters(0, &levels, sizeof(levels))))
     {
         Debug::Log("GetEffectParameters失敗.");
     }

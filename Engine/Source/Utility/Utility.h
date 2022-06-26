@@ -70,6 +70,14 @@ public:
     //@param relative 相対パスに変換を行うかどうか
     static bool OpenFileDialog(std::wstring& filepath, HWND hwnd = nullptr, const std::string& title = "select file", const char* filters = nullptr, const bool relative = false);
 
+    //@brief 最大値を"1"最小値を"0"に正規化し返す
+    //@param t 正規化する値
+    static float GetZeroOneLinear(float min, float max, float t) { return (t - min) / (max - min); }
+
+    //@brief "min"～"max"の値を"newMin"～"newMax"の値に正規化し返す
+    //@param t 正規化する値
+    static float GetZeroOneLinearEx(float min, float max, float newMin, float newMax, float t) { return (t - min) / (max - min) * (newMax - newMin) + newMin; }
+
 };
 
 //デバッグクラス

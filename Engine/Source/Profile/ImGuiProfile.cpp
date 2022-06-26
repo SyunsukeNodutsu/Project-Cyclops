@@ -8,7 +8,7 @@ bool ImGuiProfile::m_addLog = false;
 //-----------------------------------------------------------------------------
 ImGuiProfile::ImGuiProfile()
 	: m_inifile(false)
-	, m_showDemo(false)
+	, m_showDemo(true)
 	, m_pWindow(nullptr)
 	, m_pFpsTimer(nullptr)
 	, m_pGraphicsDevice(nullptr)
@@ -245,27 +245,78 @@ void ImGuiProfile::AudioMonitor(ImGuiWindowFlags wflags)
 		UINT lenM = wpSound.lock()->GetLength() / 60;
 		UINT lenS = wpSound.lock()->GetLength() % 60;
 
-
 		ImGui::Text(std::string("Name  : " + wpSound.lock()->GetName()).c_str());
 		ImGui::Text(std::string("Length: " + ToString(lenM) + ":" + ToString(lenS)).c_str());
 
 		auto val = wpSound.lock()->GetVolume();
 		if (ImGui::SliderFloat("Volume", &val, 0.0f, 1.0f, "%.2f")) wpSound.lock()->SetVolume(val);
-		static float frequencym = 0.0f;//フィルタ/パンの値もSoundクラスに保存してもよさそう
-		if (ImGui::SliderFloat("Frequencym", &frequencym, 0.0f, XAUDIO2_MAX_FILTER_FREQUENCY, "%.4f")) {}
-		static float oneOverQ = 1.4142f;
-		if (ImGui::SliderFloat("OneOverQ", &oneOverQ, 0.1f, XAUDIO2_MAX_FILTER_ONEOVERQ, "%.4f")) {}
-		static float pan = 0.0f;
-		if (ImGui::SliderFloat("Pan", &pan, -1.0f, 1.0f, "%.2f")) {}
 
-		if (ImGui::Button("LowPassFilter         ")) wpSound.lock()->SetFilter(XAUDIO2_FILTER_TYPE::LowPassFilter, frequencym, oneOverQ);
-		if (ImGui::Button("BandPassFilter        ")) wpSound.lock()->SetFilter(XAUDIO2_FILTER_TYPE::BandPassFilter, frequencym, oneOverQ);
-		if (ImGui::Button("HighPassFilter        ")) wpSound.lock()->SetFilter(XAUDIO2_FILTER_TYPE::HighPassFilter, frequencym, oneOverQ);
-		if (ImGui::Button("NotchFilter           ")) wpSound.lock()->SetFilter(XAUDIO2_FILTER_TYPE::NotchFilter, frequencym, oneOverQ);
-		if (ImGui::Button("LowPassOnePoleFilter  ")) wpSound.lock()->SetFilter(XAUDIO2_FILTER_TYPE::LowPassOnePoleFilter, frequencym, oneOverQ);
-		if (ImGui::Button("HighPassOnePoleFilter ")) wpSound.lock()->SetFilter(XAUDIO2_FILTER_TYPE::HighPassOnePoleFilter, frequencym, oneOverQ);
-		if (ImGui::Button("Filter OFF            ")) wpSound.lock()->SetFilter(XAUDIO2_FILTER_TYPE::LowPassFilter, 1, 1);
-		if (ImGui::Button("Pan                   ")) wpSound.lock()->SetPan(pan);
+		if (ImGui::Button("Start")) wpSound.lock()->Play();
+		if (ImGui::Button("Stop")) wpSound.lock()->Stop();//ウィンドウに応じて ボタンサイズ変更(文字列を短くしたり？)
+
+		if (ImGui::TreeNodeEx("Equalizer", ImGuiTreeNodeFlags_None))
+		{
+			//ImGui::Checkbox("NoDamage", &m_isNoDamage);
+
+			bool change = false;
+
+			static float bandW0 = FXEQ_DEFAULT_BANDWIDTH, bandW1 = FXEQ_DEFAULT_BANDWIDTH, bandW2 = FXEQ_DEFAULT_BANDWIDTH, bandW3 = FXEQ_DEFAULT_BANDWIDTH;
+			if (ImGui::SliderFloat("BandWidth 0", &bandW0, FXEQ_MIN_BANDWIDTH, FXEQ_MAX_BANDWIDTH, "%.2f")) { change = true; }
+			if (ImGui::SliderFloat("BandWidth 1", &bandW1, FXEQ_MIN_BANDWIDTH, FXEQ_MAX_BANDWIDTH, "%.2f")) { change = true; }
+			if (ImGui::SliderFloat("BandWidth 2", &bandW2, FXEQ_MIN_BANDWIDTH, FXEQ_MAX_BANDWIDTH, "%.2f")) { change = true; }
+			if (ImGui::SliderFloat("BandWidth 3", &bandW3, FXEQ_MIN_BANDWIDTH, FXEQ_MAX_BANDWIDTH, "%.2f")) { change = true; }
+
+			static float gain0 = FXEQ_DEFAULT_GAIN, gain1 = FXEQ_DEFAULT_GAIN, gain2 = FXEQ_DEFAULT_GAIN, gain3 = FXEQ_DEFAULT_GAIN;
+			if (ImGui::SliderFloat("Gain 0: ", &gain0, FXEQ_MIN_GAIN, FXEQ_MAX_GAIN, "%.2f")) { change = true; }
+			if (ImGui::SliderFloat("Gain 1: ", &gain1, FXEQ_MIN_GAIN, FXEQ_MAX_GAIN, "%.2f")) { change = true; }
+			if (ImGui::SliderFloat("Gain 2: ", &gain2, FXEQ_MIN_GAIN, FXEQ_MAX_GAIN, "%.2f")) { change = true; }
+			if (ImGui::SliderFloat("Gain 3: ", &gain3, FXEQ_MIN_GAIN, FXEQ_MAX_GAIN, "%.2f")) { change = true; }
+
+			FXEQ_PARAMETERS param =
+			{
+				.FrequencyCenter0	= FXEQ_DEFAULT_FREQUENCY_CENTER_0,
+				.Gain0				= gain0,
+				.Bandwidth0			= bandW0,
+
+				.FrequencyCenter1	= FXEQ_DEFAULT_FREQUENCY_CENTER_1,
+				.Gain1				= gain1,
+				.Bandwidth1			= bandW1,
+
+				.FrequencyCenter2	= FXEQ_DEFAULT_FREQUENCY_CENTER_2,
+				.Gain2				= gain2,
+				.Bandwidth2			= bandW2,
+
+				.FrequencyCenter3	= FXEQ_DEFAULT_FREQUENCY_CENTER_3,
+				.Gain3				= gain3,
+				.Bandwidth3			= bandW3,
+			};
+
+			//if (ImGui::Button("SetEqualizer")) wpSound.lock()->SetEqualizer(param);
+			if (change) wpSound.lock()->SetEqualizer(param);
+
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNodeEx("Filter and Pan", ImGuiTreeNodeFlags_None))
+		{
+			static float frequencym = 0.0f;//フィルタ/パンの値もSoundクラスに保存してもよさそう
+			if (ImGui::SliderFloat("Frequencym", &frequencym, 0.0f, XAUDIO2_MAX_FILTER_FREQUENCY, "%.4f")) {}
+			static float oneOverQ = 1.4142f;
+			if (ImGui::SliderFloat("OneOverQ", &oneOverQ, 0.1f, XAUDIO2_MAX_FILTER_ONEOVERQ, "%.4f")) {}
+			static float pan = 0.0f;
+			if (ImGui::SliderFloat("Pan", &pan, -1.0f, 1.0f, "%.2f")) {}
+
+			if (ImGui::Button("LowPassFilter         ")) wpSound.lock()->SetFilter(XAUDIO2_FILTER_TYPE::LowPassFilter, frequencym, oneOverQ);
+			if (ImGui::Button("BandPassFilter        ")) wpSound.lock()->SetFilter(XAUDIO2_FILTER_TYPE::BandPassFilter, frequencym, oneOverQ);
+			if (ImGui::Button("HighPassFilter        ")) wpSound.lock()->SetFilter(XAUDIO2_FILTER_TYPE::HighPassFilter, frequencym, oneOverQ);
+			if (ImGui::Button("NotchFilter           ")) wpSound.lock()->SetFilter(XAUDIO2_FILTER_TYPE::NotchFilter, frequencym, oneOverQ);
+			if (ImGui::Button("LowPassOnePoleFilter  ")) wpSound.lock()->SetFilter(XAUDIO2_FILTER_TYPE::LowPassOnePoleFilter, frequencym, oneOverQ);
+			if (ImGui::Button("HighPassOnePoleFilter ")) wpSound.lock()->SetFilter(XAUDIO2_FILTER_TYPE::HighPassOnePoleFilter, frequencym, oneOverQ);
+			if (ImGui::Button("Filter OFF            ")) wpSound.lock()->SetFilter(XAUDIO2_FILTER_TYPE::LowPassFilter, 1, 1);
+			if (ImGui::Button("Pan                   ")) wpSound.lock()->SetPan(pan);
+
+			ImGui::TreePop();
+		}
 
 	}
 	else ImGui::Text("Select: none");
@@ -357,8 +408,8 @@ void ImGuiProfile::PlotVolumeMeter(const float refreshRate)
 	ImGui::PlotLines("RMSLevels R", valuesB, IM_ARRAYSIZE(valuesB), values_offset, overlay, down, up, ImVec2(200, 60.0f));
 
 	sprintf_s(overlay, "avg %f", m_pAudioDevice->m_RMSLevels[0]);
-	ImGui::PlotLines("PeakLevels L", valuesC, IM_ARRAYSIZE(valuesC), values_offset, overlay, down, up, ImVec2(200, 60.0f));
+	ImGui::PlotLines("PeakLevels L", valuesC, IM_ARRAYSIZE(valuesC), values_offset, overlay, down, up + 1.0f, ImVec2(200, 60.0f));
 
 	sprintf_s(overlay, "avg %f", m_pAudioDevice->m_RMSLevels[1]);
-	ImGui::PlotLines("PeakLevels R", valuesD, IM_ARRAYSIZE(valuesD), values_offset, overlay, down, up, ImVec2(200, 60.0f));
+	ImGui::PlotLines("PeakLevels R", valuesD, IM_ARRAYSIZE(valuesD), values_offset, overlay, down, up + 1.0f, ImVec2(200, 60.0f));
 }

@@ -1,7 +1,7 @@
 ﻿//-----------------------------------------------------------------------------
 // File: Sound.h
 //
-// 音声データ単位 対応フォーマット(3GP,ASF,AVI,MP3,MPEG-4,SAMI,wav)
+// 音声データ単位
 //-----------------------------------------------------------------------------
 #pragma once
 #include "AudioDeviceChild.h"
@@ -43,6 +43,7 @@ public:
 	void SetPitch(float pitch);
 	void SetPan(float pan);
 	void SetFilter(XAUDIO2_FILTER_TYPE type, float frequencym, float oneOverQ = 1.0f);
+	void SetEqualizer(FXEQ_PARAMETERS eqParam);
 
 	float GetVolume();
 	bool IsPlaying();

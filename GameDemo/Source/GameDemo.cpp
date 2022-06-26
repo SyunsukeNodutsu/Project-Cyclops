@@ -42,9 +42,7 @@ void GameDemo::OnUpdate()
 
 	if (m_button.IsPush())
 	{
-		auto num = RandomSystem::GetRandomInt<int>(0, 10);
-
-		Debug::Log("num: " + ToString(num));
+		Debug::Log("num: " + ToString(RandomSystem::GetRandomInt<int>(0, 10)));
 	}
 
 	m_button.Update();
