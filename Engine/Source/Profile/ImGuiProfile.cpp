@@ -93,18 +93,17 @@ void ImGuiProfile::AddLog(std::string_view log, const float3& color, const std::
 	time(&times_day);
 	localtime_s(&localtime, &times_day);
 
-	std::string hour = (localtime.tm_hour < 10) ? "0" + ToString(localtime.tm_hour) : ToString(localtime.tm_hour);
-	std::string min = (localtime.tm_min < 10) ? "0" + ToString(localtime.tm_min) : ToString(localtime.tm_min);
-	std::string sec = (localtime.tm_sec < 10) ? "0" + ToString(localtime.tm_sec) : ToString(localtime.tm_sec);
+	const std::string& hour = (localtime.tm_hour < 10) ? "0" + ToString(localtime.tm_hour) : ToString(localtime.tm_hour);
+	const std::string& min  = (localtime.tm_min  < 10) ? "0" + ToString(localtime.tm_min)  : ToString(localtime.tm_min);
+	const std::string& sec  = (localtime.tm_sec  < 10) ? "0" + ToString(localtime.tm_sec)  : ToString(localtime.tm_sec);
 
-	LogData data{};
-	data.log += "[" + hour + ":" + min + ":" + sec + "]: ";
-	data.log += log.substr();
-
-	data.color = color;
+	LogData data =
+	{
+		.log = "[" + hour + ":" + min + ":" + sec + "]: " + log.data(),
+		.color = color,
+	};
 
 	m_logDatas.push_back(data);
-
 	m_addLog = true;
 }
 
@@ -135,6 +134,41 @@ void ImGuiProfile::SceneMonitor(ImGuiWindowFlags wflags)
 	
 	ImGui::Text(std::string("MousePos: " + ToString(Input::GetMousePos().x) + ", " + ToString(Input::GetMousePos().y)).c_str());
 
+	static bool show_headers = false;
+	ImGui::Checkbox("show_headers", &show_headers);
+	if (ImGui::BeginTable("table_padding", 3, 0))
+	{
+		if (show_headers)
+		{
+			ImGui::TableSetupColumn("One");
+			ImGui::TableSetupColumn("Two");
+			ImGui::TableSetupColumn("Three");
+			ImGui::TableHeadersRow();
+		}
+
+		for (int row = 0; row < 5; row++)
+		{
+			ImGui::TableNextRow();
+			for (int column = 0; column < 3; column++)
+			{
+				ImGui::TableSetColumnIndex(column);
+				if (row == 0)
+				{
+					ImGui::Text("Avail %.2f", ImGui::GetContentRegionAvail().x);
+				}
+				else
+				{
+					char buf[32];
+					sprintf_s(buf, "Hello %d,%d", column, row);
+					ImGui::Button(buf, ImVec2(-FLT_MIN, 0.0f));
+				}
+				if (ImGui::TableGetColumnFlags() & ImGuiTableColumnFlags_IsHovered)
+					ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg, IM_COL32(0, 100, 0, 255));
+			}
+		}
+		ImGui::EndTable();
+	}
+
 	ImGui::End();
 }
 
@@ -163,18 +197,6 @@ void ImGuiProfile::CameraMonitor(ImGuiWindowFlags wflags)
 	if (wpCamera.lock())
 	{
 		ImGui::Text(std::string("Select: " + wpCamera.lock()->m_name).c_str());
-
-		auto fov = RadToDeg(wpCamera.lock()->GetFovAngleY());
-		if (ImGui::SliderFloat("Fov", &fov, 0.001f, 120.0f, "%.2f"))
-			wpCamera.lock()->SetFovAngleY(DegToRad(fov));
-
-		ImGui::Text(std::string("Up      : " + ToStringV(wpCamera.lock()->Up())).c_str());
-		ImGui::Text(std::string("Down    : " + ToStringV(wpCamera.lock()->Down())).c_str());
-		ImGui::Text(std::string("Left    : " + ToStringV(wpCamera.lock()->Left())).c_str());
-		ImGui::Text(std::string("Right   : " + ToStringV(wpCamera.lock()->Right())).c_str());
-		ImGui::Text(std::string("Forward : " + ToStringV(wpCamera.lock()->Forward())).c_str());
-		ImGui::Text(std::string("Backward: " + ToStringV(wpCamera.lock()->Backward())).c_str());
-
 	}
 
 	ImGui::Separator();
@@ -184,14 +206,24 @@ void ImGuiProfile::CameraMonitor(ImGuiWindowFlags wflags)
 	if (ImGui::SliderFloat("ChangeTime", &time, 0, 5, "%.2f"))
 		m_pCameraManager->SetChangeTime(time);
 
-	if (ImGui::Button("Immediate ")) m_pCameraManager->SetChangeMode(ChangeMode::Immediate);
-	if (ImGui::Button("Liner     ")) m_pCameraManager->SetChangeMode(ChangeMode::Liner);
-	if (ImGui::Button("QuadIn    ")) m_pCameraManager->SetChangeMode(ChangeMode::QuadIn);
-	if (ImGui::Button("QuadOut   ")) m_pCameraManager->SetChangeMode(ChangeMode::QuadOut);
-	if (ImGui::Button("QuadInOut ")) m_pCameraManager->SetChangeMode(ChangeMode::QuadInOut);
-	if (ImGui::Button("CubicIn   ")) m_pCameraManager->SetChangeMode(ChangeMode::CubicIn);
-	if (ImGui::Button("CubicOut  ")) m_pCameraManager->SetChangeMode(ChangeMode::CubicOut);
-	if (ImGui::Button("CubicInOut")) m_pCameraManager->SetChangeMode(ChangeMode::CubicInOut);
+	const char* items[] = { "Immediate", "Liner", "QuadIn", "QuadOut", "QuadInOut", "CubicIn", "CubicOut", "CubicInOut" };
+	static int item = 0;
+	if (ImGui::Combo("Change Mode", &item, items, IM_ARRAYSIZE(items)))
+	{
+		switch (item)
+		{
+			using enum ChangeMode;
+		case static_cast<int>(Immediate):	m_pCameraManager->SetChangeMode(Immediate);		break;
+		case static_cast<int>(Liner):		m_pCameraManager->SetChangeMode(Liner);			break;
+		case static_cast<int>(QuadIn):		m_pCameraManager->SetChangeMode(QuadIn);		break;
+		case static_cast<int>(QuadOut):		m_pCameraManager->SetChangeMode(QuadOut);		break;
+		case static_cast<int>(QuadInOut):	m_pCameraManager->SetChangeMode(QuadInOut);		break;
+		case static_cast<int>(CubicIn):		m_pCameraManager->SetChangeMode(CubicIn);		break;
+		case static_cast<int>(CubicOut):	m_pCameraManager->SetChangeMode(CubicOut);		break;
+		case static_cast<int>(CubicInOut):	m_pCameraManager->SetChangeMode(CubicInOut);	break;
+		}
+		ImGui::SameLine();
+	}
 
 	ImGui::End();
 }
@@ -241,12 +273,13 @@ void ImGuiProfile::AudioMonitor(ImGuiWindowFlags wflags)
 	//サウンドリストで選んだサウンドを編集
 	if (wpSound.lock())
 	{
-		UINT len = wpSound.lock()->GetLength();
-		UINT lenM = wpSound.lock()->GetLength() / 60;
-		UINT lenS = wpSound.lock()->GetLength() % 60;
+		UINT lenM = wpSound.lock()->GetSeconds() / 60;
+		UINT lenS = wpSound.lock()->GetSeconds() % 60;
+		UINT lenN_M = wpSound.lock()->GetElapsedSeconds() / 60;
+		UINT lenN_S = wpSound.lock()->GetElapsedSeconds() % 60;
 
-		ImGui::Text(std::string("Name  : " + wpSound.lock()->GetName()).c_str());
-		ImGui::Text(std::string("Length: " + ToString(lenM) + ":" + ToString(lenS)).c_str());
+		ImGui::Text(std::string("Name : " + wpSound.lock()->GetName()).c_str());
+		ImGui::Text(std::string("Time : " + ToString(lenN_M) + ":" + ToString(lenN_S) + " / " + ToString(lenM) + ":" + ToString(lenS)).c_str());
 
 		auto val = wpSound.lock()->GetVolume();
 		if (ImGui::SliderFloat("Volume", &val, 0.0f, 1.0f, "%.2f")) wpSound.lock()->SetVolume(val);

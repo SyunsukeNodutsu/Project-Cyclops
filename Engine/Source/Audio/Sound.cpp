@@ -6,14 +6,17 @@
 Sound::Sound(const std::string& filepath, bool loop, bool useFilter)
     : m_soundData()
     , m_pSourceVoice(nullptr)
+    , m_seekTimer()
+    , m_prevVolume(1.0f)
+    , m_done(false)
+    , m_soundSeconds(0)
+    , m_soundElapsedSeconds(0)
     , m_timer()
     , m_fadeVolume(0.0f)
     , m_startVolume(0.0f)
     , m_targetVolume(0.0f)
     , m_targetTime(0.0f)
     , m_fade(false)
-    , m_done(false)
-    , m_prevVolume(1.0f)
 {
     if (!Load(filepath, loop, useFilter))
         Release();
@@ -24,6 +27,8 @@ Sound::Sound(const std::string& filepath, bool loop, bool useFilter)
 //-----------------------------------------------------------------------------
 void Sound::Update()
 {
+    m_soundElapsedSeconds = m_seekTimer.GetElapsedSeconds<unsigned int>();
+
     UpdateFade();
 }
 
@@ -58,10 +63,15 @@ void Sound::Play(bool flush, DWORD delay)
     {
         std::thread([=] {
             std::this_thread::sleep_for(std::chrono::milliseconds(delay));
+            m_seekTimer.Record();
             m_pSourceVoice->Start();
             }).detach();
     }
-    else m_pSourceVoice->Start();
+    else
+    {
+        m_seekTimer.Record();
+        m_pSourceVoice->Start();
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -175,10 +185,12 @@ void Sound::SetFilter(XAUDIO2_FILTER_TYPE type, float frequencym, float oneOverQ
     frequencym = std::clamp(frequencym, 0.0f, XAUDIO2_MAX_FILTER_FREQUENCY);
     oneOverQ = std::clamp(oneOverQ, 0.1f, XAUDIO2_MAX_FILTER_ONEOVERQ);
 
-    XAUDIO2_FILTER_PARAMETERS FilterParams;
-    FilterParams.Type = type;
-    FilterParams.Frequency = frequencym;
-    FilterParams.OneOverQ = oneOverQ;
+    XAUDIO2_FILTER_PARAMETERS FilterParams =
+    {
+        .Type       = type,
+        .Frequency  = frequencym,
+        .OneOverQ   = oneOverQ,
+    };
 
     if (FAILED(m_pSourceVoice->SetFilterParameters(&FilterParams)))
     {
@@ -209,6 +221,7 @@ float Sound::GetVolume()
 {
     if (m_pSourceVoice == nullptr) return FLT_MIN;
 
+    //TODO: floatの一時オブジェクト(この関数以外にもある) 別にいい気もするが 他のエンジンの実装を確認する
     float volume; m_pSourceVoice->GetVolume(&volume);
     return volume;
 }

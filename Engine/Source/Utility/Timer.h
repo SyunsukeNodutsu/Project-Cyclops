@@ -36,11 +36,17 @@ public:
 		std::chrono::duration<float> time_span = std::chrono::duration_cast<std::chrono::duration<float>>(now - m_timeStamp);
 		return time_span.count();
 	}
+	template<> static const unsigned int GetElapsedSeconds() {
+		auto now = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<unsigned int> time_span = std::chrono::duration_cast<std::chrono::duration<unsigned int>>(now - m_timeStamp);
+		return time_span.count();
+	}
 
 	//@brief 最後にRecord()が呼ばれてからの経過時間(ミリ秒)を返す
 	//@return 経過時間(ミリ秒)
 	template<> static const double GetElapsedMilliseconds() { return GetElapsedSeconds<double>() * 1000.0; }
 	template<> static const float GetElapsedMilliseconds() { return GetElapsedSeconds<float>() * 1000.0f; }
+	template<> static const unsigned int GetElapsedMilliseconds() { return GetElapsedSeconds<unsigned int>() * 1000; }
 
 private:
 

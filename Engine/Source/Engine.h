@@ -15,8 +15,10 @@
 #include <xaudio2.h>
 #include <xaudio2fx.h>
 #include <xapofx.h>
+#include <xapobase.h>
 #include <x3daudio.h>
 #pragma comment(lib,"xaudio2.lib")
+#pragma comment(lib,"xapobase.lib")
 
 //XInput
 #include <Xinput.h>

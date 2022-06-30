@@ -6,9 +6,10 @@
 FPSCamera::FPSCamera()
 	: m_sensitivity(float2(10.0f, 8.0f))
 	, m_degAngle(float3::Zero)
-	, m_minAngleX(-360)
-	, m_maxAngleX(360)
+	, m_minAngleX(-360.0f)
+	, m_maxAngleX(360.0f)
 	, m_startFrame(false)
+	, m_frameCount(0)
 {
 }
 
@@ -36,9 +37,8 @@ void FPSCamera::Update()
 	if (m_startFrame)
 	{
 		//即座に視点が移動しないように
-		static int count = 0;
-		count++;
-		if (count > 1) { count = 0; m_startFrame = false; }
+		m_frameCount++;
+		if (m_frameCount > 1) m_startFrame = false;
 	}
 }
 
@@ -49,8 +49,7 @@ void FPSCamera::OnUseStart()
 {
 	Input::SetMouseHide(true);
 	m_startFrame = true;
-
-	Debug::Log("OnUseStart()");
+	m_frameCount = 0;
 }
 
 //-----------------------------------------------------------------------------

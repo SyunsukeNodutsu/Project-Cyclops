@@ -40,5 +40,6 @@ private:
 	float		m_minAngleX;	//上向きの制限
 	float		m_maxAngleX;	//下向きの制限
 	bool		m_startFrame;	//使用開始の際にマウス座標の取得を1フレーム飛ばす
+	int			m_frameCount;
 
 };

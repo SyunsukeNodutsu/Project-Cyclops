@@ -48,6 +48,8 @@ void GPUParticleDemo::OnEnd()
 void GPUParticleDemo::OnUpdate()
 {
 	m_spCamera->SetCameraMatrix(matrix4x4::CreateTranslation(0, 0, -10));
+
+	Debug::AddDebugSphere(float3(0, 0, 0), 1.0f, color4::Black);
 }
 
 //-----------------------------------------------------------------------------

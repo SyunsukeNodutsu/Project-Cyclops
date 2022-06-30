@@ -49,22 +49,27 @@ public:
 	bool IsPlaying();
 
 	const std::string& GetName() { return Utility::GetFilenameFromFullpath(m_soundData.m_filepath); }
-	const unsigned int GetLength() const { return m_soundSeconds; }
+	const unsigned int GetSeconds() const { return m_soundSeconds; }
+	const unsigned int GetElapsedSeconds() const { return m_soundElapsedSeconds; }
 
 private:
 
 	SoundData				m_soundData;	//バッファ,フォーマット,ユーザーデータなど
 	IXAudio2SourceVoice*	m_pSourceVoice;	//ソースボイス
 
+	CommonTimer				m_seekTimer;	//再生位置用タイマ
+	float					m_prevVolume;	//音量が変化する前の音量
+	bool					m_done;			//解放済み
+	unsigned int			m_soundSeconds;	//サウンドの秒数
+	unsigned int			m_soundElapsedSeconds;//サウンドの経過秒数
+
+	//フェード用
 	CommonTimer				m_timer;		//フェード用タイマ
 	float					m_fadeVolume;	//秒数ごとの変化量
 	float					m_startVolume;	//フェード開始時の音量
 	float					m_targetVolume;	//目標音量
 	float					m_targetTime;	//目標時間
 	bool					m_fade;			//フェードを行っている
-	bool					m_done;			//解放済み
-	float					m_prevVolume;	//音量が変化する前の音量
-	unsigned int			m_soundSeconds;	//サウンドの秒数
 
 private:
 

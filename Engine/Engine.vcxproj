@@ -29,6 +29,7 @@
     <ClCompile Include="..\Library\imGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\Audio\AudioDevice.cpp" />
     <ClCompile Include="Source\Audio\AudioDeviceChild.cpp" />
+    <ClCompile Include="Source\Audio\OriginalXAPO.cpp" />
     <ClCompile Include="Source\Audio\Sound.cpp" />
     <ClCompile Include="Source\Audio\Sound3D.cpp" />
     <ClCompile Include="Source\Audio\Vender\WaveBankReader.cpp" />
@@ -103,6 +104,7 @@
     <ClInclude Include="..\Library\json\nlohmann\ordered_map.hpp" />
     <ClInclude Include="Source\Audio\AudioDevice.h" />
     <ClInclude Include="Source\Audio\AudioDeviceChild.h" />
+    <ClInclude Include="Source\Audio\OriginalXAPO.h" />
     <ClInclude Include="Source\Audio\Sound.h" />
     <ClInclude Include="Source\Audio\Sound3D.h" />
     <ClInclude Include="Source\Audio\Vender\WaveBankReader.h" />
