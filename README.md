@@ -14,5 +14,5 @@ Mediafoundationを使用した音声ファイルの読み込み
 ・ImGui  
 ・DirectXTex  
 ・DirectXTK(SimpleMath)  
-・strconv
+・strconv  
 ・nlohmann json
