@@ -3,7 +3,7 @@
 XAPO_REGISTRATION_PROPERTIES OriginalXAPO::m_xapoRegProp = {
 	__uuidof(OriginalXAPO),
 	L"MyTestXAPO2",
-	L"(c) Yohinori Tsuchida All Rights reserved.",
+	L"(c) Syunsuke Nodutsu All Rights reserved.",
 	1,0,
 	XAPOBASE_DEFAULT_FLAG,
 	1,1,1,1
@@ -18,7 +18,7 @@ OriginalXAPO::OriginalXAPO()
 }
 
 //-----------------------------------------------------------------------------
-// LockForProcess
+// XAPOを特定の入力/出力構成にロック
 //-----------------------------------------------------------------------------
 HRESULT OriginalXAPO::LockForProcess(UINT32 InputLockedParameterCount, const XAPO_LOCKFORPROCESS_BUFFER_PARAMETERS* pInputLockedParameters, UINT32 OutputLockedParameterCount, const XAPO_LOCKFORPROCESS_BUFFER_PARAMETERS* pOutputLockedParameters)
 {
@@ -29,7 +29,7 @@ HRESULT OriginalXAPO::LockForProcess(UINT32 InputLockedParameterCount, const XAP
 }
 
 //-----------------------------------------------------------------------------
-// Process
+// 指定された入出力バッファに対してXAPOのDSPコードを実行
 //-----------------------------------------------------------------------------
 void OriginalXAPO::Process(UINT32 InputProcessParameterCount, const XAPO_PROCESS_BUFFER_PARAMETERS* pInputProcessParameters, UINT32 OutputProcessParameterCount, XAPO_PROCESS_BUFFER_PARAMETERS* pOutputProcessParameters, BOOL IsEnabled)
 {

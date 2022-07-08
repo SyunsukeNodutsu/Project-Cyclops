@@ -106,6 +106,9 @@
     <Filter Include="Library\json">
       <UniqueIdentifier>{d0fece95-376d-42ec-8571-ca1f45de24b8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Graphics\Shader\LensGhost">
+      <UniqueIdentifier>{b33352b0-1c60-4c42-8441-2bf1c09f572c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Window\Window.cpp">
@@ -278,6 +281,9 @@
     </ClCompile>
     <ClCompile Include="Source\Audio\OriginalXAPO.cpp">
       <Filter>Source\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Shader\LensGhost\LensGhostShader.cpp">
+      <Filter>Source\Graphics\Shader\LensGhost</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -482,6 +488,9 @@
     <ClInclude Include="Source\Audio\OriginalXAPO.h">
       <Filter>Source\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Graphics\Shader\LensGhost\LensGhostShader.h">
+      <Filter>Source\Graphics\Shader\LensGhost</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Source\Graphics\Shader\Sprite\SpriteShader_VS.hlsl">
@@ -538,6 +547,12 @@
     <FxCompile Include="Source\Graphics\Shader\Grass\GrassShader_DS.hlsl">
       <Filter>Source\Graphics\Shader\Grass</Filter>
     </FxCompile>
+    <FxCompile Include="Source\Graphics\Shader\LensGhost\LensGhost_PS.hlsl">
+      <Filter>Source\Graphics\Shader\LensGhost</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Graphics\Shader\LensGhost\LensGhost_VS.hlsl">
+      <Filter>Source\Graphics\Shader\LensGhost</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\Shader\Sprite\SpriteShader.hlsli">
@@ -563,6 +578,9 @@
     </None>
     <None Include="..\Library\DirectXTK\SimpleMath.inl">
       <Filter>Library\DirectXTK</Filter>
+    </None>
+    <None Include="Source\Graphics\Shader\LensGhost\LensGhost.hlsli">
+      <Filter>Source\Graphics\Shader\LensGhost</Filter>
     </None>
   </ItemGroup>
 </Project>

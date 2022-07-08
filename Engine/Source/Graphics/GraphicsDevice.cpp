@@ -55,14 +55,16 @@ bool GraphicsDevice::Initialize()
 
 	//便利テクスチャ
 	{
-		const auto& col = color4::White.RGBA();
-		D3D11_SUBRESOURCE_DATA srd;
-		srd.pSysMem = &col;
-		srd.SysMemPitch = 4;
-		srd.SysMemSlicePitch = 0;
+		const auto& color = color4::White.RGBA();
+
+		D3D11_SUBRESOURCE_DATA subrData = {
+			.pSysMem = &color,
+			.SysMemPitch = 4,
+			.SysMemSlicePitch = 0,
+		};
 
 		m_texWhite = std::make_shared<Texture>();
-		m_texWhite->Create(1, 1, DXGI_FORMAT_R8G8B8A8_UNORM, 1, &srd);
+		m_texWhite->Create(1, 1, DXGI_FORMAT_R8G8B8A8_UNORM, 1, &subrData);
 	}
 
 	//使いまわしバッファ
@@ -235,7 +237,7 @@ void GraphicsDevice::DrawVertices(D3D_PRIMITIVE_TOPOLOGY topology, int vCount, c
 			m_spTempVertexBuffer->Create(D3D11_BIND_VERTEX_BUFFER, totalSize, D3D11_USAGE_DYNAMIC, nullptr);
 	}
 
-	// 単純なDISCARDでの書き込み TODO: 修正
+	//単純なDISCARDでの書き込み TODO: 修正
 	buffer->WriteData(pVStream, totalSize);
 
 	m_cpContext->IASetPrimitiveTopology(topology);

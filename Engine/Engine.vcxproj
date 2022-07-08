@@ -47,6 +47,7 @@
     <ClCompile Include="Source\Graphics\RendererStatus.cpp" />
     <ClCompile Include="Source\Graphics\Shader\GPUParticle\GPUParticleShader.cpp" />
     <ClCompile Include="Source\Graphics\Shader\Grass\GrassShader.cpp" />
+    <ClCompile Include="Source\Graphics\Shader\LensGhost\LensGhostShader.cpp" />
     <ClCompile Include="Source\Graphics\Shader\Lit\LitShader.cpp" />
     <ClCompile Include="Source\Graphics\Shader\PostProcess\PostProcessShader.cpp" />
     <ClCompile Include="Source\Graphics\Shader\ShaderManager.cpp" />
@@ -123,6 +124,7 @@
     <ClInclude Include="Source\Graphics\RendererStatus.h" />
     <ClInclude Include="Source\Graphics\Shader\GPUParticle\GPUParticleShader.h" />
     <ClInclude Include="Source\Graphics\Shader\Grass\GrassShader.h" />
+    <ClInclude Include="Source\Graphics\Shader\LensGhost\LensGhostShader.h" />
     <ClInclude Include="Source\Graphics\Shader\Lit\LitShader.h" />
     <ClInclude Include="Source\Graphics\Shader\PostProcess\PostProcessShader.h" />
     <ClInclude Include="Source\Graphics\Shader\ShaderManager.h" />
@@ -331,6 +333,18 @@
       <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RelativeDir)\%(Filename).shaderinc</HeaderFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Source\Graphics\Shader\LensGhost\LensGhost_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Graphics\Shader\LensGhost\LensGhost_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Source\Graphics\Shader\Lit\LitShader_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
@@ -598,6 +612,7 @@
     <None Include="Source\Graphics\Shader\ConstantBuffer.hlsli" />
     <None Include="Source\Graphics\Shader\GPUParticle\GPUParticle.hlsli" />
     <None Include="Source\Graphics\Shader\Grass\GrassShader.hlsli" />
+    <None Include="Source\Graphics\Shader\LensGhost\LensGhost.hlsli" />
     <None Include="Source\Graphics\Shader\Lit\LitShader.hlsli" />
     <None Include="Source\Graphics\Shader\PostProcess\PostProcessShader.hlsli" />
     <None Include="Source\Graphics\Shader\Sprite\SpriteShader.hlsli" />
