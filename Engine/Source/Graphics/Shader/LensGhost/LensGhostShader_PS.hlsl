@@ -1,12 +1,12 @@
 //-----------------------------------------------------------------------------
-// File: LensGhost_VS.hlsl
+// File: LensGhostShader_PS.hlsl
 //
-// レンズゴースト 頂点シェーダー
+// レンズゴースト ピクセルシェーダー
 //-----------------------------------------------------------------------------
 #include "../ConstantBuffer.hlsli"
 #include "LensGhost.hlsli"
 
-float4 main( float4 pos : POSITION ) : SV_POSITION
+float4 main() : SV_TARGET
 {
-	return pos;
+	return float4(1.0f, 1.0f, 1.0f, 1.0f);
 }

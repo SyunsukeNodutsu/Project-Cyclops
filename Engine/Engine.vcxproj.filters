@@ -547,10 +547,10 @@
     <FxCompile Include="Source\Graphics\Shader\Grass\GrassShader_DS.hlsl">
       <Filter>Source\Graphics\Shader\Grass</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Graphics\Shader\LensGhost\LensGhost_PS.hlsl">
+    <FxCompile Include="Source\Graphics\Shader\LensGhost\LensGhostShader_PS.hlsl">
       <Filter>Source\Graphics\Shader\LensGhost</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Graphics\Shader\LensGhost\LensGhost_VS.hlsl">
+    <FxCompile Include="Source\Graphics\Shader\LensGhost\LensGhostShader_VS.hlsl">
       <Filter>Source\Graphics\Shader\LensGhost</Filter>
     </FxCompile>
   </ItemGroup>
