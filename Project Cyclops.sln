@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{159F4C9F-8
 		Assets\test.json = Assets\test.json
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LensGhostDemo", "LensGhostDemo\LensGhostDemo.vcxproj", "{2A13629B-F2B6-40DD-B73A-CFA813006E5E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -73,6 +75,18 @@ Global
 		{371B9FA9-4C90-4AC6-A123-ACED756D6C77}.Release|x64.Build.0 = Release|x64
 		{371B9FA9-4C90-4AC6-A123-ACED756D6C77}.Release|x86.ActiveCfg = Release|Win32
 		{371B9FA9-4C90-4AC6-A123-ACED756D6C77}.Release|x86.Build.0 = Release|Win32
+		{2A13629B-F2B6-40DD-B73A-CFA813006E5E}.Debug|x64.ActiveCfg = Debug|x64
+		{2A13629B-F2B6-40DD-B73A-CFA813006E5E}.Debug|x64.Build.0 = Debug|x64
+		{2A13629B-F2B6-40DD-B73A-CFA813006E5E}.Debug|x86.ActiveCfg = Debug|Win32
+		{2A13629B-F2B6-40DD-B73A-CFA813006E5E}.Debug|x86.Build.0 = Debug|Win32
+		{2A13629B-F2B6-40DD-B73A-CFA813006E5E}.Profile|x64.ActiveCfg = Debug|x64
+		{2A13629B-F2B6-40DD-B73A-CFA813006E5E}.Profile|x64.Build.0 = Debug|x64
+		{2A13629B-F2B6-40DD-B73A-CFA813006E5E}.Profile|x86.ActiveCfg = Debug|Win32
+		{2A13629B-F2B6-40DD-B73A-CFA813006E5E}.Profile|x86.Build.0 = Debug|Win32
+		{2A13629B-F2B6-40DD-B73A-CFA813006E5E}.Release|x64.ActiveCfg = Release|x64
+		{2A13629B-F2B6-40DD-B73A-CFA813006E5E}.Release|x64.Build.0 = Release|x64
+		{2A13629B-F2B6-40DD-B73A-CFA813006E5E}.Release|x86.ActiveCfg = Release|Win32
+		{2A13629B-F2B6-40DD-B73A-CFA813006E5E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

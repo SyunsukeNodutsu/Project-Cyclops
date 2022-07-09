@@ -185,6 +185,9 @@ void CyclopsRoot::Draw()
 		m_pGraphicsDevice->m_spParticleSystem->Update();
 		m_pGraphicsDevice->m_spParticleSystem->Draw(true);
 		m_pGraphicsDevice->m_spShaderManager->m_GPUParticleShader.End();
+
+		//レンズゴースト検証
+		m_pGraphicsDevice->m_spShaderManager->m_lensGhostShader.Begin();
 	}
 
 	//ブラー描画

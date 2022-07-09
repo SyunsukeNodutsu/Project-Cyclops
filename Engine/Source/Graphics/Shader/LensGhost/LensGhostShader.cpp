@@ -54,5 +54,15 @@ bool LensGhostShader::Initialize()
 //-----------------------------------------------------------------------------
 void LensGhostShader::Begin()
 {
+	if (m_graphicsDevice == nullptr) return;
+	if (m_graphicsDevice->m_cpContext == nullptr) return;
+	if (m_graphicsDevice->m_spRendererStatus == nullptr) return;
 
+	//シェーダー設定
+	m_graphicsDevice->m_cpContext->VSSetShader(m_cpVS.Get(), 0, 0);
+	m_graphicsDevice->m_cpContext->PSSetShader(m_cpPS.Get(), 0, 0);
+	m_graphicsDevice->m_cpContext->IASetInputLayout(m_cpInputLayout.Get());
+
+	//高原の中心となるテクスチャ描画
+	//m_graphicsDevice->m_cpContext->Draw(4, 0);
 }

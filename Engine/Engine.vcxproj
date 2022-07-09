@@ -652,7 +652,7 @@
     <None Include="Source\Graphics\Shader\ConstantBuffer.hlsli" />
     <None Include="Source\Graphics\Shader\GPUParticle\GPUParticle.hlsli" />
     <None Include="Source\Graphics\Shader\Grass\GrassShader.hlsli" />
-    <None Include="Source\Graphics\Shader\LensGhost\LensGhost.hlsli" />
+    <None Include="Source\Graphics\Shader\LensGhost\LensGhostShader.hlsli" />
     <None Include="Source\Graphics\Shader\Lit\LitShader.hlsli" />
     <None Include="Source\Graphics\Shader\PostProcess\PostProcessShader.hlsli" />
     <None Include="Source\Graphics\Shader\Sprite\SpriteShader.hlsli" />

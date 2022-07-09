@@ -579,7 +579,7 @@
     <None Include="..\Library\DirectXTK\SimpleMath.inl">
       <Filter>Library\DirectXTK</Filter>
     </None>
-    <None Include="Source\Graphics\Shader\LensGhost\LensGhost.hlsli">
+    <None Include="Source\Graphics\Shader\LensGhost\LensGhostShader.hlsli">
       <Filter>Source\Graphics\Shader\LensGhost</Filter>
     </None>
   </ItemGroup>
