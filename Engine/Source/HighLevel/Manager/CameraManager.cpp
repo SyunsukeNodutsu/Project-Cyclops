@@ -135,19 +135,19 @@ void CameraManager::UpdateDollyCamera()
 {
 	if (!m_nowDolly) return;
 
-	const matrix4x4& startMatrix = m_spPrevCamera->GetCameraMatrix();
-	const matrix4x4& endMatrix = m_spUseCamera->GetCameraMatrix();
+	const matrix4x4& mStart = m_spPrevCamera->GetCameraMatrix();
+	const matrix4x4& mEnd = m_spUseCamera->GetCameraMatrix();
 
-	const float3& startPos = startMatrix.Translation();
-	const float3& endPos = endMatrix.Translation();
+	const float3& vStart = mStart.Translation();
+	const float3& vEnd = mEnd.Translation();
 
 	//座標補間
-	const float3& dir = endPos - startPos;
-	const float3& nowPos = startPos + (dir * m_progress);
+	const float3& vDir = vEnd - vStart;
+	const float3& vNow = vStart + (vDir * m_progress);
 
 	//回転補間
-	const quaternion& qStart = quaternion::CreateFromRotationMatrix(startMatrix);
-	const quaternion& qEnd = quaternion::CreateFromRotationMatrix(endMatrix);
+	const quaternion& qStart = quaternion::CreateFromRotationMatrix(mStart);
+	const quaternion& qEnd = quaternion::CreateFromRotationMatrix(mEnd);
 
 	const quaternion& qSlerp = quaternion::Slerp(qStart, qEnd, m_progress);
 	const matrix4x4& rotMatrix = matrix4x4::CreateFromQuaternion(qSlerp);
@@ -156,7 +156,7 @@ void CameraManager::UpdateDollyCamera()
 
 	//ドリーカメラのカメラ行列確定
 	matrix4x4 cameraMatrix = rotMatrix;
-	cameraMatrix.Translation(nowPos);
+	cameraMatrix.Translation(vNow);
 	m_spDollyCamera->SetCameraMatrix(cameraMatrix);
 
 	//進行度更新
@@ -175,7 +175,7 @@ void CameraManager::UpdateDollyCamera()
 	case ChangeMode::CubicInOut:	m_progress = Easing::CubicInOut(t, m_changeTime, 0.0f, 1.0f);	break;
 	}
 
-	if (m_progress >= 1.0f)
+	if (m_progress >= 0.9999f)//桁落ち防止で1.0ちょうどではなく0.9999
 	{
 		//切り替え終了
 		m_spUseCamera->OnUseStart();
