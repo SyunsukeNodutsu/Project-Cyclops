@@ -166,16 +166,17 @@ void CameraManager::UpdateDollyCamera()
 	switch (m_changeMode)
 	{
 	case ChangeMode::Immediate:		m_progress = 1.0f; break;
-	case ChangeMode::Liner:			m_progress = Easing::Linear(t, m_changeTime, 0.0f, 1.0f);		break;
-	case ChangeMode::QuadIn:		m_progress = Easing::QuadIn(t, m_changeTime, 0.0f, 1.0f);		break;
-	case ChangeMode::QuadOut:		m_progress = Easing::QuadOut(t, m_changeTime, 0.0f, 1.0f);		break;
-	case ChangeMode::QuadInOut:		m_progress = Easing::QuadInOut(t, m_changeTime, 0.0f, 1.0f);	break;
-	case ChangeMode::CubicIn:		m_progress = Easing::CubicIn(t, m_changeTime, 0.0f, 1.0f);		break;
-	case ChangeMode::CubicOut:		m_progress = Easing::CubicOut(t, m_changeTime, 0.0f, 1.0f);		break;
-	case ChangeMode::CubicInOut:	m_progress = Easing::CubicInOut(t, m_changeTime, 0.0f, 1.0f);	break;
+	case ChangeMode::Liner:			m_progress = Easing::Linear(t, m_changeTime);		break;
+	case ChangeMode::QuadIn:		m_progress = Easing::QuadIn(t, m_changeTime);		break;
+	case ChangeMode::QuadOut:		m_progress = Easing::QuadOut(t, m_changeTime);		break;
+	case ChangeMode::QuadInOut:		m_progress = Easing::QuadInOut(t, m_changeTime);	break;
+	case ChangeMode::CubicIn:		m_progress = Easing::CubicIn(t, m_changeTime);		break;
+	case ChangeMode::CubicOut:		m_progress = Easing::CubicOut(t, m_changeTime);		break;
+	case ChangeMode::CubicInOut:	m_progress = Easing::CubicInOut(t, m_changeTime);	break;
 	}
 
-	if (m_progress >= 0.9999f)//桁落ち防止で1.0ちょうどではなく0.9999
+	//m_progressで判定を行うと桁落ちで破綻するためタイマー基準で判定
+	if (t >= m_changeTime)
 	{
 		//切り替え終了
 		m_spUseCamera->OnUseStart();
