@@ -5,6 +5,16 @@
 //-----------------------------------------------------------------------------
 void LensGhostDemo::OnStart()
 {
+	//カメラ
+	m_spCamera = std::make_shared<FPSCamera>();
+	if (m_spCamera)
+	{
+		m_spCamera->m_name = "Camera Main";
+		m_spCamera->m_priority = 10.0f;
+		m_spCamera->SetCameraMatrix(matrix4x4::CreateTranslation(float3(0, 0, -1)));
+		m_spCamera->SetLocalPos(float3(0, 0, 0));
+		m_pCameraManager->AddCameraList(m_spCamera);
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -19,6 +29,7 @@ void LensGhostDemo::OnEnd()
 //-----------------------------------------------------------------------------
 void LensGhostDemo::OnUpdate()
 {
+	m_spCamera->SetCameraMatrix(matrix4x4::CreateTranslation(0, 0, -10));
 }
 
 //-----------------------------------------------------------------------------

@@ -24,4 +24,6 @@ public:
 
 private:
 
+	std::shared_ptr<FPSCamera> m_spCamera = nullptr;
+
 };
